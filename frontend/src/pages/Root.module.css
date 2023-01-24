@@ -1,0 +1,19 @@
+.header {
+    background-color: var(--color-gray-100)
+}
+
+.nav {
+    display: flex;
+}
+
+a {
+    margin-left: 1rem;
+    text-decoration: none;
+    color: rgb(85, 85, 85);
+}
+
+
+.active {
+    color: rgb(98, 98, 255);
+    text-decoration: none;
+}

@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import HomePage from "./pages/Home";
+import RootLayout from "./pages/Root";
+import PostsPage, { loader as postsLoader } from "./pages/Posts";
+import PostPage, { loader as postLoader } from "./pages/Post";
+import NewPostPage from "./pages/NewPost";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <RootLayout />,
+    children: [
+      {
+        index: true,
+        element: <HomePage />,
+      },
+      {
+        path: "posts",
+        element: <PostsPage />,
+        loader: postsLoader,
+      },
+      {
+        path: "posts/:id",
+        element: <PostPage />,
+        loader: postLoader,
+      },
+      {
+        path: "posts/new",
+        element: <NewPostPage />,
+      },
+    ],
+  },
+]);
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
