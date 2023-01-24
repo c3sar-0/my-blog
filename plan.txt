@@ -1,0 +1,34 @@
+Structure of this project.
+
+It will be a blog where people can make posts. To do so, they have to authenticate.
+Posts can contain text and images. Maybe videos and code snippets.
+
+Backend endpoints (all of them start with /api):
+/posts GET
+/posts POST *
+/posts/id GET
+/posts/id PUT, DELETE *
+/posts/id/like POST ? *
+
+/posts/id/comments GET
+/posts/id/comments POST, PUT, DELETE *
+
+/posts/id/comments/id/like POST ? *
+
+/user/<name> GET
+
+/me GET, PUT, DELETE *
+
+/register POST
+
+/token GET
+
+* Authenticated. Tokens will be refreshed on each login.
+
+Frontend endpoints:
+/home
+/posts
+/posts/id
+/auth?mode=login/register
+/user/<name>
+/me
