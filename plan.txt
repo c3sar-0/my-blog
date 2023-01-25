@@ -19,7 +19,7 @@ Backend endpoints (all of them start with /api):
 
 /me GET, PUT, DELETE *
 
-/register POST
+/create POST
 
 /token GET
 

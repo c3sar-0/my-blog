@@ -1,7 +1,9 @@
 import React from "react";
-import { Form, useSearchParams } from "react-router-dom";
+import { Form, useSearchParams, useActionData } from "react-router-dom";
 
 const AuthForm = () => {
+  const data = useActionData();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const isLogin = searchParams.get("mode") === "login";
 
@@ -13,6 +15,7 @@ const AuthForm = () => {
   return (
     <>
       <Form method="POST">
+        {data && <p>{data.detail}</p>}
         <label htmlFor="email">Email</label>
         <input id="email" name="email" type="email" />
         {!isLogin && <label htmlFor="name">Username</label>}

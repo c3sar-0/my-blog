@@ -9,7 +9,7 @@ import PostPage, {
 } from "./pages/Post";
 import NewPostPage, { action as newPostAction } from "./pages/NewPost";
 import EditPostPage, { action as editPostAction } from "./pages/EditPost";
-import AuthPage from "./pages/Auth";
+import AuthPage, { action as authAction } from "./pages/Auth";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +46,7 @@ const router = createBrowserRouter([
       {
         path: "auth",
         element: <AuthPage />,
+        action: authAction,
       },
     ],
   },
