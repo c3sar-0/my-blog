@@ -7,25 +7,35 @@ const RootLayout = () => {
     <>
       <header className={classes.header}>
         <nav className={classes.nav}>
-          <NavLink
-            to="/"
-            className={({ isActive }) => (isActive ? classes.active : "")}
-          >
-            <h3>Home</h3>
-          </NavLink>
-          <NavLink
-            to="posts"
-            className={({ isActive }) => (isActive ? classes.active : "")}
-            end
-          >
-            <h3>Posts</h3>
-          </NavLink>
-          <NavLink
-            to="posts/new"
-            className={({ isActive }) => (isActive ? classes.active : "")}
-          >
-            <h3>New Post</h3>
-          </NavLink>
+          <div className={classes.container}>
+            <NavLink
+              to="/"
+              className={({ isActive }) => (isActive ? classes.active : "")}
+            >
+              <h3>Home</h3>
+            </NavLink>
+            <NavLink
+              to="posts"
+              className={({ isActive }) => (isActive ? classes.active : "")}
+              end
+            >
+              <h3>Posts</h3>
+            </NavLink>
+            <NavLink
+              to="posts/new"
+              className={({ isActive }) => (isActive ? classes.active : "")}
+            >
+              <h3>New Post</h3>
+            </NavLink>
+          </div>
+          <div className={classes.container}>
+            <NavLink
+              to="/auth?mode=login"
+              className={({ isActive }) => (isActive ? classes.active : "")}
+            >
+              <h3>Login</h3>
+            </NavLink>
+          </div>
         </nav>
       </header>
       <Outlet />

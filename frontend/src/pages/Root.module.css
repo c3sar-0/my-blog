@@ -4,10 +4,11 @@
 
 .nav {
     display: flex;
+    justify-content: space-between;
 }
 
 a {
-    margin-left: 1rem;
+    margin: 0 0.5rem;
     text-decoration: none;
     color: rgb(85, 85, 85);
 }
@@ -16,4 +17,8 @@ a {
 .active {
     color: rgb(98, 98, 255);
     text-decoration: none;
+}
+
+.container {
+    display: flex;
 }

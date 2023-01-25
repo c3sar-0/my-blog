@@ -15,8 +15,8 @@ const PostsList = (props) => {
                 <h2>
                   {post.title} - {post.author}
                 </h2>
+                <p>{post.text.slice(0, 20)}...</p>
               </Link>
-              <p>{post.text.slice(0, 20)}...</p>
             </li>
           );
         })}
