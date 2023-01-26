@@ -11,6 +11,8 @@ import NewPostPage, { action as newPostAction } from "./pages/NewPost";
 import EditPostPage, { action as editPostAction } from "./pages/EditPost";
 import AuthPage, { action as authAction } from "./pages/Auth";
 
+import { AuthProvider } from "./context/AuthContext";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -53,7 +55,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <AuthProvider>
+      <RouterProvider router={router} />;
+    </AuthProvider>
+  );
 }
 
 export default App;
