@@ -6,6 +6,7 @@ import AuthContext from "../context/AuthContext";
 
 const RootLayout = () => {
   const ctx = useContext(AuthContext);
+  const isLoggedIn = ctx.isLoggedIn;
 
   const logoutHandler = () => {
     ctx.logout();
@@ -37,15 +38,17 @@ const RootLayout = () => {
             </NavLink>
             {/* <a>Hello, {ctx.name}</a> */}
           </div>
-          <div className={classes.container}>
-            <NavLink
-              to="/auth?mode=login"
-              className={({ isActive }) => (isActive ? classes.active : "")}
-            >
-              <h3>Login</h3>
-            </NavLink>
-          </div>
-          <button onClick={logoutHandler}>Logout</button>
+          {!isLoggedIn && (
+            <div className={classes.container}>
+              <NavLink
+                to="/auth?mode=login"
+                className={({ isActive }) => (isActive ? classes.active : "")}
+              >
+                <h3>Login</h3>
+              </NavLink>
+            </div>
+          )}
+          {isLoggedIn && <button onClick={logoutHandler}>Logout</button>}
         </nav>
       </header>
       <Outlet />

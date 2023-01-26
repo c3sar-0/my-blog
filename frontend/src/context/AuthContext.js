@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import { redirect } from "react-router-dom";
+import { redirect, Outlet } from "react-router-dom";
 
 const AuthContext = createContext();
 
@@ -7,10 +7,46 @@ export default AuthContext;
 
 export const AuthProvider = ({ children }) => {
   // I should put the login functionallity here (I think).
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authError, setAuthError] = useState(null);
 
   const logout = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
+    setIsLoggedIn(false);
+  };
+
+  const authenticate = async (data) => {
+    let url = "http://localhost:8000/api/user/";
+    url = data.isLogin ? url + "token/" : url + "create/";
+
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(data.body),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const resData = await response.json();
+
+    if (response.ok && data.isLogin) {
+      setIsLoggedIn(true);
+      localStorage.setItem("access", resData.access);
+      localStorage.setItem("refresh", resData.refresh);
+      setAuthError(null);
+      console.log("logged in");
+      redirect("/");
+    }
+
+    if (response.ok && !data.isLogin) {
+      setAuthError(null);
+      redirect("/auth?mode=login");
+    }
+
+    if (!response.ok) {
+      console.log("detail: ", resData.detail);
+      setAuthError(resData.detail);
+      return;
+    }
   };
 
   useEffect(() => {
@@ -32,6 +68,7 @@ export const AuthProvider = ({ children }) => {
         }
         localStorage.access = data.access;
         localStorage.refresh = data.refresh;
+        setIsLoggedIn(true);
       }
     };
 
@@ -45,16 +82,15 @@ export const AuthProvider = ({ children }) => {
   const contextData = {
     name: "nothing",
     logout: logout,
-    isLoggedIn: true,
-    setIsLoggedIn: (state) => {
-      state.isLoggedIn = false;
-    },
+    isLoggedIn: isLoggedIn,
+    authenticate: authenticate,
+    authError: authError,
   };
 
   return (
     <>
       <AuthContext.Provider value={contextData}>
-        {children}
+        <Outlet />
       </AuthContext.Provider>
     </>
   );

@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import AuthContext from "../context/AuthContext";
 import AuthForm from "../components/AuthForm";
-import { redirect } from "react-router-dom";
+import { redirect, useSearchParams } from "react-router-dom";
 
 const Auth = () => {
+  const ctx = useContext(AuthContext);
+
+  const submitHandler = (data) => {
+    ctx.authenticate(data);
+  };
+
+  useEffect(() => {}, []);
+
   return (
     <>
-      <AuthForm />
+      <AuthForm onSubmit={submitHandler} error={ctx.authError} />
     </>
   );
 };
@@ -13,6 +22,7 @@ const Auth = () => {
 export default Auth;
 
 export async function action({ request, params }) {
+  // Login/register action.
   const searchParams = new URL(request.url).searchParams;
   const mode = searchParams.get("mode");
 
