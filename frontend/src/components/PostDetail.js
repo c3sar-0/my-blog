@@ -17,7 +17,8 @@ const PostDetail = (props) => {
   return (
     <>
       <h1>
-        {post.title} - {post.author} ({post.created})
+        {post.title} - {post.author?.name} (
+        {new Date(post.created).toLocaleDateString()})
       </h1>
       <p>{post.text}</p>
       <button onClick={deletePostHandler}>Delete</button>

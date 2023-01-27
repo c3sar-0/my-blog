@@ -30,11 +30,13 @@ export async function loader({ request, params }) {
 
 export async function action({ request, params }) {
   // Action for deleting post
-  console.log("delete");
   const response = await fetch(
     `http://localhost:8000/api/blog/posts/${params.id}`,
     {
       method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + localStorage.access,
+      },
     }
   );
 

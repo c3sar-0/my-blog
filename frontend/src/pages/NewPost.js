@@ -30,11 +30,12 @@ export async function action({ request, params }) {
     body: JSON.stringify(body),
   });
 
+  const data = await response.json();
+
   if (!response.ok) {
+    console.log(response, data);
     throw json({ message: response.statusText }, { status: response.status });
   }
-
-  const data = await response.json();
 
   return redirect(`/posts/${data.id}`);
 }

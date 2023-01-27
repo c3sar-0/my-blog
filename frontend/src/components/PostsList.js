@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 const PostsList = (props) => {
   const posts = props.posts;
+  console.log(posts);
 
   return (
     <>
@@ -13,7 +14,7 @@ const PostsList = (props) => {
             <li key={post.id}>
               <Link to={`${post.id}`}>
                 <h2>
-                  {post.title} - {post.author}
+                  {post.title} - {post.author.name}
                 </h2>
                 <p>{post.text.slice(0, 20)}...</p>
               </Link>

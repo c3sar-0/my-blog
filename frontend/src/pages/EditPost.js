@@ -29,11 +29,14 @@ export async function action({ request, params }) {
   };
 
   const response = await fetch(
-    `http://localhost:8000/api/blog/posts/${postId}`,
+    `http://localhost:8000/api/blog/posts/${postId}/`,
     {
       method: "PUT",
       body: JSON.stringify(body),
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.access,
+      },
     }
   );
 

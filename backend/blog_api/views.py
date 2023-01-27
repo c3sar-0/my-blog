@@ -10,13 +10,15 @@ from rest_framework import mixins
 from .serializers import PostSerializer
 from .models import Post
 
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 
 class PostsViewSet(ModelViewSet):
     """Viewset for posts."""
 
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -31,6 +33,9 @@ class PostsViewSet(ModelViewSet):
         if self.action == "retrieve" or self.action == "list":
             return [permissions.AllowAny()]
         return super().get_permissions()
+
+    # def perform_create(self, serializer):
+    #     serializer.save(author=self.request.user)
 
 
 # class PostsView(ListCreateAPIView):
