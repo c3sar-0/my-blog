@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import { redirect, Outlet } from "react-router-dom";
+import { redirect, Outlet, useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   // I should put the login functionallity here (I think).
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authError, setAuthError] = useState(null);
+  const navigate = useNavigate();
 
   const logout = () => {
     localStorage.removeItem("access");
@@ -34,12 +35,14 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("refresh", resData.refresh);
       setAuthError(null);
       console.log("logged in");
-      redirect("/");
+      return navigate("/");
+      // return redirect("/");
     }
 
     if (response.ok && !data.isLogin) {
       setAuthError(null);
-      redirect("/auth?mode=login");
+      return navigate("/auth?mode=login");
+      // return redirect("/auth?mode=login");
     }
 
     if (!response.ok) {

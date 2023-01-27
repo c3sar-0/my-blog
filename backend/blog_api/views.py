@@ -1,40 +1,64 @@
-from django.shortcuts import render
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.generics import (
+    RetrieveUpdateDestroyAPIView,
+    ListCreateAPIView,
+)
+from rest_framework import permissions
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework import mixins
 
 from .serializers import PostSerializer
 from .models import Post
 
 
-class PostsView(APIView):
-    def get(self, request):
-        posts = Post.objects.order_by("-created")
-        serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data, status.HTTP_200_OK)
+class PostsViewSet(ModelViewSet):
+    """Viewset for posts."""
 
-    def post(self, request):
-        serializer = PostSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status.HTTP_201_CREATED)
-        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        """For delete and put, the queryset is only the user's posts (not every post)."""
+        actions = ["destroy", "update", "partial_update"]
+        if self.action in actions:
+            return Post.objects.filter(author=self.request.user)
+        return super().get_queryset()
+
+    def get_permissions(self):
+        "Only authorized users can post, delete and update."
+        if self.action == "retrieve" or self.action == "list":
+            return [permissions.AllowAny()]
+        return super().get_permissions()
 
 
-class PostView(APIView):
-    def get(self, request, pk):
-        posts = Post.objects.get(id=pk)
-        serializer = PostSerializer(posts)
-        return Response(serializer.data, status.HTTP_200_OK)
+# class PostsView(ListCreateAPIView):
+#     queryset = Post.objects.all()
+#     serializer_class = PostSerializer
+#     permission_classes = [permissions.IsAuthenticated]
+#     authentication_classes = [TokenAuthentication]
 
-    def put(self, request, pk):
-        post = Post.objects.get(id=pk)
-        serializer = PostSerializer(instance=post, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status.HTTP_200_OK)
-        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+#     def get_permissions(self):
+#         if self.request.method == "GET":
+#             return [permissions.AllowAny()]
+#         return super().get_permissions()
 
-    def delete(self, request, pk):
-        Post.objects.get(id=pk).delete()
-        return Response({}, status.HTTP_204_NO_CONTENT)
+
+# class PostView(RetrieveUpdateDestroyAPIView):
+#     serializer_class = PostSerializer
+#     queryset = Post.objects.all()
+#     permission_classes = [permissions.IsAuthenticated]
+#     authentication_classes = [TokenAuthentication]
+
+#     def get_permissions(self):
+#         authMethods = ["POST", "PUT", "DELETE"]
+#         if self.request.method not in authMethods:
+#             return [permissions.AllowAny()]
+#         return super().get_permissions()
+
+#     def get_queryset(self):
+#         authMethods = ["POST", "PUT", "DELETE"]
+#         if self.request.method in authMethods:
+#             return Post.objects.filter(author=self.request.user)
+#         return super().get_queryset()

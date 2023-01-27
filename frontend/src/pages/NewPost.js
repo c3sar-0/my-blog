@@ -23,7 +23,10 @@ export async function action({ request, params }) {
 
   const response = await fetch("http://localhost:8000/api/blog/posts/", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + String(localStorage.access),
+    },
     body: JSON.stringify(body),
   });
 
