@@ -37,7 +37,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model."""
 
     email = models.EmailField(max_length=255, unique=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     created = models.DateField(auto_now_add=True)
@@ -45,3 +45,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
+
+
+class Post(models.Model):
+    # author = models.CharField(max_length=50)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    title = models.CharField(max_length=200)
+    text = models.TextField(max_length=5000)
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    text = models.TextField(max_length=500)

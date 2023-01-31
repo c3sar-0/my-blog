@@ -6,6 +6,7 @@ const PostForm = (props) => {
   return (
     <div className={classes.card}>
       <Form className={classes.form} method="POST" action={props.action}>
+        {props.errors?.title && <p>{props.errors.title[0]}</p>}
         <label htmlFor="title">Title</label>
         <input
           id="title"
@@ -13,6 +14,7 @@ const PostForm = (props) => {
           name="title"
           defaultValue={props.title || ""}
         />
+        {props.errors?.text && <p>{props.errors.text[0]}</p>}
         <label htmlFor="text">Text</label>
         <textarea
           id="text"

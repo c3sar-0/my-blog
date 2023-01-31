@@ -3,9 +3,11 @@ import { json, useActionData, redirect } from "react-router-dom";
 import PostForm from "../components/PostForm";
 
 const NewPost = () => {
+  const errors = useActionData();
+
   return (
     <>
-      <PostForm button="Create" action="/posts/new" />
+      <PostForm button="Create" action="/posts/new" errors={errors} />
     </>
   );
 };
@@ -21,7 +23,7 @@ export async function action({ request, params }) {
     text: formData.get("text"),
   };
 
-  const response = await fetch("http://localhost:8000/api/blog/posts/", {
+  const response = await fetch(process.env.REACT_APP_API_URL + "blog/posts/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -30,12 +32,15 @@ export async function action({ request, params }) {
     body: JSON.stringify(body),
   });
 
-  const data = await response.json();
+  if (!response.ok && response.status === 400) {
+    return response;
+  }
 
   if (!response.ok) {
-    console.log(response, data);
     throw json({ message: response.statusText }, { status: response.status });
   }
+
+  const data = await response.json();
 
   return redirect(`/posts/${data.id}`);
 }

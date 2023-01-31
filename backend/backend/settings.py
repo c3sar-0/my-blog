@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "blog_api",
     "rest_framework_simplejwt.token_blacklist",
     "user_api",
+    "core",
 ]
 
 MIDDLEWARE = [
@@ -183,4 +184,4 @@ SIMPLE_JWT = {
     # "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 }
 
-AUTH_USER_MODEL = "user_api.User"
+AUTH_USER_MODEL = "core.User"

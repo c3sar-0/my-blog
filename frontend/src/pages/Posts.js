@@ -11,11 +11,9 @@ const Posts = () => {
 export default Posts;
 
 export async function loader({ request, params }) {
-  const response = await fetch("http://localhost:8000/api/blog/posts/");
+  const response = await fetch(process.env.REACT_APP_API_URL + "blog/posts/");
 
   if (!response.ok) {
-    // console.log(response);
-    // return {};
     throw json({ message: response.statusText }, { status: response.status });
   }
 

@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import AuthContext from "../context/AuthContext";
 import { useNavigate, useSubmit } from "react-router-dom";
 
 const PostDetail = (props) => {
+  const authCtx = useContext(AuthContext);
   const post = props.post;
   const submit = useSubmit();
   const navigate = useNavigate();
@@ -21,8 +23,12 @@ const PostDetail = (props) => {
         {new Date(post.created).toLocaleDateString()})
       </h1>
       <p>{post.text}</p>
-      <button onClick={deletePostHandler}>Delete</button>
-      <button onClick={editPostHandler}>Edit</button>
+      {authCtx.isLoggedIn && post.author.name === authCtx.user.name && (
+        <button onClick={deletePostHandler}>Delete</button>
+      )}
+      {authCtx.isLoggedIn && post.author.name === authCtx.user.name && (
+        <button onClick={editPostHandler}>Edit</button>
+      )}
     </>
   );
 };

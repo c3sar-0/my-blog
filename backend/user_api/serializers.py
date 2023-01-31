@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import User
+from core.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -17,8 +17,8 @@ class UserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         """Update and return user."""
 
-        password = validated_data.pop("password")
-        user = super().update(**validated_data)
+        password = validated_data.pop("password", None)
+        user = super().update(instance, validated_data)
 
         if password:
             user.set_password(password)

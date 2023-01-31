@@ -22,3 +22,11 @@ a {
 .container {
     display: flex;
 }
+
+.logout {
+    color: rgb(85, 85, 85);
+}
+.logout:hover {
+    color: rgb(98, 98, 255);
+    cursor: pointer;
+}

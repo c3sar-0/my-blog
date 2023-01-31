@@ -16,6 +16,9 @@ import PostPage, {
 import NewPostPage, { action as newPostAction } from "./pages/NewPost";
 import EditPostPage, { action as editPostAction } from "./pages/EditPost";
 import AuthPage from "./pages/Auth";
+import MePage, { loader as meLoader } from "./pages/Me";
+
+import PrivateRoute from "./utils/PrivateRoute";
 
 import AuthContext, { AuthProvider } from "./context/AuthContext";
 
@@ -50,9 +53,19 @@ const router = createBrowserRouter([
             action: editPostAction,
           },
           {
-            path: "posts/new",
-            element: <NewPostPage />,
-            action: newPostAction,
+            element: <PrivateRoute />,
+            children: [
+              {
+                path: "posts/new",
+                element: <NewPostPage />,
+                action: newPostAction,
+              },
+            ],
+          },
+          //
+          {
+            path: "me",
+            element: <MePage />,
           },
           //
           {

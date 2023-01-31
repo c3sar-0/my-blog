@@ -1,24 +1,32 @@
 import { createContext, useState, useEffect } from "react";
 import { redirect, Outlet, useNavigate } from "react-router-dom";
 
-const AuthContext = createContext();
+const AuthContext = createContext({
+  user: {},
+  logout: () => {},
+  authenticate: () => {},
+  isLoggedIn: false,
+  authError: "",
+});
 
 export default AuthContext;
 
 export const AuthProvider = ({ children }) => {
-  // I should put the login functionallity here (I think).
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authError, setAuthError] = useState(null);
+  const [user, setUser] = useState(null);
+
   const navigate = useNavigate();
 
   const logout = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
     setIsLoggedIn(false);
+    navigate("/");
   };
 
   const authenticate = async (data) => {
-    let url = "http://localhost:8000/api/user/";
+    let url = process.env.REACT_APP_API_URL + "user/";
     url = data.isLogin ? url + "token/" : url + "create/";
 
     const response = await fetch(url, {
@@ -36,27 +44,25 @@ export const AuthProvider = ({ children }) => {
       setAuthError(null);
       console.log("logged in");
       return navigate("/");
-      // return redirect("/");
     }
 
     if (response.ok && !data.isLogin) {
       setAuthError(null);
       return navigate("/auth?mode=login");
-      // return redirect("/auth?mode=login");
     }
 
     if (!response.ok) {
-      console.log("detail: ", resData.detail);
       setAuthError(resData.detail);
       return;
     }
   };
 
   useEffect(() => {
+    // Refreshing tokens
     const refreshTokens = async () => {
       if (localStorage.refresh) {
         const response = await fetch(
-          "http://localhost:8000/api/user/token/refresh/",
+          process.env.REACT_APP_API_URL + "user/token/refresh/",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -64,7 +70,6 @@ export const AuthProvider = ({ children }) => {
           }
         );
         const data = await response.json();
-        // console.log(response);
         if (response.statusText === "Unauthorized") {
           logout();
           return;
@@ -82,8 +87,35 @@ export const AuthProvider = ({ children }) => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    // Get logged user (if any).
+    if (isLoggedIn) {
+      const getUser = async () => {
+        const response = await fetch(
+          process.env.REACT_APP_API_URL + "user/me/",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.access,
+            },
+          }
+        );
+        const me = await response.json();
+        setUser(me);
+      };
+
+      try {
+        getUser();
+      } catch (error) {
+        console.log("Error: ", error.message);
+      }
+    } else {
+      setUser(null);
+    }
+  }, [isLoggedIn]);
+
   const contextData = {
-    name: "nothing",
+    user: user,
     logout: logout,
     isLoggedIn: isLoggedIn,
     authenticate: authenticate,

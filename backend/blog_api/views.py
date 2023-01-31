@@ -1,14 +1,9 @@
-from rest_framework.generics import (
-    RetrieveUpdateDestroyAPIView,
-    ListCreateAPIView,
-)
 from rest_framework import permissions
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
-from rest_framework import mixins
+from rest_framework.viewsets import ModelViewSet
+from rest_framework import status
 
-from .serializers import PostSerializer
-from .models import Post
+from .serializers import PostSerializer, CommentSerializer
+from core.models import Post, Comment
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -34,36 +29,32 @@ class PostsViewSet(ModelViewSet):
             return [permissions.AllowAny()]
         return super().get_permissions()
 
-    # def perform_create(self, serializer):
-    #     serializer.save(author=self.request.user)
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 
-# class PostsView(ListCreateAPIView):
-#     queryset = Post.objects.all()
-#     serializer_class = PostSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-#     authentication_classes = [TokenAuthentication]
+class CommentsViewSet(ModelViewSet):
+    """Viewset for comments. Post and comment pk here are accessed through self.kwargs['post_pk'/'comment_pk']"""
 
-#     def get_permissions(self):
-#         if self.request.method == "GET":
-#             return [permissions.AllowAny()]
-#         return super().get_permissions()
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        """For delete and put, the queryset is only the user's comments."""
+        actions = ["destroy", "update", "partial_update"]
+        if self.action in actions:
+            return Comment.objects.filter(author=self.request.user)
+        return super().get_queryset()
 
-# class PostView(RetrieveUpdateDestroyAPIView):
-#     serializer_class = PostSerializer
-#     queryset = Post.objects.all()
-#     permission_classes = [permissions.IsAuthenticated]
-#     authentication_classes = [TokenAuthentication]
+    def get_permissions(self):
+        "Only authorized users can comment, delete and update."
+        if self.action == "retrieve" or self.action == "list":
+            return [permissions.AllowAny()]
+        return super().get_permissions()
 
-#     def get_permissions(self):
-#         authMethods = ["POST", "PUT", "DELETE"]
-#         if self.request.method not in authMethods:
-#             return [permissions.AllowAny()]
-#         return super().get_permissions()
-
-#     def get_queryset(self):
-#         authMethods = ["POST", "PUT", "DELETE"]
-#         if self.request.method in authMethods:
-#             return Post.objects.filter(author=self.request.user)
-#         return super().get_queryset()
+    def perform_create(self, serializer):
+        author = self.request.user
+        post = Post.objects.get(id=self.kwargs["post_pk"])
+        serializer.save(author=author, post=post)

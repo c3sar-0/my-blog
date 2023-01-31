@@ -1,15 +1,16 @@
 import React, { useContext } from "react";
 import classes from "./Root.module.css";
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink, useLoaderData } from "react-router-dom";
 
 import AuthContext from "../context/AuthContext";
 
 const RootLayout = () => {
-  const ctx = useContext(AuthContext);
-  const isLoggedIn = ctx.isLoggedIn;
+  const authCtx = useContext(AuthContext);
+  const isLoggedIn = authCtx.isLoggedIn;
+  const me = authCtx.user;
 
   const logoutHandler = () => {
-    ctx.logout();
+    authCtx.logout();
   };
 
   return (
@@ -36,7 +37,7 @@ const RootLayout = () => {
             >
               <h3>New Post</h3>
             </NavLink>
-            {/* <a>Hello, {ctx.name}</a> */}
+            {/* <a>Hello, {authCtx.name}</a> */}
           </div>
           {!isLoggedIn && (
             <div className={classes.container}>
@@ -48,7 +49,19 @@ const RootLayout = () => {
               </NavLink>
             </div>
           )}
-          {isLoggedIn && <button onClick={logoutHandler}>Logout</button>}
+          {isLoggedIn && me && (
+            <div className={classes.container}>
+              <NavLink
+                to="/me"
+                className={({ isActive }) => (isActive ? classes.active : "")}
+              >
+                <h3>{me.name}</h3>
+              </NavLink>
+              <h3 className={classes.logout} onClick={logoutHandler}>
+                Logout
+              </h3>
+            </div>
+          )}
         </nav>
       </header>
       <Outlet />

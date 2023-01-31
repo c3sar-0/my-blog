@@ -10,8 +10,8 @@ Backend endpoints (all of them start with /api):
 /posts/id PUT, DELETE *
 /posts/id/like POST ? *
 
-/posts/id/comments GET
-/posts/id/comments POST, PUT, DELETE *
+/posts/id/comments GET, POST
+/posts/id/comments/id PUT, DELETE *
 
 /posts/id/comments/id/like POST ? *
 

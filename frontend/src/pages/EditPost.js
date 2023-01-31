@@ -1,10 +1,26 @@
-import React from "react";
-import { json, redirect, useLoaderData, useParams } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import AuthContext from "../context/AuthContext";
+import {
+  json,
+  redirect,
+  useActionData,
+  useLoaderData,
+  useNavigate,
+} from "react-router-dom";
 import PostForm from "../components/PostForm";
 
 const EditPost = () => {
-  const params = useParams();
+  const authCtx = useContext(AuthContext);
+  const navigate = useNavigate();
   const post = useLoaderData();
+  const errors = useActionData();
+
+  useEffect(() => {
+    if (!authCtx.isLoggedIn || post.author.name !== authCtx.user.name) {
+      navigate("/auth?mode=login");
+    }
+  }, []);
+
   return (
     <>
       <PostForm
@@ -12,6 +28,7 @@ const EditPost = () => {
         action={`/posts/${post.id}/edit`}
         title={post.title}
         text={post.text}
+        errors={errors}
       />
     </>
   );
@@ -29,7 +46,7 @@ export async function action({ request, params }) {
   };
 
   const response = await fetch(
-    `http://localhost:8000/api/blog/posts/${postId}/`,
+    `${process.env.REACT_APP_API_URL}blog/posts/${postId}/`,
     {
       method: "PUT",
       body: JSON.stringify(body),
@@ -39,6 +56,10 @@ export async function action({ request, params }) {
       },
     }
   );
+
+  if (!response.ok && response.status === 400) {
+    return response;
+  }
 
   if (!response.ok) {
     throw json({ message: response.statusText }, { status: response.status });

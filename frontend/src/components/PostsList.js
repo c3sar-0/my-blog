@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 const PostsList = (props) => {
   const posts = props.posts;
-  console.log(posts);
 
   return (
     <>

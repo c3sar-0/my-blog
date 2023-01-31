@@ -31,7 +31,7 @@ export async function loader({ request, params }) {
 export async function action({ request, params }) {
   // Action for deleting post
   const response = await fetch(
-    `http://localhost:8000/api/blog/posts/${params.id}`,
+    `${process.env.REACT_APP_API_URL}blog/posts/${params.id}`,
     {
       method: "DELETE",
       headers: {
