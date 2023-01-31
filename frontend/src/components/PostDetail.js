@@ -11,10 +11,11 @@ const PostDetail = (props) => {
   const deletePostHandler = () => {
     submit(null, { method: "DELETE" });
   };
-
   const editPostHandler = () => {
     navigate("edit");
   };
+
+  console.log(post);
 
   return (
     <>
@@ -23,12 +24,22 @@ const PostDetail = (props) => {
         {new Date(post.created).toLocaleDateString()})
       </h1>
       <p>{post.text}</p>
-      {authCtx.isLoggedIn && post.author.name === authCtx.user.name && (
+      {authCtx.isLoggedIn && post.author.name === authCtx.user?.name && (
         <button onClick={deletePostHandler}>Delete</button>
       )}
-      {authCtx.isLoggedIn && post.author.name === authCtx.user.name && (
+      {authCtx.isLoggedIn && post.author.name === authCtx.user?.name && (
         <button onClick={editPostHandler}>Edit</button>
       )}
+      <ul>
+        {post.comments.map((comment) => {
+          return (
+            <li key={comment.id}>
+              <h3>{comment.author.name}</h3>
+              <p>{comment.text}</p>
+            </li>
+          );
+        })}
+      </ul>
     </>
   );
 };

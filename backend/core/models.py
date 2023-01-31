@@ -23,9 +23,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password):
 
         """Create and return a superuser."""
-        user = self.create_user(
-            email, password
-        )  # DANGEROUS? what if I send a request to create_user and in **other I pass is_superuser: True
+        user = self.create_user(email, password)
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
@@ -48,7 +46,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Post(models.Model):
-    # author = models.CharField(max_length=50)
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -57,7 +54,21 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, null=True, related_name="comments"
+    )
     created = models.DateTimeField(auto_now_add=True)
     text = models.TextField(max_length=500)
+
+
+class Like(models.Model):
+    """Like model for posts and comments."""
+
+    author = models.OneToOneField(User, on_delete=models.CASCADE)
+    comment = models.ForeignKey(
+        Comment, on_delete=models.CASCADE, null=True, related_name="likes"
+    )
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, null=True, related_name="likes"
+    )
