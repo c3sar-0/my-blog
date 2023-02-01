@@ -34,7 +34,7 @@ class PostsViewSet(ModelViewSet):
         serializer.save(author=self.request.user)
 
     @action(
-        methods=["POST"],
+        methods=["POST", "DELETE"],
         detail=True,
         authentication_classes=[JWTAuthentication],
         permission_classes=[permissions.IsAuthenticated],
@@ -42,19 +42,32 @@ class PostsViewSet(ModelViewSet):
     def like(self, request, pk):
         """
             Like action for posts.
-        Users need to be authenticated and only allowed method is POST.
-        If the user has already liked the post, the like will be deleted.
-        I should probably change this approach since it's not RESTFUL at all.
+        Users need to be authenticated. Allowed methods are DELETE and POST.
+        When a user sends a POST request, this action checks if the user has already liked the post.
+        If so, a 401 is returned, else, the post is liked. The same happens with DELETE.
         """
         post = Post.objects.get(id=pk)
         isLiked = post.likes.filter(author=request.user).exists()
-        if isLiked:
-            post.likes.get(author=request.user).delete()
-            return Response({}, status.HTTP_204_NO_CONTENT)
-        like = post.likes.create(author=request.user)
-        post.save()
-        serializer = LikeSerializer(like)
-        return Response(serializer.data, status.HTTP_201_CREATED)
+        if request.method == "POST":
+            if isLiked:
+                return Response(
+                    {"detail": "The post is already liked."},
+                    status.HTTP_401_UNAUTHORIZED,
+                )
+            else:
+                like = post.likes.create(author=request.user)
+                post.save()
+                serializer = LikeSerializer(like)
+                return Response(serializer.data, status.HTTP_201_CREATED)
+        if request.method == "DELETE":
+            if isLiked:
+                post.likes.get(author=request.user).delete()
+                return Response({}, status.HTTP_204_NO_CONTENT)
+            else:
+                return Response(
+                    {"detail": "The post has not been liked."},
+                    status.HTTP_401_UNAUTHORIZED,
+                )
 
 
 class CommentsViewSet(ModelViewSet):
@@ -84,7 +97,7 @@ class CommentsViewSet(ModelViewSet):
         serializer.save(author=author, post=post)
 
     @action(
-        methods=["POST"],
+        methods=["POST", "DELETE"],
         detail=True,
         authentication_classes=[JWTAuthentication],
         permission_classes=[permissions.IsAuthenticated],
@@ -94,33 +107,23 @@ class CommentsViewSet(ModelViewSet):
         post = Post.objects.get(id=post_pk)
         comment = post.comments.get(id=pk)
         isLiked = comment.likes.filter(author=request.user).exists()
-        if isLiked:
-            comment.likes.get(author=request.user).delete()
-            return Response({}, status.HTTP_204_NO_CONTENT)
-        like = comment.likes.create(author=request.user)
-        comment.save()
-        serializer = LikeSerializer(like)
-        return Response(serializer.data, status.HTTP_201_CREATED)
-
-
-# Old like implementation (I changed it mid-work)
-# @action(authentication_classes=[JWTAuthentication], permission_classes=[permissions.IsAuthenticated])
-# def like(self, request, post__pk):
-#     """Custom action for liking posts. /api/blog/posts/pk/like/
-#     This is the GET method, which returns the likes (you get the likes of a post/comment when you get the post/comment, so this method is not really suppossed to be used and is here just to be able make the mappings)."""
-#     likes = Like.objects.filter(post__id=post__pk)
-#     serializer = LikeSerializer(likes, many=True)
-#     return Response(serializer.data, status.HTTP_200_OK)
-
-# @like.mapping.post
-# def like_post(self, request, post__pk):
-#     """POST method for like action."""
-#     post = Post.objects.get(id=post__pk)
-#     like = post.likes.add(author=request.user)
-#     serializer = LikeSerializer(like)
-#     return Response(serializer.data, status.HTTP_201_CREATED)
-
-# @like.mapping.delete
-# def like_post(self, request, post__pk):
-#     """DELETE method for like action."""
-#     like =
+        if request.method == "POST":
+            if isLiked:
+                return Response(
+                    {"detail": "The post is already liked."},
+                    status.HTTP_401_UNAUTHORIZED,
+                )
+            else:
+                like = comment.likes.create(author=request.user)
+                comment.save()
+                serializer = LikeSerializer(like)
+                return Response(serializer.data, status.HTTP_201_CREATED)
+        if request.method == "DELETE":
+            if isLiked:
+                comment.likes.get(author=request.user).delete()
+                return Response({}, status.HTTP_204_NO_CONTENT)
+            else:
+                return Response(
+                    {"detail": "The post has not been liked."},
+                    status.HTTP_401_UNAUTHORIZED,
+                )
