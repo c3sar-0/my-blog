@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import AuthContext from "../context/AuthContext";
-import { useNavigate, useSubmit } from "react-router-dom";
+import { useNavigate, useSubmit, Form } from "react-router-dom";
+import CommentForm from "./CommentForm";
+import Comment from "./Comment";
 
 const PostDetail = (props) => {
   const authCtx = useContext(AuthContext);
@@ -15,8 +17,6 @@ const PostDetail = (props) => {
     navigate("edit");
   };
 
-  console.log(post);
-
   return (
     <>
       <h1>
@@ -30,12 +30,12 @@ const PostDetail = (props) => {
       {authCtx.isLoggedIn && post.author.name === authCtx.user?.name && (
         <button onClick={editPostHandler}>Edit</button>
       )}
+      <CommentForm postId={post.id} />
       <ul>
         {post.comments.map((comment) => {
           return (
             <li key={comment.id}>
-              <h3>{comment.author.name}</h3>
-              <p>{comment.text}</p>
+              <Comment author={comment.author} text={comment.text} />
             </li>
           );
         })}
