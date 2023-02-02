@@ -24,6 +24,7 @@ class CommentSerializer(serializers.ModelSerializer):
     author = UserSerializer(many=False, required=False)
     likes = serializers.SerializerMethodField()
     is_liked_by_user = serializers.SerializerMethodField()
+    image_url = serializers.ImageField(required=False)
 
     class Meta:
         model = Comment

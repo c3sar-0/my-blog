@@ -1,0 +1,2 @@
+you can send requests to /blog/posts/post_pk/comments/
+even if post_pk does not exist

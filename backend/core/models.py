@@ -52,6 +52,8 @@ class Post(models.Model):
     title = models.CharField(max_length=200)
     text = models.TextField(max_length=5000)
 
+    image_url = models.ImageField(upload_to="posts", null=True, blank=True)
+
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")

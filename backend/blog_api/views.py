@@ -2,6 +2,9 @@ from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
+from rest_framework.parsers import MultiPartParser, FormParser
+
+from django.shortcuts import get_object_or_404
 
 from .serializers import PostSerializer, CommentSerializer, LikeSerializer
 from core.models import Post, Comment
@@ -16,6 +19,8 @@ class PostsViewSet(ModelViewSet):
     serializer_class = PostSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated]
+
+    parser_classes = [MultiPartParser, FormParser]
 
     def get_queryset(self):
         """For delete and put, the queryset is only the user's posts (not every post)."""
@@ -104,8 +109,10 @@ class CommentsViewSet(ModelViewSet):
     )
     def like(self, request, post_pk, pk):
         """Like action for comments."""
-        post = Post.objects.get(id=post_pk)
-        comment = post.comments.get(id=pk)
+        # post = Post.objects.get(id=post_pk)
+        post = get_object_or_404(Post.objects.all(), id=post_pk)
+        # comment = post.comments.get(id=pk)
+        comment = get_object_or_404(post.comments, id=pk)
         isLiked = comment.likes.filter(author=request.user).exists()
         if request.method == "POST":
             if isLiked:
