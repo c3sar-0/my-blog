@@ -42,7 +42,7 @@ const PostDetail = (props) => {
       setCommentFormError("Something went wrong.");
     }
   };
-  console.log(post);
+  console.log(post.image_url);
 
   return (
     <>

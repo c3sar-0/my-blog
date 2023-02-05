@@ -23,6 +23,7 @@ const Comment = (props) => {
     authorRef.current.value = "deleted";
     textRef.current.value = "deleted";
     navigate("");
+    // IN POST DETAIL CREATE A STATE WITH INITIAL VALUE = PROPS.COMMENTS AND DELETE THIS ONE
   };
 
   return (
