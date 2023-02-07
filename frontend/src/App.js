@@ -6,9 +6,8 @@ import {
   Routes,
 } from "react-router-dom";
 
-import HomePage from "./pages/Home";
+import HomePage, { loader as postsLoader } from "./pages/Home";
 import RootLayout from "./pages/Root";
-import PostsPage, { loader as postsLoader } from "./pages/Posts";
 import PostPage, {
   loader as postLoader,
   action as deletePostAction,
@@ -34,10 +33,6 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <HomePage />,
-          },
-          {
-            path: "posts",
-            element: <PostsPage />,
             loader: postsLoader,
           },
           {

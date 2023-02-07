@@ -1,6 +1,5 @@
 import React from "react";
-
-import { Link } from "react-router-dom";
+import PostPreview from "./PostPreview";
 
 const PostsList = (props) => {
   const posts = props.posts;
@@ -8,18 +7,9 @@ const PostsList = (props) => {
   return (
     <>
       <ul>
-        {posts.map((post) => {
-          return (
-            <li key={post.id}>
-              <Link to={`${post.id}`}>
-                <h2>
-                  {post.title} - {post.author.name}
-                </h2>
-                <p>{post.text.slice(0, 20)}...</p>
-              </Link>
-            </li>
-          );
-        })}
+        {posts.map((post) => (
+          <PostPreview post={post} key={post.id} />
+        ))}
       </ul>
     </>
   );

@@ -1,0 +1,20 @@
+.sidebar {
+  width: 17vw;
+  line-height: 1.5rem;
+  font-weight: 500;
+  background-color: $color-white;
+  padding: 1rem 2rem;
+  border-style: solid;
+  border-color: $color-light-gray;
+  border-width: $width-border;
+  font-size: .85rem;
+
+  &__create-account {
+    padding-bottom: 1rem;
+    border-bottom: $width-border solid $color-light-gray;
+  }
+
+  &__feeds {
+    font-size: 1rem;
+  }
+}
