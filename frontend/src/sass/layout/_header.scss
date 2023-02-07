@@ -1,4 +1,7 @@
 .root-header {
+    z-index: 10;
+    position: sticky;
+    top: 0;
     background-color: $color-white;
     height: 6vh;
     display: flex;
@@ -6,6 +9,7 @@
     padding: .5rem 2rem;
     justify-content: space-between;
     overflow: hidden;
+    margin-bottom: 2rem;
 
     &__logo {
         &--link {
@@ -19,7 +23,8 @@
     &__search-form {
         width: 50%;
         display: flex;
-        height: 2.2rem;
+        height: 65%;
+        min-height: 1.5rem;
 		position: relative;
 		display: flex;
 		align-items: center;
@@ -28,10 +33,11 @@
             width: 100%;
             border-radius: 100px;
             border-style: solid;
-            padding-left: 2.5rem;
+            // padding-left: 3.3rem;
+            padding-left: 6vh;
 			position: absolute;
 			z-index: 1;
-			height: 2.1rem;
+			height: 100%;
 			font-size: 1rem;
 
             &:focus {
@@ -46,82 +52,26 @@
 			position: absolute;
 			z-index: 2;
 			background-color: transparent;
-			left: .6rem;
-
+            left: 1rem;
+            height: 3.8vh;
+            width: 3.8vh;
+            min-height: 1.5rem;
+            min-width: 1.5rem;
 
             & img {
-                width: 1.4rem;
+                width: 100%;
             }
         }
     }
 
     &__nav {
         & a {
-            position: relative;
-            overflow: hidden;
-            transition: transform .2s;
-
             &.active {
 				outline-style: solid;
 				outline-color: $color-light-blue;
 				outline-offset: 3px;
 				outline-width: 2px;
             }
-
-            &::after {
-                content: "";
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: .8rem;
-                height: 100%;
-                background-color: rgba($color-white, .5);
-                transform: translateX(-1.2rem) skew(20deg);
-            }
-            
-            &:hover {
-                transform: scale(1.06);
-
-                &::after {
-                    animation: lightFromLeft .8s linear;
-                }
-            }
         }
     }
 }
-
-
-
-// .root-header {
-//     background-color: $color-white;
-
-//     &__nav {
-//         display: flex;
-//         justify-content: space-between;
-
-//         & .active {
-//             color: $color-light-blue;
-//             text-decoration: none;
-//         }
-//     }
-
-//     &__container {
-//         display: flex;
-
-//         & a {
-//             margin: 0 0.5rem;
-//             text-decoration: none;
-//             color: rgb(85, 85, 85);
-//         }
-
-//         &--logout {
-//             color: rgb(85, 85, 85);
-
-//             &:hover {
-//                 color: $color-light-blue;
-//                 cursor: pointer;
-//             }
-//         }
-//     }
-// }
-

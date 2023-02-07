@@ -8,6 +8,29 @@
   padding: .55rem;
   border-radius: 2px;
 
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s;
+
   // box-shadow: 2px 2px 2px lighten($color-light-blue, 10);
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: .8rem;
+    height: 100%;
+    background-color: rgba($color-white, .5);
+    transform: translateX(-1.2rem) skew(20deg);
+  }
+
+  &:hover {
+      transform: scale(1.06);
+
+      &::after {
+          animation: lightFromLeft .8s linear;
+      }
+  }
 
 }

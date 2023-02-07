@@ -46,40 +46,145 @@ const PostDetail = (props) => {
 
   return (
     <>
-      <h1>
-        {post.title} - {post.author?.name} (
-        {new Date(post.created).toLocaleDateString()})
-      </h1>
-      <img src={post.image_url} alt="post image" style={{ height: "300px" }} />
-      <button>{post.is_liked_by_user ? "Already liked" : "Like"}</button>
-      <p>{post.text}</p>
-      {authCtx.isLoggedIn && post.author.name === authCtx.user?.name && (
-        <button onClick={deletePostHandler}>Delete</button>
-      )}
-      {authCtx.isLoggedIn && post.author.name === authCtx.user?.name && (
-        <button onClick={editPostHandler}>Edit</button>
-      )}
-      <CommentForm
-        postId={post.id}
-        onSubmit={commentSubmitHandler}
-        error={commentFormError}
-      />
-      <ul>
-        {post.comments.map((comment) => {
-          return (
-            <li key={comment.id}>
-              <Comment
-                author={comment.author}
-                text={comment.text}
-                postId={post.id}
-                commentId={comment.id}
-              />
-            </li>
-          );
-        })}
-      </ul>
+      <div className="post-detail">
+        <div className="post-detail__image">
+          <img src={post.image_url} alt="Post" />
+        </div>
+        <div className="post-detail__info">
+          <div className="post-detail__title">
+            <h1>{post.title}</h1>
+          </div>
+          <div className="post-detail__date">
+            <p>{new Date(post.created).toDateString()}</p>
+          </div>
+        </div>
+        <div className="post-detail__text">
+          {/* <p>{post.text}</p> */}
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum
+            sint minus accusantium pariatur nobis error facilis quia, dolore
+            quisquam sunt a odio porro suscipit quidem fugiat? Non, nam veniam?
+            Explicabo! Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            Optio deserunt cupiditate nostrum, reprehenderit architecto id dolor
+            maxime voluptatum odit, quia est quod magnam nisi inventore
+            dignissimos repellendus obcaecati harum eum? Lorem ipsum dolor sit
+            amet consectetur adipisicing elit. Suscipit soluta quasi iure
+            corrupti accusamus itaque repellat unde at autem possimus quia
+            consequatur ratione molestias reprehenderit quos, officia quod
+            distinctio necessitatibus. Lorem ipsum dolor sit amet consectetur
+            adipisicing elit. Voluptatum sint minus accusantium pariatur nobis
+            error facilis quia, dolore quisquam sunt a odio porro suscipit
+            quidem fugiat? Non, nam veniam? Explicabo! Lorem ipsum dolor sit
+            amet, consectetur adipisicing elit. Optio deserunt cupiditate
+            nostrum, reprehenderit architecto id dolor maxime voluptatum odit,
+            quia est quod magnam nisi inventore dignissimos repellendus
+            obcaecati harum eum? Lorem ipsum dolor sit amet consectetur
+            adipisicing elit. Suscipit soluta quasi iure corrupti accusamus
+            itaque repellat unde at autem possimus quia consequatur ratione
+            molestias reprehenderit quos, officia quod distinctio
+            necessitatibus. Lorem ipsum dolor sit amet consectetur adipisicing
+            elit. Voluptatum sint minus accusantium pariatur nobis error facilis
+            quia, dolore quisquam sunt a odio porro suscipit quidem fugiat? Non,
+            nam veniam? Explicabo! Lorem ipsum dolor sit amet, consectetur
+            adipisicing elit. Optio deserunt cupiditate nostrum, reprehenderit
+            architecto id dolor maxime voluptatum odit, quia est quod magnam
+            nisi inventore dignissimos repellendus obcaecati harum eum? Lorem
+            ipsum dolor sit amet consectetur adipisicing elit. Suscipit soluta
+            quasi iure corrupti accusamus itaque repellat unde at autem possimus
+            quia consequatur ratione molestias reprehenderit quos, officia quod
+            distinctio necessitatibus. Lorem ipsum dolor sit amet consectetur
+            adipisicing elit. Voluptatum sint minus accusantium pariatur nobis
+            error facilis quia, dolore quisquam sunt a odio porro suscipit
+            quidem fugiat? Non, nam veniam? Explicabo! Lorem ipsum dolor sit
+            amet, consectetur adipisicing elit. Optio deserunt cupiditate
+            nostrum, reprehenderit architecto id dolor maxime voluptatum odit,
+            quia est quod magnam nisi inventore dignissimos repellendus
+            obcaecati harum eum? Lorem ipsum dolor sit amet consectetur
+            adipisicing elit. Suscipit soluta quasi iure corrupti accusamus
+            itaque repellat unde at autem possimus quia consequatur ratione
+            molestias reprehenderit quos, officia quod distinctio
+            necessitatibus. Lorem ipsum dolor sit amet consectetur adipisicing
+            elit. Voluptatum sint minus accusantium pariatur nobis error facilis
+            quia, dolore quisquam sunt a odio porro suscipit quidem fugiat? Non,
+            nam veniam? Explicabo! Lorem ipsum dolor sit amet, consectetur
+            adipisicing elit. Optio deserunt cupiditate nostrum, reprehenderit
+            architecto id dolor maxime voluptatum odit, quia est quod magnam
+            nisi inventore dignissimos repellendus obcaecati harum eum? Lorem
+            ipsum dolor sit amet consectetur adipisicing elit. Suscipit soluta
+            quasi iure corrupti accusamus itaque repellat unde at autem possimus
+            quia consequatur ratione molestias reprehenderit quos, officia quod
+            distinctio necessitatibus. Lorem ipsum dolor sit amet consectetur
+            adipisicing elit. Voluptatum sint minus accusantium pariatur nobis
+            error facilis quia, dolore quisquam sunt a odio porro suscipit
+            quidem fugiat? Non, nam veniam? Explicabo! Lorem ipsum dolor sit
+            amet, consectetur adipisicing elit. Optio deserunt cupiditate
+            nostrum, reprehenderit architecto id dolor maxime voluptatum odit,
+            quia est quod magnam nisi inventore dignissimos repellendus
+            obcaecati harum eum? Lorem ipsum dolor sit amet consectetur
+            adipisicing elit. Suscipit soluta quasi iure corrupti accusamus
+            itaque repellat unde at autem possimus quia consequatur ratione
+            molestias reprehenderit quos, officia quod distinctio
+            necessitatibus. Lorem ipsum dolor sit amet consectetur adipisicing
+            elit. Voluptatum sint minus accusantium pariatur nobis error facilis
+            quia, dolore quisquam sunt a odio porro suscipit quidem fugiat? Non,
+            nam veniam? Explicabo! Lorem ipsum dolor sit amet, consectetur
+            adipisicing elit. Optio deserunt cupiditate nostrum, reprehenderit
+            architecto id dolor maxime voluptatum odit, quia est quod magnam
+            nisi inventore dignissimos repellendus obcaecati harum eum? Lorem
+            ipsum dolor sit amet consectetur adipisicing elit. Suscipit soluta
+            quasi iure corrupti accusamus itaque repellat unde at autem possimus
+            quia consequatur ratione molestias reprehenderit quos, officia quod
+            distinctio necessitatibus. Lorem ipsum dolor sit amet consectetur
+            adipisicing elit. Voluptatum sint minus accusantium pariatur nobis
+            error facilis quia, dolore quisquam sunt a odio porro suscipit
+            quidem fugiat? Non, nam veniam? Explicabo! Lorem ipsum dolor sit
+            amet, consectetur adipisicing elit. Optio deserunt cupiditate
+            nostrum, reprehenderit architecto id dolor maxime voluptatum odit,
+            quia est quod magnam nisi inventore dignissimos repellendus
+            obcaecati harum eum? Lorem ipsum dolor sit amet consectetur
+            adipisicing elit. Suscipit soluta quasi iure corrupti accusamus
+            itaque repellat unde at autem possimus quia consequatur ratione
+            molestias reprehenderit quos, officia quod distinctio
+            necessitatibus.
+          </p>
+        </div>
+        <div className="post-detail__actions">Like Comment Save</div>
+      </div>
     </>
   );
 };
 
 export default PostDetail;
+
+// <h1>
+//   {post.title} - {post.author?.name} (
+//   {new Date(post.created).toLocaleDateString()})
+// </h1>
+// <img src={post.image_url} alt="post image" style={{ height: "300px" }} />
+// <button>{post.is_liked_by_user ? "Already liked" : "Like"}</button>
+// <p>{post.text}</p>
+// {authCtx.isLoggedIn && post.author.name === authCtx.user?.name && (
+//   <button onClick={deletePostHandler}>Delete</button>
+// )}
+// {authCtx.isLoggedIn && post.author.name === authCtx.user?.name && (
+//   <button onClick={editPostHandler}>Edit</button>
+// )}
+// <CommentForm
+//   postId={post.id}
+//   onSubmit={commentSubmitHandler}
+//   error={commentFormError}
+// />
+// <ul>
+//   {post.comments.map((comment) => {
+//     return (
+//       <li key={comment.id}>
+//         <Comment
+//           author={comment.author}
+//           text={comment.text}
+//           postId={post.id}
+//           commentId={comment.id}
+//         />
+//       </li>
+//     );
+//   })}
+// </ul>

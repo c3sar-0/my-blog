@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   return (
@@ -9,9 +9,9 @@ const Sidebar = () => {
           Create an account to create your own posts, enter discussions, save
           and like your favourite posts, and more!
         </p>
-        <NavLink to="/auth?mode=register" className="account-btn">
+        <Link to="/auth?mode=register" className="account-btn">
           Create Account
-        </NavLink>
+        </Link>
       </div>
 
       <div className="sidebar__feeds">

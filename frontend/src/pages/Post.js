@@ -7,7 +7,10 @@ const Post = () => {
 
   return (
     <>
-      <PostDetail post={data} />
+      <div className="post-page">
+        <PostDetail post={data} />
+        <div className="author">AUTHOR</div>
+      </div>
     </>
   );
 };

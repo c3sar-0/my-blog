@@ -1,0 +1,16 @@
+.post-page {
+  margin: 2rem 20vw 0 20vw;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  column-gap: 2rem;
+
+  & .author {
+    background-color: rgb(27, 27, 27);
+    border: $width-border solid $border-color;
+    background-color: $color-white;
+    
+    height: 40rem;
+    position: sticky;
+    top: calc(6vh + 3rem);
+  }
+}

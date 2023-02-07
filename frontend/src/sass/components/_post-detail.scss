@@ -1,0 +1,36 @@
+.post-detail {
+    background-color: rgb(27, 27, 27);
+    border: $width-border solid $border-color;
+    background-color: $color-white;
+    position: relative;
+
+  &__image {
+    width: 100%;
+    height: 50vh;
+
+    & img {
+      width: 100%;
+      height: 100%;
+      object-fit:cover;
+    }
+  }
+
+  &__info {
+    text-align: center;
+    padding: 0 2.5rem;
+  }
+
+  &__title {
+    text-transform: uppercase;
+  }
+
+  &__text {
+    padding: 1rem 2.5rem;
+  }
+
+  &__actions {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+  }
+}
