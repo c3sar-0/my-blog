@@ -7,7 +7,7 @@ const NewPost = () => {
 
   return (
     <>
-      <PostForm button="Create" action="/posts/new" errors={errors} />
+      {/* <PostForm button="Create" action="/posts/new" errors={errors} /> */}
     </>
   );
 };
