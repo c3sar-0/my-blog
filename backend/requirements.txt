@@ -8,3 +8,4 @@ sqlparse==0.4.3
 asgiref==3.6.0
 djangorestframework-simplejwt==5.2.2
 drf-nested-routers==0.93.4
+django-quill-editor==0.1.40
