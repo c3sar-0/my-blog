@@ -1,15 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { json, redirect, useLoaderData } from "react-router-dom";
 import PostDetail from "../components/PostDetail";
+import { useQuill } from "react-quilljs";
 
 const Post = () => {
   const data = useLoaderData();
+  console.log(data);
+  const { quill, quillRef } = useQuill({
+    readOnly: true,
+    modules: { toolbar: false },
+  });
+
+  useEffect(() => {
+    if (!quill) return;
+    quill.setContents(JSON.parse(data.text));
+  }, [quill]);
 
   return (
     <>
+      <article ref={quillRef}></article>
       <div className="post-page">
-        <PostDetail post={data} />
-        <div className="author">AUTHOR</div>
+        {/* <PostDetail post={data} />
+        <div className="author">AUTHOR</div> */}
       </div>
     </>
   );

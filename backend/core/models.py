@@ -4,6 +4,7 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin,
 )
+from django_quill.fields import QuillField
 
 
 class UserManager(BaseUserManager):
@@ -50,7 +51,8 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=200)
-    text = models.TextField(max_length=5000)
+    # text = models.TextField(max_length=5000)
+    text = QuillField()
 
     image_url = models.ImageField(upload_to="posts", null=True, blank=True)
 
