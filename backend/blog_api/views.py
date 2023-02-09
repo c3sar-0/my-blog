@@ -5,6 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser, FormParser
 
 from django.shortcuts import get_object_or_404
+from django.core.files.storage import FileSystemStorage
 
 from .serializers import PostSerializer, CommentSerializer, LikeSerializer
 from core.models import Post, Comment
@@ -73,6 +74,24 @@ class PostsViewSet(ModelViewSet):
                     {"detail": "The post has not been liked."},
                     status.HTTP_401_UNAUTHORIZED,
                 )
+
+    @action(
+        methods=["POST", "DELETE"],
+        detail=False,
+        authentication_classes=[JWTAuthentication],
+        permission_classes=[permissions.AllowAny],
+    )
+    def file_upload(self, request):
+        print("#################: ", request.body)
+        f = request.FILES["image"]
+        fs = FileSystemStorage()
+        filename = str(f).split(".")[0]
+        file = fs.save(filename, f)
+        file_url = fs.url(file)
+        return Response(
+            {"success": "1", "file": {"url": f"http://localhost:8000{file_url}"}},
+            status.HTTP_201_CREATED,
+        )
 
 
 class CommentsViewSet(ModelViewSet):

@@ -63,7 +63,7 @@ class PostSerializer(serializers.ModelSerializer):
         """Number of likes of the post."""
         return str(obj.likes.count())
 
-    def to_representation(self, instance):
-        rep = super().to_representation(instance)
-        rep["text"] = instance.text.delta
-        return rep
+    # def to_representation(self, instance):
+    #     rep = super().to_representation(instance)
+    #     rep["text"] = instance.text.delta
+    #     return rep

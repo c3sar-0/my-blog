@@ -1,15 +1,49 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
-// import { Paragraph } from "@editorjs/paragraph";
+import ImageTool from "@editorjs/image";
+import { useNavigate } from "react-router-dom";
 
 const Editor = (props) => {
+  const navigate = useNavigate();
+
   const configuration = {
     holder: "editorjs",
+    autofocus: true,
     tools: {
       header: {
         class: Header,
         inlineToolbar: true,
+      },
+      image: {
+        class: ImageTool,
+        config: {
+          endpoints: {
+            byFile: "localhost:8000/api/blog/posts/file_upload/",
+          },
+
+          uploader: {
+            async uploadByFile(file) {
+              console.log("UPLOADING");
+              try {
+                const formData = new FormData();
+                formData.append("image", file);
+                const response = await fetch(
+                  process.env.REACT_APP_API_URL + `blog/posts/file_upload/`,
+                  {
+                    method: "POST",
+                    body: formData,
+                  }
+                );
+                const resData = await response.json();
+                console.log("RESDATA: ", resData);
+                return resData;
+              } catch (err) {
+                console.log("ERROR: ", err.message);
+              }
+            },
+          },
+        },
       },
     },
     data: {},
@@ -21,22 +55,39 @@ const Editor = (props) => {
     },
   };
 
-  const [editor, seteditor] = useState({});
+  // const [editor, seteditor] = useState({});
+  let editor = { isReady: false };
 
   useEffect(() => {
-    const editor = new EditorJS(configuration);
-    seteditor(editor);
+    if (!editor.isReady) {
+      editor = new EditorJS(configuration);
+      // seteditor(editor);
+    }
   }, []);
 
-  const onSave = () => {
-    editor
-      .save()
-      .then((outputData) => {
-        console.log("Article data: ", outputData);
-      })
-      .catch((error) => {
-        console.log("Saving failed: ", error);
-      });
+  const onSave = async () => {
+    const outputData = await editor.save();
+
+    const formData = new FormData();
+    formData.append("text", JSON.stringify(outputData));
+
+    const response = await fetch(
+      process.env.REACT_APP_API_URL + "blog/posts/",
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + localStorage.access,
+        },
+        body: formData,
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    console.log("success");
+    navigate("/");
   };
 
   return (
@@ -46,17 +97,6 @@ const Editor = (props) => {
       <div id="editorjs" />
     </div>
   );
-
-  // return (
-  //   <>
-  //     <div>
-  //       <h3>My Editor</h3>
-  //       <div className="container">
-  //         <div id="editor"></div>
-  //       </div>
-  //     </div>
-  //   </>
-  // );
 };
 
 export default Editor;

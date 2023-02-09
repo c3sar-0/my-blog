@@ -4,7 +4,6 @@ import PostDetail from "../components/PostDetail";
 
 const Post = () => {
   const data = useLoaderData();
-  console.log(data);
 
   return (
     <>

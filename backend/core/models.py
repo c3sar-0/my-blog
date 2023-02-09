@@ -4,7 +4,7 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin,
 )
-from django_quill.fields import QuillField
+from django_editorjs import EditorJsField
 
 
 class UserManager(BaseUserManager):
@@ -50,9 +50,23 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    title = models.CharField(max_length=200)
-    # text = models.TextField(max_length=5000)
-    text = QuillField()
+    title = models.CharField(max_length=200, default="default title")
+    text = EditorJsField(
+        editorjs_config={
+            "tools": {
+                "Image": {
+                    "config": {
+                        "endpoints": {
+                            "byFile": "http://localhost:8000/api/blog/posts/file_upload/"
+                        },
+                        "additionalRequestHeaders": [
+                            {"Content-Type": "multipart/form-data"}
+                        ],
+                    }
+                }
+            }
+        }
+    )
 
     image_url = models.ImageField(upload_to="posts", null=True, blank=True)
 

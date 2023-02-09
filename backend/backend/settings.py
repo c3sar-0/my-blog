@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "user_api",
     "core",
-    "django_quill",
+    "django_editorjs",
 ]
 
 MIDDLEWARE = [
@@ -168,5 +168,7 @@ SIMPLE_JWT = {
 
 AUTH_USER_MODEL = "core.User"
 
-MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "mediafiles")
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 MEDIA_URL = "/api/media/"

@@ -4,12 +4,18 @@ import { useNavigate, useSubmit } from "react-router-dom";
 import CommentForm from "./CommentForm";
 import Comment from "./Comment";
 
+import Output from "editorjs-react-renderer";
+import { ImageOutput } from "editorjs-react-renderer";
+
 const PostDetail = (props) => {
   const authCtx = useContext(AuthContext);
   const post = props.post;
   const submit = useSubmit();
   const navigate = useNavigate();
   const [commentFormError, setCommentFormError] = useState(null);
+
+  const data = JSON.parse(post.text);
+  const image = data.blocks.find((block) => block.type === "Image");
 
   const deletePostHandler = () => {
     submit(null, { method: "DELETE" });
@@ -42,11 +48,26 @@ const PostDetail = (props) => {
       setCommentFormError("Something went wrong.");
     }
   };
-  console.log(post.image_url);
 
   return (
-    <>
-      <div className="post-detail">
+    <div className="post-detail">
+      {post.image_url && (
+        <div className="post-detail__image">
+          <img src={post.image_url} alt="Post" />
+        </div>
+      )}
+      <div className="post-detail__info">
+        <h1>{post.title}</h1>
+      </div>
+      <div className="post-detail__text">
+        <Output data={data} />
+      </div>
+
+      {/* <div className="post-detail__image">
+        <ImageOutput data={image.data} style={{ "margin": "40rem" }} />
+      </div> */}
+
+      {/* <div className="post-detail">
         <div className="post-detail__image">
           <img src={post.image_url} alt="Post" />
         </div>
@@ -59,8 +80,8 @@ const PostDetail = (props) => {
           </div>
         </div>
         <div className="post-detail__text">
-          {/* <p>{post.text}</p> */}
-          <p>
+          <p>{post.text}</p>
+          {/* <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum
             sint minus accusantium pariatur nobis error facilis quia, dolore
             quisquam sunt a odio porro suscipit quidem fugiat? Non, nam veniam?
@@ -146,11 +167,12 @@ const PostDetail = (props) => {
             itaque repellat unde at autem possimus quia consequatur ratione
             molestias reprehenderit quos, officia quod distinctio
             necessitatibus.
-          </p>
+          </p> */}
+      {/*
         </div>
         <div className="post-detail__actions">Like Comment Save</div>
-      </div>
-    </>
+      </div> */}
+    </div>
   );
 };
 
