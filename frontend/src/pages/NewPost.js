@@ -1,13 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { json, useActionData, redirect } from "react-router-dom";
 import PostForm from "../components/PostForm";
+import Editor from "../components/Editor";
 
 const NewPost = () => {
   const errors = useActionData();
+  const [data, setData] = useState();
 
   return (
     <>
-      <PostForm button="Create" action="/posts/new" errors={errors} />
+      {/* <PostForm button="Create" action="/posts/new" errors={errors} /> */}
+      <Editor />
     </>
   );
 };
