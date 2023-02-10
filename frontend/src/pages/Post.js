@@ -1,15 +1,16 @@
 import React, { useEffect } from "react";
 import { json, redirect, useLoaderData } from "react-router-dom";
+import AuthorPreview from "../components/AuthorPreview";
 import PostDetail from "../components/PostDetail";
 
 const Post = () => {
   const data = useLoaderData();
-
+  console.log(data.author);
   return (
     <>
       <div className="post-page">
         <PostDetail post={data} />
-        <div className="author">AUTHOR</div>
+        <AuthorPreview author={data.author} />
       </div>
     </>
   );

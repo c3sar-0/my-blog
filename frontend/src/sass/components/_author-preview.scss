@@ -1,0 +1,23 @@
+.author-preview {
+  display: flex;
+  &__img {
+    width: 3.7rem;
+    height: 3.7rem;
+    // overflow: hidden;
+    // display: inline-block;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      clip-path: circle(1.7rem);
+    }
+  }
+
+  p {
+    margin-left: 1rem;
+    // display: inline-block;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+}
