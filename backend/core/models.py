@@ -55,7 +55,7 @@ class Post(models.Model):
     text = EditorJsField(
         editorjs_config={
             "tools": {
-                "Image": {
+                "image": {
                     "config": {
                         "endpoints": {
                             "byFile": "http://localhost:8000/api/blog/posts/file_upload/"
@@ -64,7 +64,7 @@ class Post(models.Model):
                             {"Content-Type": "multipart/form-data"}
                         ],
                     }
-                }
+                },
             }
         }
     )

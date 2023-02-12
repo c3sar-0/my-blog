@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
+import AuthContext from "../context/AuthContext";
 import { NavLink, Link, useSearchParams } from "react-router-dom";
 import byteBustersLogo from "../assets/ByteBustersLogoTransparent.png";
 import searchIcon from "../assets/basic_magnifier.svg";
+import UserMenu from "./UserMenu";
 
 const RootHeader = (props) => {
-  const me = props.me;
+  const authCtx = useContext(AuthContext);
+  const isLoggedIn = authCtx.isLoggedIn;
+  const me = authCtx.user;
   const logoutHandler = props.logoutHandler;
-  const isLoggedIn = props.isLoggedIn;
   const [searchParams, setSearchParams] = useSearchParams();
 
   return (
@@ -23,24 +26,27 @@ const RootHeader = (props) => {
           placeholder="Search..."
         />
       </form>
-      <nav className="root-header__nav">
-        <Link
-          className={`account-btn ${
-            searchParams.get("mode") === "login" ? "active" : ""
-          }`}
-          to="/auth?mode=login"
-        >
-          Log In
-        </Link>
-        <Link
-          className={`account-btn ${
-            searchParams.get("mode") === "register" ? "active" : ""
-          }`}
-          to="/auth?mode=register"
-        >
-          Create Account
-        </Link>
-      </nav>
+      {!me && (
+        <nav className="root-header__nav">
+          <Link
+            className={`account-btn ${
+              searchParams.get("mode") === "login" ? "active" : ""
+            }`}
+            to="/auth?mode=login"
+          >
+            Log In
+          </Link>
+          <Link
+            className={`account-btn ${
+              searchParams.get("mode") === "register" ? "active" : ""
+            }`}
+            to="/auth?mode=register"
+          >
+            Create Account
+          </Link>
+        </nav>
+      )}
+      {me && <UserMenu user={me} />}
     </header>
   );
 };

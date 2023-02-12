@@ -12,11 +12,13 @@ from core.models import Post, Comment
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+import json
+
 
 class PostsViewSet(ModelViewSet):
     """Viewset for posts."""
 
-    queryset = Post.objects.all()
+    queryset = Post.objects.all().order_by("-updated")
     serializer_class = PostSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -31,13 +33,56 @@ class PostsViewSet(ModelViewSet):
         return super().get_queryset()
 
     def get_permissions(self):
-        "Only authorized users can post, delete and update."
+        """Only authorized users can post, delete and update."""
         if self.action == "retrieve" or self.action == "list":
             return [permissions.AllowAny()]
         return super().get_permissions()
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    def get_image_urls(self, post_content):
+        """Get all the image urls from the post content."""
+        r = json.loads(post_content)
+        blocks = r["blocks"]
+        images = filter(lambda block: block["type"] == "image", blocks)
+        image_urls = map(lambda image: image["data"]["file"]["url"], images)
+        return list(image_urls)
+
+    def update(self, request, *args, **kwargs):
+        """
+        When updating a post, the images sent by editorjs in the updated post have to be
+        compared with those of the old one, and if one of the old images is not anymore in the
+        updated post, it has to be deleted from te filesystem storage.
+        """
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        old_image_urls = self.get_image_urls(instance.text)
+        new_image_urls = self.get_image_urls(serializer.validated_data["text"])
+
+        fs = FileSystemStorage()
+        for image in old_image_urls:
+            if image not in new_image_urls:
+                image_name = image.split("/")[-1]
+                fs.delete(image_name)
+
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        """When deleting a post, the images that it's content contained also have to be deleted."""
+        instance = self.get_object()
+
+        image_urls = self.get_image_urls(instance.text)
+        fs = FileSystemStorage()
+        for image in image_urls:
+            image_name = image.split("/")[-1]
+            fs.delete(image_name)
+
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
         methods=["POST", "DELETE"],
@@ -76,7 +121,7 @@ class PostsViewSet(ModelViewSet):
                 )
 
     @action(
-        methods=["POST", "DELETE"],
+        methods=["POST"],
         detail=False,
         authentication_classes=[JWTAuthentication],
         permission_classes=[permissions.AllowAny],

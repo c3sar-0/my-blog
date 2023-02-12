@@ -14,8 +14,9 @@ const PostDetail = (props) => {
   const navigate = useNavigate();
   const [commentFormError, setCommentFormError] = useState(null);
 
+  console.log(post.text);
+
   const data = JSON.parse(post.text);
-  const image = data.blocks.find((block) => block.type === "Image");
 
   const deletePostHandler = () => {
     submit(null, { method: "DELETE" });
@@ -62,6 +63,7 @@ const PostDetail = (props) => {
       <div className="post-detail__text">
         <Output data={data} />
       </div>
+      <button onClick={deletePostHandler}>Delete</button>
 
       {/* <div className="post-detail__image">
         <ImageOutput data={image.data} style={{ "margin": "40rem" }} />

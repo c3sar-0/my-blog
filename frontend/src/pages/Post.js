@@ -5,7 +5,6 @@ import PostDetail from "../components/PostDetail";
 
 const Post = () => {
   const data = useLoaderData();
-  console.log(data.author);
   return (
     <>
       <div className="post-page">
@@ -53,7 +52,7 @@ export async function action({ request, params }) {
     throw json({ message: response.statusText }, { status: response.status });
   }
 
-  return redirect("/posts");
+  return redirect("/");
 }
 
 // COMMENT

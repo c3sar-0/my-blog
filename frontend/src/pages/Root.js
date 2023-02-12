@@ -7,20 +7,13 @@ import RootHeader from "../components/RootHeader";
 
 const RootLayout = () => {
   const authCtx = useContext(AuthContext);
-  const isLoggedIn = authCtx.isLoggedIn;
-  const me = authCtx.user;
-
   const logoutHandler = () => {
     authCtx.logout();
   };
 
   return (
     <>
-      <RootHeader
-        isLoggedIn={isLoggedIn}
-        me={me}
-        logoutHandler={logoutHandler}
-      />
+      <RootHeader logoutHandler={logoutHandler} />
       <Outlet />
     </>
   );

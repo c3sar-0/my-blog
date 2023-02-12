@@ -1,0 +1,53 @@
+.user-menu {
+  width: 3rem;
+  height: 3rem;
+  position: relative;
+
+  &__img-container {
+    width: 100%;
+    height: 100%;
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: circle(1.5rem);
+    cursor: pointer;
+  }
+
+  &__menu {
+    position: absolute;
+    top: 120%;
+    left: -150%;
+    display: inline-block;
+    background-color: $color-white;
+    padding: .5rem 1rem;
+    width: 6rem;
+    visibility: hidden;
+
+    &.hidden {
+      visibility: visible;
+    }
+  }
+
+  &__link {
+    text-decoration: none;
+    display: block;
+    color: inherit;
+    font-family: inherit;
+
+    &:hover {
+      color: $color-dark-gray;
+    }
+
+    &:not(:last-child) {
+      border-bottom: solid $color-medium-gray;
+      padding-bottom: .5rem;
+    }
+
+    &:not(:first-child) {
+      padding-top: .5rem;
+    }
+  }
+}

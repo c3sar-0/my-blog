@@ -8,6 +8,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import PostForm from "../components/PostForm";
+import Editor from "../components/Editor";
 
 const EditPost = () => {
   const authCtx = useContext(AuthContext);
@@ -16,20 +17,25 @@ const EditPost = () => {
   const errors = useActionData();
 
   useEffect(() => {
-    if (!authCtx.isLoggedIn || post.author.name !== authCtx.user.name) {
+    if (!localStorage.access) {
       navigate("/auth?mode=login");
     }
-  }, []);
+
+    if (authCtx.user && post.author.name !== authCtx.user.name) {
+      navigate("/");
+    }
+  }, [authCtx.user]);
 
   return (
     <>
-      <PostForm
+      <Editor method="PUT" data={post} />
+      {/* <PostForm
         button="Save"
         action={`/posts/${post.id}/edit`}
         title={post.title}
         text={post.text}
         errors={errors}
-      />
+      /> */}
     </>
   );
 };

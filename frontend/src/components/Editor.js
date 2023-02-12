@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import ImageTool from "@editorjs/image";
 import { useNavigate } from "react-router-dom";
 
-const Editor = (props) => {
+const Editor = ({ method, data }) => {
   const navigate = useNavigate();
 
   const configuration = {
@@ -46,7 +46,7 @@ const Editor = (props) => {
         },
       },
     },
-    data: {},
+    ...(data && { data: JSON.parse(data.text) }),
     onReady: () => {
       console.log("Editor.js READY");
     },
@@ -55,32 +55,34 @@ const Editor = (props) => {
     },
   };
 
-  // const [editor, seteditor] = useState({});
-  let editor = { isReady: false };
+  // const [editor, setEditor] = useState({ isReady: false });
+  // let editor = { isReady: false };
+  const editor = useRef();
 
   useEffect(() => {
-    if (!editor.isReady) {
-      editor = new EditorJS(configuration);
-      // seteditor(editor);
+    // if (!editor.isReady) {
+    if (!editor.current) {
+      // editor = new EditorJS(configuration);
+      // setEditor(new EditorJS(configuration));
+      editor.current = new EditorJS(configuration);
     }
   }, []);
 
   const onSave = async () => {
-    const outputData = await editor.save();
+    const outputData = await editor.current.save();
 
     const formData = new FormData();
     formData.append("text", JSON.stringify(outputData));
 
-    const response = await fetch(
-      process.env.REACT_APP_API_URL + "blog/posts/",
-      {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer " + localStorage.access,
-        },
-        body: formData,
-      }
-    );
+    let url = process.env.REACT_APP_API_URL + "blog/posts/";
+    url = method == "PUT" ? url + data.id + "/" : url;
+    const response = await fetch(url, {
+      method: method,
+      headers: {
+        Authorization: "Bearer " + localStorage.access,
+      },
+      body: formData,
+    });
 
     if (!response.ok) {
       throw new Error(response.statusText);
