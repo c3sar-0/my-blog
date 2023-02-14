@@ -6,11 +6,10 @@ import UserMenu from "./UserMenu";
 
 import SearchIcon from "@mui/icons-material/Search";
 
-const RootHeader = (props) => {
+const RootHeader = () => {
   const authCtx = useContext(AuthContext);
   const isLoggedIn = authCtx.isLoggedIn;
   const me = authCtx.user;
-  const logoutHandler = props.logoutHandler;
   const [searchParams, setSearchParams] = useSearchParams();
 
   return (

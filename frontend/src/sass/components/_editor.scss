@@ -1,7 +1,62 @@
 .editor {
   background-color: $color-white;
+  text-align: center;
+  padding: 1rem 2rem;
+
+  &__title {
+    font-size: 2rem;
+  }
+
+  &__top {
+    color: $color-dark-gray;
+    text-align: left;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__title-input {
+    font-size: 2.5rem;
+    border: none;
+    outline: none;
+    font-weight: bold;
+
+    &::placeholder {
+      color: inherit;
+    }
+  }
+
+  &__img-input {
+    visibility: hidden;
+  }
+
+  &__img-label {
+    align-self: flex-start;
+    border: solid 3px $border-color;
+    border-radius: 3px;
+    padding: .3rem .5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    color: inherit;
+    margin-bottom: 1rem;
+  }
 
   &__editor {
-    // background-color: lightgreen;
+    border: solid 2px $border-color;
+    border-radius: 3px;
+    text-align: left;
   }
 }
+
+// .ce-block__content {
+  
+// }
+
+// .ce-toolbar__actions {
+//   &--opened {
+//     width: 100%;
+//     top: 0;
+//     left: 0;
+//     justify-content: space-between;
+//   }
+// }

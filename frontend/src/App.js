@@ -55,14 +55,12 @@ const router = createBrowserRouter([
                 element: <NewPostPage />,
                 action: newPostAction,
               },
+              {
+                path: "me",
+                element: <MePage />,
+              },
             ],
           },
-          //
-          {
-            path: "me",
-            element: <MePage />,
-          },
-          //
           {
             path: "auth",
             element: <AuthPage />,

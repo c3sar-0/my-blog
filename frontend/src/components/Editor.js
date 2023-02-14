@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import EditorJS from "@editorjs/editorjs";
+import Paragraph from "@editorjs/paragraph";
 import Header from "@editorjs/header";
 import ImageTool from "@editorjs/image";
 import { useNavigate } from "react-router-dom";
@@ -77,20 +78,34 @@ const Editor = ({ onSave, data }) => {
 
   return (
     <div className="editor">
-      <h1 className="editor__title">My Editor</h1>
+      <h1 className="editor__title">New Post</h1>
+      <button
+        className="editor__save-btn account-btn"
+        onClick={saveHandler}
+        type="button"
+      >
+        Save
+      </button>
       <div className="editor__top">
         <input
+          className="editor__img-input"
           type="file"
           id="cover_img"
           required
           ref={imageRef}
           onChange={fileChangeHandler}
         />
-        <input type="text" id="title" placeholder="Post title" ref={titleRef} />
+        <label className="editor__img-label" htmlFor="cover_img">
+          Add cover image
+        </label>
+        <input
+          className="editor__title-input"
+          type="text"
+          id="title"
+          placeholder="Post title"
+          ref={titleRef}
+        />
       </div>
-      <button className="editor__save-btn" onClick={saveHandler} type="button">
-        Save
-      </button>
       <div id="editorjs" className="editor__editor" />
     </div>
   );

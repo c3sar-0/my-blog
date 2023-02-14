@@ -1,10 +1,12 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
+import { Link } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 
 const UserMenu = ({ user }) => {
   const menuRef = useRef();
+  const authCtx = useContext(AuthContext);
 
   const toggleMenuHandler = () => {
-    // console.log(menuRef.current.classList.toggle("hidden"));
     menuRef.current.classList.toggle("hidden");
   };
 
@@ -24,18 +26,18 @@ const UserMenu = ({ user }) => {
           />
         </div>
         <div className="user-menu__menu" ref={menuRef}>
-          <a href="#" className="user-menu__link">
+          <Link to="/me" className="user-menu__link">
             {user.name}
-          </a>
-          <a href="#" className="user-menu__link">
+          </Link>
+          <Link to="/posts/new" className="user-menu__link">
             Create post
-          </a>
-          <a href="#" className="user-menu__link">
+          </Link>
+          <Link to="#" className="user-menu__link">
             Read later
-          </a>
-          <a href="#" className="user-menu__link">
+          </Link>
+          <button className="user-menu__link" onClick={authCtx.logout}>
             Sign out
-          </a>
+          </button>
         </div>
       </div>
     </>

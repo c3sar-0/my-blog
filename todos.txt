@@ -5,3 +5,4 @@
   User page
   Tags
   Make image optional, if not image, the preview is just the rest (it's smaller)
+  CHECK TIPTAP TEXT EDITOR

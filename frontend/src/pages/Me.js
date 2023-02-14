@@ -5,6 +5,8 @@ const Me = () => {
   const authCtx = useContext(AuthContext);
   const me = authCtx.user;
 
+  if (!me) return <></>;
+
   return (
     <>
       <h2>{me.name}</h2>

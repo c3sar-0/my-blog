@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { json, useActionData, redirect, useSubmit } from "react-router-dom";
-import PostForm from "../components/PostForm";
 import Editor from "../components/Editor";
 
 const NewPost = () => {

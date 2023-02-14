@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
     setIsLoggedIn(false);
-    navigate("/");
+    return navigate("/");
   };
 
   const authenticate = async (data) => {
