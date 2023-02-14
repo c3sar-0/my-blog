@@ -57,7 +57,7 @@ const AuthForm = (props) => {
             <input
               id="username"
               type="text"
-              ref={emailRef}
+              ref={nameRef}
               placeholder="Username"
               className="form__input"
             />

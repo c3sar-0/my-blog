@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { json, useActionData, redirect, useSubmit } from "react-router-dom";
 import Editor from "../components/Editor";
 
+import Tiptap from "../components/TipTap/TipTap";
+
 const NewPost = () => {
   const errors = useActionData();
   const [data, setData] = useState();
@@ -22,7 +24,8 @@ const NewPost = () => {
 
   return (
     <div className="new-post">
-      <Editor onSave={saveHandler} />
+      {/* <Editor onSave={saveHandler} /> */}
+      <Tiptap />
     </div>
   );
 };

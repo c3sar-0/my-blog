@@ -1,5 +1,8 @@
-import { Node, Plugin } from "tiptap";
-import { nodeInputRule } from "tiptap-commands";
+// import { Node, Plugin } from "tiptap";
+// import { nodeInputRule } from "tiptap-commands";
+import { Node } from "@tiptap/pm/model";
+import { Plugin } from "@tiptap/pm/state";
+import { nodeInputRule } from "@tiptap/react";
 
 /**
  * Matches following attributes in Markdown-typed image: [, alt, src, title]

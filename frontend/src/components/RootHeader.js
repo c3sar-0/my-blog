@@ -48,9 +48,9 @@ const RootHeader = () => {
       )}
       {me && (
         <div className="root-header__user">
-          <a href="/posts/new" className="account-btn">
+          <Link to="/posts/new" className="account-btn">
             New Post
-          </a>
+          </Link>
           <UserMenu user={me} />
         </div>
       )}
