@@ -1,17 +1,30 @@
 import React, { useState } from "react";
-import { json, useActionData, redirect } from "react-router-dom";
+import { json, useActionData, redirect, useSubmit } from "react-router-dom";
 import PostForm from "../components/PostForm";
 import Editor from "../components/Editor";
 
 const NewPost = () => {
   const errors = useActionData();
   const [data, setData] = useState();
+  const submit = useSubmit();
+
+  const saveHandler = async ({ image_url, text, title }) => {
+    const formData = new FormData();
+    formData.append("image_url", image_url);
+    formData.append("title", title);
+    formData.append("text", text);
+
+    submit(formData, {
+      action: `/posts/new/`,
+      method: "POST",
+      encType: "multipart/form-data",
+    });
+  };
 
   return (
-    <>
-      {/* <PostForm button="Create" action="/posts/new" errors={errors} /> */}
-      <Editor method="POST" />
-    </>
+    <div className="new-post">
+      <Editor onSave={saveHandler} />
+    </div>
   );
 };
 
@@ -21,18 +34,12 @@ export async function action({ request, params }) {
   // Action for creating new post.
   const formData = await request.formData();
 
-  const body = {
-    title: formData.get("title"),
-    text: formData.get("text"),
-  };
-
   const response = await fetch(process.env.REACT_APP_API_URL + "blog/posts/", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Authorization: "Bearer " + String(localStorage.access),
     },
-    body: JSON.stringify(body),
+    body: formData,
   });
 
   if (!response.ok && response.status === 400) {

@@ -6,8 +6,8 @@ import {
   useActionData,
   useLoaderData,
   useNavigate,
+  useSubmit,
 } from "react-router-dom";
-import PostForm from "../components/PostForm";
 import Editor from "../components/Editor";
 
 const EditPost = () => {
@@ -15,6 +15,7 @@ const EditPost = () => {
   const navigate = useNavigate();
   const post = useLoaderData();
   const errors = useActionData();
+  const submit = useSubmit();
 
   useEffect(() => {
     if (!localStorage.access) {
@@ -26,16 +27,22 @@ const EditPost = () => {
     }
   }, [authCtx.user]);
 
+  const saveHandler = async ({ image_url, text, title }) => {
+    const formData = new FormData();
+    formData.append("image_url", image_url);
+    formData.append("title", title);
+    formData.append("text", text);
+
+    submit(formData, {
+      action: `/posts/${post.id}/edit/`,
+      method: "PUT",
+      encType: "multipart/form-data",
+    });
+  };
+
   return (
     <>
-      <Editor method="PUT" data={post} />
-      {/* <PostForm
-        button="Save"
-        action={`/posts/${post.id}/edit`}
-        title={post.title}
-        text={post.text}
-        errors={errors}
-      /> */}
+      <Editor onSave={saveHandler} data={post} />
     </>
   );
 };
@@ -44,22 +51,18 @@ export default EditPost;
 
 export async function action({ request, params }) {
   // Action for editing post.
+
   const postId = params.id;
   const formData = await request.formData();
-  const body = {
-    title: formData.get("title"),
-    text: formData.get("text"),
-  };
 
   const response = await fetch(
     `${process.env.REACT_APP_API_URL}blog/posts/${postId}/`,
     {
       method: "PUT",
-      body: JSON.stringify(body),
       headers: {
-        "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.access,
       },
+      body: formData,
     }
   );
 
@@ -71,5 +74,6 @@ export async function action({ request, params }) {
     throw json({ message: response.statusText }, { status: response.status });
   }
 
-  return redirect("/posts/" + postId);
+  return redirect("/");
+  // return redirect("/posts/" + postId);
 }

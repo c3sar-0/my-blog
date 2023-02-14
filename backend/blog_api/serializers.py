@@ -48,6 +48,7 @@ class PostSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(many=True, required=False)
     likes = serializers.SerializerMethodField()
     is_liked_by_user = serializers.SerializerMethodField()
+    image_url = serializers.ImageField()
 
     class Meta:
         model = Post

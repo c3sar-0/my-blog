@@ -15,7 +15,6 @@ const PostDetail = (props) => {
   const [commentFormError, setCommentFormError] = useState(null);
 
   console.log(post.text);
-
   const data = JSON.parse(post.text);
 
   const deletePostHandler = () => {
@@ -64,116 +63,6 @@ const PostDetail = (props) => {
         <Output data={data} />
       </div>
       <button onClick={deletePostHandler}>Delete</button>
-
-      {/* <div className="post-detail__image">
-        <ImageOutput data={image.data} style={{ "margin": "40rem" }} />
-      </div> */}
-
-      {/* <div className="post-detail">
-        <div className="post-detail__image">
-          <img src={post.image_url} alt="Post" />
-        </div>
-        <div className="post-detail__info">
-          <div className="post-detail__title">
-            <h1>{post.title}</h1>
-          </div>
-          <div className="post-detail__date">
-            <p>{new Date(post.created).toDateString()}</p>
-          </div>
-        </div>
-        <div className="post-detail__text">
-          <p>{post.text}</p>
-          {/* <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum
-            sint minus accusantium pariatur nobis error facilis quia, dolore
-            quisquam sunt a odio porro suscipit quidem fugiat? Non, nam veniam?
-            Explicabo! Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            Optio deserunt cupiditate nostrum, reprehenderit architecto id dolor
-            maxime voluptatum odit, quia est quod magnam nisi inventore
-            dignissimos repellendus obcaecati harum eum? Lorem ipsum dolor sit
-            amet consectetur adipisicing elit. Suscipit soluta quasi iure
-            corrupti accusamus itaque repellat unde at autem possimus quia
-            consequatur ratione molestias reprehenderit quos, officia quod
-            distinctio necessitatibus. Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Voluptatum sint minus accusantium pariatur nobis
-            error facilis quia, dolore quisquam sunt a odio porro suscipit
-            quidem fugiat? Non, nam veniam? Explicabo! Lorem ipsum dolor sit
-            amet, consectetur adipisicing elit. Optio deserunt cupiditate
-            nostrum, reprehenderit architecto id dolor maxime voluptatum odit,
-            quia est quod magnam nisi inventore dignissimos repellendus
-            obcaecati harum eum? Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Suscipit soluta quasi iure corrupti accusamus
-            itaque repellat unde at autem possimus quia consequatur ratione
-            molestias reprehenderit quos, officia quod distinctio
-            necessitatibus. Lorem ipsum dolor sit amet consectetur adipisicing
-            elit. Voluptatum sint minus accusantium pariatur nobis error facilis
-            quia, dolore quisquam sunt a odio porro suscipit quidem fugiat? Non,
-            nam veniam? Explicabo! Lorem ipsum dolor sit amet, consectetur
-            adipisicing elit. Optio deserunt cupiditate nostrum, reprehenderit
-            architecto id dolor maxime voluptatum odit, quia est quod magnam
-            nisi inventore dignissimos repellendus obcaecati harum eum? Lorem
-            ipsum dolor sit amet consectetur adipisicing elit. Suscipit soluta
-            quasi iure corrupti accusamus itaque repellat unde at autem possimus
-            quia consequatur ratione molestias reprehenderit quos, officia quod
-            distinctio necessitatibus. Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Voluptatum sint minus accusantium pariatur nobis
-            error facilis quia, dolore quisquam sunt a odio porro suscipit
-            quidem fugiat? Non, nam veniam? Explicabo! Lorem ipsum dolor sit
-            amet, consectetur adipisicing elit. Optio deserunt cupiditate
-            nostrum, reprehenderit architecto id dolor maxime voluptatum odit,
-            quia est quod magnam nisi inventore dignissimos repellendus
-            obcaecati harum eum? Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Suscipit soluta quasi iure corrupti accusamus
-            itaque repellat unde at autem possimus quia consequatur ratione
-            molestias reprehenderit quos, officia quod distinctio
-            necessitatibus. Lorem ipsum dolor sit amet consectetur adipisicing
-            elit. Voluptatum sint minus accusantium pariatur nobis error facilis
-            quia, dolore quisquam sunt a odio porro suscipit quidem fugiat? Non,
-            nam veniam? Explicabo! Lorem ipsum dolor sit amet, consectetur
-            adipisicing elit. Optio deserunt cupiditate nostrum, reprehenderit
-            architecto id dolor maxime voluptatum odit, quia est quod magnam
-            nisi inventore dignissimos repellendus obcaecati harum eum? Lorem
-            ipsum dolor sit amet consectetur adipisicing elit. Suscipit soluta
-            quasi iure corrupti accusamus itaque repellat unde at autem possimus
-            quia consequatur ratione molestias reprehenderit quos, officia quod
-            distinctio necessitatibus. Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Voluptatum sint minus accusantium pariatur nobis
-            error facilis quia, dolore quisquam sunt a odio porro suscipit
-            quidem fugiat? Non, nam veniam? Explicabo! Lorem ipsum dolor sit
-            amet, consectetur adipisicing elit. Optio deserunt cupiditate
-            nostrum, reprehenderit architecto id dolor maxime voluptatum odit,
-            quia est quod magnam nisi inventore dignissimos repellendus
-            obcaecati harum eum? Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Suscipit soluta quasi iure corrupti accusamus
-            itaque repellat unde at autem possimus quia consequatur ratione
-            molestias reprehenderit quos, officia quod distinctio
-            necessitatibus. Lorem ipsum dolor sit amet consectetur adipisicing
-            elit. Voluptatum sint minus accusantium pariatur nobis error facilis
-            quia, dolore quisquam sunt a odio porro suscipit quidem fugiat? Non,
-            nam veniam? Explicabo! Lorem ipsum dolor sit amet, consectetur
-            adipisicing elit. Optio deserunt cupiditate nostrum, reprehenderit
-            architecto id dolor maxime voluptatum odit, quia est quod magnam
-            nisi inventore dignissimos repellendus obcaecati harum eum? Lorem
-            ipsum dolor sit amet consectetur adipisicing elit. Suscipit soluta
-            quasi iure corrupti accusamus itaque repellat unde at autem possimus
-            quia consequatur ratione molestias reprehenderit quos, officia quod
-            distinctio necessitatibus. Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Voluptatum sint minus accusantium pariatur nobis
-            error facilis quia, dolore quisquam sunt a odio porro suscipit
-            quidem fugiat? Non, nam veniam? Explicabo! Lorem ipsum dolor sit
-            amet, consectetur adipisicing elit. Optio deserunt cupiditate
-            nostrum, reprehenderit architecto id dolor maxime voluptatum odit,
-            quia est quod magnam nisi inventore dignissimos repellendus
-            obcaecati harum eum? Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Suscipit soluta quasi iure corrupti accusamus
-            itaque repellat unde at autem possimus quia consequatur ratione
-            molestias reprehenderit quos, officia quod distinctio
-            necessitatibus.
-          </p> */}
-      {/*
-        </div>
-        <div className="post-detail__actions">Like Comment Save</div>
-      </div> */}
     </div>
   );
 };

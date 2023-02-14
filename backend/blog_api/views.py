@@ -2,10 +2,16 @@ from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import (
+    MultiPartParser,
+    FormParser,
+    JSONParser,
+    FileUploadParser,
+)
 
 from django.shortcuts import get_object_or_404
 from django.core.files.storage import FileSystemStorage
+from django.http.request import QueryDict
 
 from .serializers import PostSerializer, CommentSerializer, LikeSerializer
 from core.models import Post, Comment
@@ -56,6 +62,7 @@ class PostsViewSet(ModelViewSet):
         updated post, it has to be deleted from te filesystem storage.
         """
         instance = self.get_object()
+
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
 

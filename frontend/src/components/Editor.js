@@ -1,11 +1,13 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import ImageTool from "@editorjs/image";
 import { useNavigate } from "react-router-dom";
 
-const Editor = ({ method, data }) => {
+const Editor = ({ onSave, data }) => {
   const navigate = useNavigate();
+  const imageRef = useRef();
+  const titleRef = useRef();
 
   const configuration = {
     holder: "editorjs",
@@ -47,56 +49,49 @@ const Editor = ({ method, data }) => {
       },
     },
     ...(data && { data: JSON.parse(data.text) }),
-    onReady: () => {
-      console.log("Editor.js READY");
-    },
-    onChange: (api, event) => {
-      console.log("Now I know that Editor's content changed!", event);
-    },
   };
 
-  // const [editor, setEditor] = useState({ isReady: false });
-  // let editor = { isReady: false };
   const editor = useRef();
 
   useEffect(() => {
-    // if (!editor.isReady) {
     if (!editor.current) {
-      // editor = new EditorJS(configuration);
-      // setEditor(new EditorJS(configuration));
       editor.current = new EditorJS(configuration);
     }
   }, []);
 
-  const onSave = async () => {
+  let files = [];
+
+  const fileChangeHandler = (e) => {
+    files = Array.from(e.target.files);
+  };
+
+  const saveHandler = async () => {
     const outputData = await editor.current.save();
-
-    const formData = new FormData();
-    formData.append("text", JSON.stringify(outputData));
-
-    let url = process.env.REACT_APP_API_URL + "blog/posts/";
-    url = method == "PUT" ? url + data.id + "/" : url;
-    const response = await fetch(url, {
-      method: method,
-      headers: {
-        Authorization: "Bearer " + localStorage.access,
-      },
-      body: formData,
+    const text = JSON.stringify(outputData);
+    onSave({
+      image_url: files[0],
+      title: titleRef.current.value,
+      text,
     });
-
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-
-    console.log("success");
-    navigate("/");
   };
 
   return (
-    <div>
-      <h1>My Editor</h1>
-      <button onClick={onSave}>Save</button>
-      <div id="editorjs" />
+    <div className="editor">
+      <h1 className="editor__title">My Editor</h1>
+      <div className="editor__top">
+        <input
+          type="file"
+          id="cover_img"
+          required
+          ref={imageRef}
+          onChange={fileChangeHandler}
+        />
+        <input type="text" id="title" placeholder="Post title" ref={titleRef} />
+      </div>
+      <button className="editor__save-btn" onClick={saveHandler} type="button">
+        Save
+      </button>
+      <div id="editorjs" className="editor__editor" />
     </div>
   );
 };

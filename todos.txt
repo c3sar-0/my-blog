@@ -1,6 +1,7 @@
-  User tab on header
-  Render header content conditionally
+  User tab on header *
+  Render header content conditionally *
   New Post page
   Edit Post page
   User page
   Tags
+  Make image optional, if not image, the preview is just the rest (it's smaller)

@@ -2,8 +2,9 @@ import React, { useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import { NavLink, Link, useSearchParams } from "react-router-dom";
 import byteBustersLogo from "../assets/ByteBustersLogoTransparent.png";
-import searchIcon from "../assets/basic_magnifier.svg";
 import UserMenu from "./UserMenu";
+
+import SearchIcon from "@mui/icons-material/Search";
 
 const RootHeader = (props) => {
   const authCtx = useContext(AuthContext);
@@ -14,12 +15,12 @@ const RootHeader = (props) => {
 
   return (
     <header className="root-header">
-      <NavLink className="root-header__logo--link" to="/">
+      <NavLink className="root-header__link" to="/">
         <img className="root-header__logo" src={byteBustersLogo} />
       </NavLink>
       <form className="root-header__search-form">
-        <button className="root-header__search-form--btn" type="submit">
-          <img src={searchIcon} alt="Search icon" />
+        <button className="root-header__btn" type="submit">
+          <SearchIcon className="root-header__search-icon" />
         </button>
         <input
           className="root-header__search-form--bar"
@@ -46,7 +47,14 @@ const RootHeader = (props) => {
           </Link>
         </nav>
       )}
-      {me && <UserMenu user={me} />}
+      {me && (
+        <div className="root-header__user">
+          <a href="/posts/new" className="account-btn">
+            New Post
+          </a>
+          <UserMenu user={me} />
+        </div>
+      )}
     </header>
   );
 };
