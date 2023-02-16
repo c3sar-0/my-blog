@@ -24,8 +24,8 @@ const NewPost = () => {
 
   return (
     <div className="new-post">
-      {/* <Editor onSave={saveHandler} /> */}
-      <Tiptap />
+      <Editor onSave={saveHandler} />
+      {/* <Tiptap /> */}
     </div>
   );
 };

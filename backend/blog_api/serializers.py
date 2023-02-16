@@ -24,7 +24,7 @@ class CommentSerializer(serializers.ModelSerializer):
     author = UserSerializer(many=False, required=False)
     likes = serializers.SerializerMethodField()
     is_liked_by_user = serializers.SerializerMethodField()
-    image_url = serializers.ImageField(required=False)
+    # image_url = serializers.ImageField(required=False) ?? why did I put this here
 
     class Meta:
         model = Comment
@@ -48,7 +48,7 @@ class PostSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(many=True, required=False)
     likes = serializers.SerializerMethodField()
     is_liked_by_user = serializers.SerializerMethodField()
-    image_url = serializers.ImageField()
+    image_url = serializers.ImageField(required=False)
 
     class Meta:
         model = Post

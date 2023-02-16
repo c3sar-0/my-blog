@@ -1,6 +1,7 @@
 import React, { useContext, useRef } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
+import ProfilePicture from "./ProfilePicture";
 
 const UserMenu = ({ user }) => {
   const menuRef = useRef();
@@ -13,16 +14,13 @@ const UserMenu = ({ user }) => {
   const hideMenuHandler = () => {
     menuRef.current.classList.delete("hidden");
   };
-
   return (
     <>
       <div className="user-menu">
         <div className="user-menu__img-container">
-          <img
-            className="user-menu__img"
-            src={user.profile_picture_url}
-            alt="profile picture"
+          <ProfilePicture
             onClick={toggleMenuHandler}
+            profile_picture_url={user.profile_picture_url}
           />
         </div>
         <div className="user-menu__menu" ref={menuRef}>

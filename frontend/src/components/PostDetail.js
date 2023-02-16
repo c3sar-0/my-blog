@@ -1,27 +1,22 @@
 import React, { useContext, useState } from "react";
 import AuthContext from "../context/AuthContext";
-import { useNavigate, useSubmit } from "react-router-dom";
+import { useSubmit, Link } from "react-router-dom";
 import CommentForm from "./CommentForm";
 import Comment from "./Comment";
 
 import Output from "editorjs-react-renderer";
-import { ImageOutput } from "editorjs-react-renderer";
 
 const PostDetail = (props) => {
   const authCtx = useContext(AuthContext);
   const post = props.post;
   const submit = useSubmit();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [commentFormError, setCommentFormError] = useState(null);
 
-  console.log(post.text);
   const data = JSON.parse(post.text);
 
   const deletePostHandler = () => {
     submit(null, { method: "DELETE" });
-  };
-  const editPostHandler = () => {
-    navigate("edit");
   };
 
   const commentSubmitHandler = async (text) => {
@@ -43,7 +38,7 @@ const PostDetail = (props) => {
       if (!response.ok) {
         setCommentFormError(data.text[0]);
       }
-      navigate("");
+      // navigate("");
     } catch (err) {
       setCommentFormError("Something went wrong.");
     }
@@ -51,6 +46,11 @@ const PostDetail = (props) => {
 
   return (
     <div className="post-detail">
+      {post.author.name == authCtx.user?.name && (
+        <Link to="edit" className="account-btn post-detail__edit-btn">
+          Edit post
+        </Link>
+      )}
       {post.image_url && (
         <div className="post-detail__image">
           <img src={post.image_url} alt="Post" />

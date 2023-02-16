@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
-import Paragraph from "@editorjs/paragraph";
 import Header from "@editorjs/header";
 import ImageTool from "@editorjs/image";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +8,8 @@ const Editor = ({ onSave, data }) => {
   const navigate = useNavigate();
   const imageRef = useRef();
   const titleRef = useRef();
+  const coverImageUrl = data?.image_url;
+  const [coverImageName, setCoverImageName] = useState();
 
   const configuration = {
     holder: "editorjs",
@@ -64,6 +65,7 @@ const Editor = ({ onSave, data }) => {
 
   const fileChangeHandler = (e) => {
     files = Array.from(e.target.files);
+    setCoverImageName(files[0].name);
   };
 
   const saveHandler = async () => {
@@ -76,9 +78,18 @@ const Editor = ({ onSave, data }) => {
     });
   };
 
+  let coverImageLabel;
+  if (!coverImageName && !coverImageUrl) {
+    coverImageLabel = "Add cover image";
+  } else if (coverImageName) {
+    coverImageLabel = coverImageName;
+  } else if (coverImageUrl) {
+    coverImageLabel = "Change cover image";
+  }
+
   return (
     <div className="editor">
-      <h1 className="editor__title">New Post</h1>
+      {/* <h1 className="editor__title">New Post</h1> */}
       <button
         className="editor__save-btn account-btn"
         onClick={saveHandler}
@@ -87,6 +98,13 @@ const Editor = ({ onSave, data }) => {
         Save
       </button>
       <div className="editor__top">
+        {coverImageUrl && (
+          <img
+            src={coverImageUrl}
+            alt="Cover image"
+            className="editor__cover-img-preview"
+          />
+        )}
         <input
           className="editor__img-input"
           type="file"
@@ -96,14 +114,15 @@ const Editor = ({ onSave, data }) => {
           onChange={fileChangeHandler}
         />
         <label className="editor__img-label" htmlFor="cover_img">
-          Add cover image
+          {coverImageLabel}
         </label>
         <input
           className="editor__title-input"
           type="text"
           id="title"
-          placeholder="Post title"
+          placeholder="Post title..."
           ref={titleRef}
+          defaultValue={data ? data.title : ""}
         />
       </div>
       <div id="editorjs" className="editor__editor" />

@@ -6,7 +6,7 @@
 
   &__image {
     width: 100%;
-    height: 50vh;
+    height: 70vh;
     // height: 300px;
 
     & img {
@@ -33,5 +33,12 @@
     position: absolute;
     bottom: 1rem;
     right: 1rem;
+  }
+
+  &__edit-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    box-shadow: 0 1rem 1rem rgba(0,0,0,.3);
   }
 }

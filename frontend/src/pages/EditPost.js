@@ -29,10 +29,11 @@ const EditPost = () => {
 
   const saveHandler = async ({ image_url, text, title }) => {
     const formData = new FormData();
-    formData.append("image_url", image_url);
+    if (image_url) {
+      formData.append("image_url", image_url);
+    }
     formData.append("title", title);
     formData.append("text", text);
-
     submit(formData, {
       action: `/posts/${post.id}/edit/`,
       method: "PUT",
@@ -41,9 +42,9 @@ const EditPost = () => {
   };
 
   return (
-    <>
+    <div className="edit-post">
       <Editor onSave={saveHandler} data={post} />
-    </>
+    </div>
   );
 };
 
@@ -54,15 +55,20 @@ export async function action({ request, params }) {
 
   const postId = params.id;
   const formData = await request.formData();
-
+  console.log(JSON.stringify(Object.fromEntries(formData)));
   const response = await fetch(
     `${process.env.REACT_APP_API_URL}blog/posts/${postId}/`,
     {
       method: "PUT",
       headers: {
+        ...(!formData.get("image_url") && {
+          "Content-Type": "application/json",
+        }),
         Authorization: "Bearer " + localStorage.access,
       },
-      body: formData,
+      body: formData.get("image_url")
+        ? formData
+        : JSON.stringify(Object.fromEntries(formData)),
     }
   );
 

@@ -46,11 +46,37 @@
     border-radius: 3px;
     text-align: left;
   }
+
+  &__save-btn {
+    float: right;
+    font-size: 1.2rem;
+  }
+
+  &__cover-img-preview {
+    width: 5rem;
+  }
 }
 
-// .ce-block__content {
-  
-// }
+.ce-block__content {
+  margin: 0;
+  margin-left: 4rem;
+  // width: 100%;
+  max-width: none;
+}
+
+.ce-toolbar {
+  &__content {
+    width: 100%;
+    max-width: none;
+    height: .5rem;
+  }
+
+  &__actions {
+    padding: 0;
+    left: 0;
+  }
+}
+
 
 // .ce-toolbar__actions {
 //   &--opened {

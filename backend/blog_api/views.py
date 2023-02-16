@@ -6,7 +6,6 @@ from rest_framework.parsers import (
     MultiPartParser,
     FormParser,
     JSONParser,
-    FileUploadParser,
 )
 
 from django.shortcuts import get_object_or_404
@@ -29,7 +28,7 @@ class PostsViewSet(ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
-    parser_classes = [MultiPartParser, FormParser]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
 
     def get_queryset(self):
         """For delete and put, the queryset is only the user's posts (not every post)."""

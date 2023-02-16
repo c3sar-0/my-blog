@@ -2,18 +2,11 @@
   width: 3rem;
   height: 3rem;
   position: relative;
+  background-color: transparent;
 
   &__img-container {
     width: 100%;
     height: 100%;
-  }
-
-  &__img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    clip-path: circle(1.5rem);
-    cursor: pointer;
   }
 
   &__menu {

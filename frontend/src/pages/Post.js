@@ -9,7 +9,9 @@ const Post = () => {
     <>
       <div className="post-page">
         <PostDetail post={data} />
-        <AuthorPreview author={data.author} />
+        <div className="post-page__author-preview">
+          <AuthorPreview author={data.author} />
+        </div>
       </div>
     </>
   );
