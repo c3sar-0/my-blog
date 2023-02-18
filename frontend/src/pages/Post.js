@@ -18,7 +18,8 @@ const Post = () => {
           <AuthorPreview author={data.author} />
         </section>
         <section className="post-page__comment-section">
-          <CommentForm />
+          <div className="post-page__comments-header">Comments</div>
+          <CommentForm postId={data.id} />
           <CommentList comments={data.comments} postId={data.id} />
         </section>
       </div>

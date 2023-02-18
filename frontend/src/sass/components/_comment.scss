@@ -1,10 +1,30 @@
 .comment {
   margin: 1.5rem 0;
-  border-bottom: solid 2px $border-color;
+  border: solid 2px $border-color;
+  border-radius: $border-radius;
+  padding: 1rem;
+  position: relative;
 
   &__author {
     display: flex;
-    align-items: center;
+    margin-bottom: 1.5rem;
+
+    &-img-container {
+      width: 3rem;
+      height: 3rem;
+      margin-right: .8rem;
+    }
+
+    &-name {
+      margin: .3rem 0 0 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+  }
+
+  &__date {
+    margin: 0;
+    font-size: .8rem;
   }
 
   &__author-img-container {
@@ -17,5 +37,36 @@
   &__author-name {
     // display: inline-block;
     font-weight: 600;
+  }
+
+  &__actions {
+    position: absolute;
+    top: .2rem;
+    right: 0;
+    text-align: right;
+
+    svg {
+      cursor: pointer;
+    }
+  }
+
+  &__btn-container {
+    opacity: 0;
+    visibility: 0;
+
+    &--hidden {
+      animation: slide-up .5s forwards;
+    }
+
+    &--visible {
+      animation: slide-down .5s forwards;
+    }
+  }
+
+  &__edit-btn {
+    margin-bottom: .8rem;
+  }
+
+  &__delete-btn {
   }
 }

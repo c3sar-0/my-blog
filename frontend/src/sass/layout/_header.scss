@@ -4,6 +4,7 @@
     top: 0;
     background-color: $color-white;
     height: 6vh;
+    height: 3rem;
     display: flex;
     align-items: center;
     padding: .5rem 2rem;
@@ -22,7 +23,8 @@
     &__search-form {
         width: 50%;
         display: flex;
-        height: 5vh;
+        height: 4.2vh;
+        // height: 85%;
         // min-height: 1.5rem;
 		position: relative;
 		display: flex;

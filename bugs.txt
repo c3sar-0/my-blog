@@ -3,3 +3,5 @@ even if post_pk does not exist
 
 - if you open home with expired token it throws 401 and does not get a new token (it never gets solved)
 I should make a request util and use that for every request. If the request returns a 401, log user out.
+
+- text overflows editor

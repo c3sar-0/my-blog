@@ -7,3 +7,49 @@
     transform: translateX(10rem)
   }
 }
+
+@keyframes slide-down {
+  0% {
+    transform: translateY(-2rem);
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  50% {
+    transform: translateY(.4rem);
+    opacity: .6;
+    visibility: visibile;
+  }
+
+  80% {
+    transform: translateY(-.2rem);
+    opacity: .8;
+    visibility: visibile;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@keyframes slide-up {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  60% {
+    transform: translateY(.4rem);
+    opacity: .6;
+    visibility: visibile;
+  }
+
+  100% {
+    transform: translateY(-2rem);
+    opacity: 0;
+    visibility: hidden;
+  }
+}

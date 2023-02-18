@@ -16,4 +16,18 @@
   &__comment-section {
     padding: 1rem 2.5rem;
   }
+
+  &__comments-header {
+    font-size: 2rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 1rem 0;
+    text-align: center;
+  }
+
+  &__author-section {
+    height: 20rem;
+    position: sticky;
+    top: calc(6vh + 2.4rem);
+  }
 }
