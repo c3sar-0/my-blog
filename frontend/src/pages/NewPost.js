@@ -11,7 +11,9 @@ const NewPost = () => {
 
   const saveHandler = async ({ image_url, text, title }) => {
     const formData = new FormData();
-    formData.append("image_url", image_url);
+    if (image_url) {
+      formData.append("image_url", image_url);
+    }
     formData.append("title", title);
     formData.append("text", text);
 
@@ -35,6 +37,7 @@ export default NewPost;
 export async function action({ request, params }) {
   // Action for creating new post.
   const formData = await request.formData();
+  console.log("FORM DATA: ", formData);
 
   const response = await fetch(process.env.REACT_APP_API_URL + "blog/posts/", {
     method: "POST",

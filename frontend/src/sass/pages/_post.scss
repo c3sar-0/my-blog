@@ -3,4 +3,17 @@
   display: grid;
   grid-template-columns: 3fr 1fr;
   column-gap: 2rem;
+
+  &__post-section, &__author-section, &__comment-section {
+    border: $width-border solid $border-color;
+    background-color: $color-white;
+  }
+
+  &__post-section {
+    margin-bottom: 1rem;
+  }
+
+  &__comment-section {
+    padding: 1rem 2.5rem;
+  }
 }

@@ -51,7 +51,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    title = models.CharField(max_length=200, default="default title")
+    title = models.CharField(max_length=150, default="default title")
     text = EditorJsField(
         editorjs_config={
             "tools": {
@@ -84,10 +84,15 @@ class Comment(models.Model):
 class Like(models.Model):
     """Like model for posts and comments."""
 
-    author = models.OneToOneField(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.ForeignKey(
         Comment, on_delete=models.CASCADE, null=True, related_name="likes"
     )
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, null=True, related_name="likes"
     )
+
+
+class Bookmark(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bookmarks")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="bookmarks")

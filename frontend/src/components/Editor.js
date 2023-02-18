@@ -9,7 +9,6 @@ const Editor = ({ onSave, data }) => {
   const imageRef = useRef();
   const titleRef = useRef();
   const coverImageUrl = data?.image_url;
-  const [coverImageName, setCoverImageName] = useState();
 
   const configuration = {
     holder: "editorjs",
@@ -61,28 +60,26 @@ const Editor = ({ onSave, data }) => {
     }
   }, []);
 
-  let files = [];
-
+  const [file, setFile] = useState();
   const fileChangeHandler = (e) => {
-    files = Array.from(e.target.files);
-    setCoverImageName(files[0].name);
+    setFile(Array.from(e.target.files));
   };
 
   const saveHandler = async () => {
     const outputData = await editor.current.save();
     const text = JSON.stringify(outputData);
     onSave({
-      image_url: files[0],
+      image_url: file?.[0],
       title: titleRef.current.value,
       text,
     });
   };
 
   let coverImageLabel;
-  if (!coverImageName && !coverImageUrl) {
+  if (!file?.[0].name && !coverImageUrl) {
     coverImageLabel = "Add cover image";
-  } else if (coverImageName) {
-    coverImageLabel = coverImageName;
+  } else if (file?.[0].name) {
+    coverImageLabel = file?.[0].name;
   } else if (coverImageUrl) {
     coverImageLabel = "Change cover image";
   }
@@ -123,6 +120,7 @@ const Editor = ({ onSave, data }) => {
           placeholder="Post title..."
           ref={titleRef}
           defaultValue={data ? data.title : ""}
+          maxLength="150"
         />
       </div>
       <div id="editorjs" className="editor__editor" />

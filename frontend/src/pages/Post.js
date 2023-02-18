@@ -1,17 +1,26 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { json, redirect, useLoaderData } from "react-router-dom";
 import AuthorPreview from "../components/AuthorPreview";
+import CommentForm from "../components/CommentForm";
+import CommentList from "../components/CommentList";
 import PostDetail from "../components/PostDetail";
 
 const Post = () => {
   const data = useLoaderData();
+
   return (
     <>
       <div className="post-page">
-        <PostDetail post={data} />
-        <div className="post-page__author-preview">
+        <section className="post-page__post-section">
+          <PostDetail post={data} />
+        </section>
+        <section className="post-page__author-section">
           <AuthorPreview author={data.author} />
-        </div>
+        </section>
+        <section className="post-page__comment-section">
+          <CommentForm />
+          <CommentList comments={data.comments} postId={data.id} />
+        </section>
       </div>
     </>
   );

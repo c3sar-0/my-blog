@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from core.models import Post, User, Comment, Like
+from core.models import Post, Comment, Like, Bookmark
 from user_api.serializers import UserSerializer
 
 
@@ -45,10 +45,11 @@ class PostSerializer(serializers.ModelSerializer):
     """Serializer for posts."""
 
     author = UserSerializer(many=False, required=False)
+    image_url = serializers.ImageField(required=False)
     comments = CommentSerializer(many=True, required=False)
     likes = serializers.SerializerMethodField()
     is_liked_by_user = serializers.SerializerMethodField()
-    image_url = serializers.ImageField(required=False)
+    is_bookmarked_by_user = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
@@ -60,6 +61,11 @@ class PostSerializer(serializers.ModelSerializer):
         post = Post.objects.get(id=obj.id)
         return post.likes.filter(author=self.context["request"].user.id).exists()
 
+    def get_is_bookmarked_by_user(self, obj):
+        """Boolean. True if the user that sends the request has already bookmarked the post."""
+        post = Post.objects.get(id=obj.id)
+        return post.bookmarks.filter(user__id=self.context["request"].user.id).exists()
+
     def get_likes(self, obj):
         """Number of likes of the post."""
         return str(obj.likes.count())
@@ -68,3 +74,10 @@ class PostSerializer(serializers.ModelSerializer):
     #     rep = super().to_representation(instance)
     #     rep["text"] = instance.text.delta
     #     return rep
+
+
+class BookmarkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bookmark
+        fields = "__all__"
+        read_only_fields = ["user", "post"]

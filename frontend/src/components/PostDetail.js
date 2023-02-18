@@ -16,6 +16,7 @@ const PostDetail = (props) => {
   const data = JSON.parse(post.text);
 
   const deletePostHandler = () => {
+    if (!window.confirm("Are you sure you want to delete this post?")) return;
     submit(null, { method: "DELETE" });
   };
 
@@ -47,9 +48,17 @@ const PostDetail = (props) => {
   return (
     <div className="post-detail">
       {post.author.name == authCtx.user?.name && (
-        <Link to="edit" className="account-btn post-detail__edit-btn">
-          Edit post
-        </Link>
+        <div className="post-detail__owner-actions">
+          <button
+            onClick={deletePostHandler}
+            className="account-btn account-btn--red post-detail__delete-btn"
+          >
+            Delete
+          </button>
+          <Link to="edit" className="account-btn post-detail__edit-btn">
+            Edit post
+          </Link>
+        </div>
       )}
       {post.image_url && (
         <div className="post-detail__image">
@@ -62,7 +71,6 @@ const PostDetail = (props) => {
       <div className="post-detail__text">
         <Output data={data} />
       </div>
-      <button onClick={deletePostHandler}>Delete</button>
     </div>
   );
 };

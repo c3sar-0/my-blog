@@ -1,17 +1,16 @@
 import React, { useContext, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
+import ProfilePicture from "./ProfilePicture";
 
-const Comment = (props) => {
+const Comment = ({ comment, postId }) => {
   const authCtx = useContext(AuthContext);
-  const authorRef = useRef();
   const textRef = useRef();
-  const navigate = useNavigate();
 
   const deleteHandler = async () => {
+    if (window.confirm("Are you sure you want to delete the comment?")) return;
     const res = await fetch(
       process.env.REACT_APP_API_URL +
-        `blog/posts/${props.postId}/comments/${props.commentId}/`,
+        `blog/posts/${postId}/comments/${comment.id}/`,
       {
         method: "DELETE",
         headers: {
@@ -20,19 +19,32 @@ const Comment = (props) => {
         },
       }
     );
-    authorRef.current.value = "deleted";
+
+    if (!res.ok) {
+      console.log(res.statusText);
+      return;
+    }
     textRef.current.value = "deleted";
-    navigate("");
-    // IN POST DETAIL CREATE A STATE WITH INITIAL VALUE = PROPS.COMMENTS AND DELETE THIS ONE
   };
 
   return (
     <>
-      <h3 ref={authorRef}>{props.author.name}</h3>
-      <p ref={textRef}>{props.text}</p>
-      {authCtx.user && authCtx.user.name === props.author.name && (
-        <button onClick={deleteHandler}>Delete</button>
-      )}
+      <div className="comment">
+        <div className="comment__author">
+          <div className="comment__author-img-container">
+            <ProfilePicture
+              profile_picture_url={comment.author.profile_picture_url}
+            />
+          </div>
+          <div className="comment__author-name">{comment.author.name}</div>
+        </div>
+        <div className="comment__content">
+          <p ref={textRef}>{comment.text}</p>
+        </div>
+        {authCtx.user && authCtx.user.name === comment.author.name && (
+          <button onClick={deleteHandler}>Delete</button>
+        )}
+      </div>
     </>
   );
 };

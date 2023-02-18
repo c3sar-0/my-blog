@@ -12,7 +12,12 @@ from django.shortcuts import get_object_or_404
 from django.core.files.storage import FileSystemStorage
 from django.http.request import QueryDict
 
-from .serializers import PostSerializer, CommentSerializer, LikeSerializer
+from .serializers import (
+    PostSerializer,
+    CommentSerializer,
+    LikeSerializer,
+    BookmarkSerializer,
+)
 from core.models import Post, Comment
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -123,6 +128,42 @@ class PostsViewSet(ModelViewSet):
             else:
                 return Response(
                     {"detail": "The post has not been liked."},
+                    status.HTTP_401_UNAUTHORIZED,
+                )
+
+    @action(
+        methods=["POST", "DELETE"],
+        detail=True,
+        authentication_classes=[JWTAuthentication],
+        permission_classes=[permissions.IsAuthenticated],
+    )
+    def bookmark(self, request, pk):
+        """
+        Bookmark action for bookmarking posts.
+        Users need to be authenticated. Allowed methods are DELETE and POST.
+        When a user sends a POST request, this action checks if the user has already bookmarked the post.
+        If so, a 401 is returned, else, the post is bookmarked. The same happens with DELETE.
+        """
+        post = Post.objects.get(id=pk)
+        isBookmarked = post.bookmarks.filter(user=request.user).exists()
+        if request.method == "POST":
+            if isBookmarked:
+                return Response(
+                    {"detail": "The post is already bookmarked."},
+                    status.HTTP_401_UNAUTHORIZED,
+                )
+            else:
+                bookmark = post.bookmarks.create(user=request.user)
+                post.save()
+                serializer = BookmarkSerializer(bookmark)
+                return Response(serializer.data, status.HTTP_201_CREATED)
+        if request.method == "DELETE":
+            if isBookmarked:
+                post.bookmarks.get(user=request.user).delete()
+                return Response({}, status.HTTP_204_NO_CONTENT)
+            else:
+                return Response(
+                    {"detail": "The post has not been bookmarked."},
                     status.HTTP_401_UNAUTHORIZED,
                 )
 

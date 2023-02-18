@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import ProfilePicture from "./ProfilePicture";
 
@@ -6,13 +6,68 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 
 const PostPreview = (props) => {
   const post = props.post;
+  const [isLiked, setIsLiked] = useState(post.is_liked_by_user);
+  const [likes, setLikes] = useState(post.likes);
+  const [isBookmarked, setIsBookmarked] = useState(post.is_bookmarked_by_user);
+
+  const likePostHandler = async () => {
+    let method = "POST";
+    if (isLiked) {
+      method = "DELETE";
+    }
+    const response = await fetch(
+      process.env.REACT_APP_API_URL + `blog/posts/${post.id}/like/`,
+      {
+        method: method,
+        headers: { Authorization: "Bearer " + localStorage.access },
+        body: {},
+      }
+    );
+    if (!response.ok) {
+      console.log(response);
+      return;
+    }
+    if (isLiked) {
+      setIsLiked(false);
+      setLikes((prev) => prev - 1);
+    } else {
+      setIsLiked(true);
+      setLikes((prev) => Number(prev) + 1);
+    }
+  };
+
+  const bookmarkPostHandler = async () => {
+    let method = "POST";
+    if (isBookmarked) {
+      method = "DELETE";
+    }
+    const response = await fetch(
+      process.env.REACT_APP_API_URL + `blog/posts/${post.id}/bookmark/`,
+      {
+        method: method,
+        headers: { Authorization: "Bearer " + localStorage.access },
+        body: {},
+      }
+    );
+    if (!response.ok) {
+      console.log(response);
+      return;
+    }
+    if (isBookmarked) {
+      setIsBookmarked(false);
+    } else {
+      setIsBookmarked(true);
+    }
+  };
+
   return (
-    <section className="post-preview">
+    <article className="post-preview">
       <div className="post-preview__img-container">
-        <img src={post.image_url} alt="Post" />
+        <img src={post.image_url} alt="Post" className="post-preview__img" />
       </div>
       <div className="post-preview__content">
         <div className="post-preview__author">
@@ -30,30 +85,41 @@ const PostPreview = (props) => {
         </div>
         <div className="post-preview__title-container">
           <Link to={`/posts/${post.id}`} className="post-preview__title">
-            {post.title.toUpperCase()}
+            <p>{post.title.toUpperCase()}</p>
           </Link>
         </div>
         <div className="post-preview__info">
-          <div className="post-preview__tags">#insert #tags #here</div>
+          <div className="post-preview__tags">#insert #tags</div>
           <div className="post-preview__actions">
             <div className="post-preview__comments">
               <CommentIcon />
+              <p>{post.comments.length}</p>
             </div>
             <div className="post-preview__likes">
-              {post.is_liked_by_user ? (
-                <FavoriteIcon className="post-preview__favourite-btn--active" />
+              {isLiked ? (
+                <FavoriteIcon
+                  className="post-preview__favourite-btn--active"
+                  onClick={likePostHandler}
+                />
               ) : (
-                <FavoriteBorderIcon className="post-preview__favourite-btn" />
+                <FavoriteBorderIcon
+                  className="post-preview__favourite-btn"
+                  onClick={likePostHandler}
+                />
               )}
-              <p>{post.likes}</p>
+              <p>{likes}</p>
             </div>
             <div className="post-preview__bookmark">
-              <BookmarkBorderIcon />
+              {isBookmarked ? (
+                <BookmarkIcon onClick={bookmarkPostHandler} />
+              ) : (
+                <BookmarkBorderIcon onClick={bookmarkPostHandler} />
+              )}
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </article>
   );
 };
 

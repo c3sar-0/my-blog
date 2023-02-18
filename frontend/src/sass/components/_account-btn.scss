@@ -36,4 +36,8 @@
       }
   }
 
+  &--red {
+    background-image: linear-gradient(to right, $color-light-red, $color-dark-red);
+  }
+
 }

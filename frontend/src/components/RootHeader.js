@@ -26,7 +26,7 @@ const RootHeader = () => {
           placeholder="Search..."
         />
       </form>
-      {!me && (
+      {!isLoggedIn && (
         <nav className="root-header__nav">
           <Link
             className={`account-btn ${
@@ -46,12 +46,12 @@ const RootHeader = () => {
           </Link>
         </nav>
       )}
-      {me && (
+      {isLoggedIn && me && (
         <div className="root-header__user">
           <Link to="/posts/new" className="account-btn">
             New Post
           </Link>
-          <UserMenu user={me} />
+          {isLoggedIn && <UserMenu user={me} />}
         </div>
       )}
     </header>

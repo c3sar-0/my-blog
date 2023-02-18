@@ -1,0 +1,21 @@
+.comment {
+  margin: 1.5rem 0;
+  border-bottom: solid 2px $border-color;
+
+  &__author {
+    display: flex;
+    align-items: center;
+  }
+
+  &__author-img-container {
+    width: 2rem;
+    height: 2rem;
+    margin-right: .5rem;
+    // display: inline-block;
+  }
+
+  &__author-name {
+    // display: inline-block;
+    font-weight: 600;
+  }
+}
