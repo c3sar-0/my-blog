@@ -5,9 +5,10 @@
 - Send number of comments and if user has bookmarked in post view *
 - Finish post previews (icons, title) *
 - Add handlers to send like and bookmark requests *
+- Add comment form *
 
-- Add comment form
 - User page
+
 - Tags
 - Make image optional, if not image, the preview is just the rest (it's smaller)
 - When editing or creating a post, if I leave without saving the images uploaded to the server should be deleted.

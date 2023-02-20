@@ -8,12 +8,10 @@ const UserMenu = ({ user }) => {
   const authCtx = useContext(AuthContext);
 
   const toggleMenuHandler = () => {
-    menuRef.current.classList.toggle("hidden");
+    menuRef.current.classList.toggle("user-menu__menu--hidden");
+    menuRef.current.classList.toggle("user-menu__menu--visible");
   };
 
-  const hideMenuHandler = () => {
-    menuRef.current.classList.delete("hidden");
-  };
   return (
     <>
       <div className="user-menu">
@@ -23,7 +21,7 @@ const UserMenu = ({ user }) => {
             profile_picture_url={user.profile_picture_url}
           />
         </div>
-        <div className="user-menu__menu" ref={menuRef}>
+        <div className="user-menu__menu user-menu__menu--hidden" ref={menuRef}>
           <Link to="/me" className="user-menu__link">
             {user.name}
           </Link>

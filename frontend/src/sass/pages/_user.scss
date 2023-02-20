@@ -1,0 +1,15 @@
+.user-page {
+  margin: 0 2rem 2rem 2rem;
+  display: flex;
+  column-gap: 2rem;
+
+  &__user-section {
+    background-color: $color-white;
+    flex-grow: 1;
+  }
+
+  &__posts-section {
+    background-color: $color-white;
+    flex-grow: 3;
+  }
+}

@@ -28,7 +28,7 @@ import json
 class PostsViewSet(ModelViewSet):
     """Viewset for posts."""
 
-    queryset = Post.objects.all().order_by("-updated")
+    queryset = Post.objects.all().order_by("-created")
     serializer_class = PostSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -228,7 +228,7 @@ class CommentsViewSet(ModelViewSet):
         if request.method == "POST":
             if isLiked:
                 return Response(
-                    {"detail": "The post is already liked."},
+                    {"detail": "The comment is already liked."},
                     status.HTTP_401_UNAUTHORIZED,
                 )
             else:
@@ -242,6 +242,6 @@ class CommentsViewSet(ModelViewSet):
                 return Response({}, status.HTTP_204_NO_CONTENT)
             else:
                 return Response(
-                    {"detail": "The post has not been liked."},
+                    {"detail": "The comment has not been liked."},
                     status.HTTP_401_UNAUTHORIZED,
                 )

@@ -19,8 +19,12 @@
     width: 6rem;
     visibility: hidden;
 
-    &.hidden {
-      visibility: visible;
+    &--hidden {
+      animation: slide-up .5s forwards;
+    }
+
+    &--visible {
+      animation: slide-down .5s forwards;
     }
   }
 

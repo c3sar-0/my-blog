@@ -8,6 +8,22 @@ import PostDetail from "../components/PostDetail";
 const Post = () => {
   const data = useLoaderData();
 
+  const commentSubmitHandler = async (text) => {
+    const response = await fetch(
+      process.env.REACT_APP_API_URL + `blog/posts/${data.id}/comments/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.access,
+        },
+        body: JSON.stringify({
+          text: text,
+        }),
+      }
+    );
+  };
+
   return (
     <>
       <div className="post-page">
@@ -19,7 +35,11 @@ const Post = () => {
         </section>
         <section className="post-page__comment-section">
           <div className="post-page__comments-header">Comments</div>
-          <CommentForm postId={data.id} />
+          <CommentForm
+            submitHandler={commentSubmitHandler}
+            placeholder="Add a new comment..."
+            btnText="Comment"
+          />
           <CommentList comments={data.comments} postId={data.id} />
         </section>
       </div>

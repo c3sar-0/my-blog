@@ -1,8 +1,6 @@
 import React, { useContext, useState } from "react";
 import AuthContext from "../context/AuthContext";
 import { useSubmit, Link } from "react-router-dom";
-import CommentForm from "./CommentForm";
-import Comment from "./Comment";
 
 import Output from "editorjs-react-renderer";
 
@@ -11,38 +9,12 @@ const PostDetail = (props) => {
   const post = props.post;
   const submit = useSubmit();
   // const navigate = useNavigate();
-  const [commentFormError, setCommentFormError] = useState(null);
 
   const data = JSON.parse(post.text);
 
   const deletePostHandler = () => {
     if (!window.confirm("Are you sure you want to delete this post?")) return;
     submit(null, { method: "DELETE" });
-  };
-
-  const commentSubmitHandler = async (text) => {
-    try {
-      const response = await fetch(
-        process.env.REACT_APP_API_URL + `blog/posts/${post.id}/comments/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + localStorage.access,
-          },
-          body: JSON.stringify({
-            text: text,
-          }),
-        }
-      );
-      const data = await response.json();
-      if (!response.ok) {
-        setCommentFormError(data.text[0]);
-      }
-      // navigate("");
-    } catch (err) {
-      setCommentFormError("Something went wrong.");
-    }
   };
 
   return (

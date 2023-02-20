@@ -23,8 +23,8 @@ class CreateUserView(CreateAPIView):
 class GetUserView(APIView):
     """View for getting a user."""
 
-    def get(self, request, name):
-        user = User.objects.get(name=name)
+    def get(self, request, slug):
+        user = User.objects.get(slug=slug)
         serializer = UserSerializer(user)
         return Response(serializer.data, status.HTTP_200_OK)
 

@@ -1,40 +1,34 @@
 import React, { useContext, useRef } from "react";
 import AuthContext from "../context/AuthContext";
 
-const CommentForm = ({ postId }) => {
+const CommentForm = ({
+  placeholder,
+  submitHandler,
+  defaultValue,
+  btnText,
+  cancelHandler,
+}) => {
   const authCtx = useContext(AuthContext);
   const textRef = useRef();
 
-  const submitHandler = async (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
-
-    const response = await fetch(
-      process.env.REACT_APP_API_URL + `blog/posts/${postId}/comments/`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.access,
-        },
-        body: JSON.stringify({
-          text: textRef.current.value,
-        }),
-      }
-    );
+    submitHandler(textRef.current.value);
   };
 
   return (
     <>
-      <form onSubmit={submitHandler} className="comment-form">
+      <form onSubmit={onSubmit} className="comment-form">
         <textarea
           name="text"
           placeholder={
-            authCtx.isLoggedIn ? "Add a comment..." : "Log in to comment."
+            authCtx.isLoggedIn ? placeholder || "" : "Log in to comment."
           }
           ref={textRef}
           className="comment-form__textarea"
           minLength="1"
           maxLength="500"
+          defaultValue={defaultValue ? defaultValue : ""}
         />
         <button
           name="intent"
@@ -42,8 +36,18 @@ const CommentForm = ({ postId }) => {
           disabled={authCtx.isLoggedIn ? false : true}
           className="account-btn comment-form__submit-btn"
         >
-          Comment
+          {btnText}
         </button>
+        {cancelHandler && (
+          <button
+            name="intent"
+            disabled={authCtx.isLoggedIn ? false : true}
+            className="account-btn account-btn--red comment-form__cancel-btn"
+            onClick={cancelHandler}
+          >
+            Cancel
+          </button>
+        )}
       </form>
     </>
   );

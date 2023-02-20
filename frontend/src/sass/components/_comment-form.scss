@@ -1,8 +1,8 @@
 .comment-form {
   width: 100%;
-  margin-bottom: 2rem;
-  border-bottom: solid 2px $border-color;
-  padding-bottom: 1rem;
+  // margin-bottom: 2rem;
+  // border-bottom: solid 2px $border-color;
+  // padding-bottom: 1rem;
   position: relative;
 
   &__textarea {
@@ -24,10 +24,10 @@
     }
   }
 
-  &__submit-btn {
-    bottom: 0;
-    right: 0;
-    margin: 0;
+  // make the comment btn fixed, cancel and save animated
+
+  &__submit-btn, &__cancel-btn {
+    margin: 0 .5rem 0 0;
     transform: translateY(-1.5rem);
     opacity: 0;
     visibility: hidden;
@@ -37,6 +37,12 @@
   &__textarea:focus + &__submit-btn {
     visibility: visible;
     transform: translateY(0);
-    opacity: 1;
+    opacity: 1; 
+  }
+
+  &__textarea:focus ~ &__cancel-btn {
+    visibility: visible;
+    transform: translateY(0);
+    opacity: 1; 
   }
 }

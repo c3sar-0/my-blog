@@ -5,6 +5,7 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 from django_editorjs import EditorJsField
+from django.utils.text import slugify
 
 
 class UserManager(BaseUserManager):
@@ -41,10 +42,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     created = models.DateField(auto_now_add=True)
+    slug = models.SlugField(null=False, unique=True, default="")
 
     objects = UserManager()
 
     USERNAME_FIELD = "email"
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 
 class Post(models.Model):

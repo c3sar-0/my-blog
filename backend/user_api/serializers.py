@@ -6,8 +6,11 @@ from core.models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["name", "email", "password", "profile_picture_url"]
-        extra_kwargs = {"password": {"write_only": True, "min_length": 8}}
+        fields = ["name", "email", "password", "profile_picture_url", "slug"]
+        extra_kwargs = {
+            "password": {"write_only": True, "min_length": 8},
+        }
+        read_only_fields = ["slug"]
 
     def create(self, validated_data):
         """Create and return user with encrypted password."""

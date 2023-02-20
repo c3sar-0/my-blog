@@ -1,17 +1,22 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState, useEffect } from "react";
 import AuthContext from "../context/AuthContext";
 import ProfilePicture from "./ProfilePicture";
+import CommentForm from "./CommentForm";
 
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const Comment = ({ comment, postId }) => {
   const authCtx = useContext(AuthContext);
   const textRef = useRef();
   const btnContainerRef = useRef();
 
-  // FOR EDIT FUNCTIONALLITY: ADD STATE ISEDITING
-  // IF TRUE, RENDER A TEXTAREA INSTEAD OF THE COMMENT (OR JUST THE COMMENT FORM, DK)
-  // ADD THE ICON FOR LIKING
+  const textInputRef = useRef();
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [isLiked, setIsLiked] = useState(comment.is_liked_by_user);
+  const [likes, setLikes] = useState(comment.likes);
 
   const deleteHandler = async () => {
     if (!window.confirm("Are you sure you want to delete the comment?")) return;
@@ -34,50 +39,134 @@ const Comment = ({ comment, postId }) => {
     textRef.current.value = "deleted";
   };
 
+  const editSubmitHandler = async () => {
+    const response = await fetch(
+      process.env.REACT_APP_API_URL +
+        `blog/posts/${postId}/comments/${comment.id}/`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.access,
+        },
+        body: JSON.stringify({
+          text: textInputRef.current.value(),
+        }),
+      }
+    );
+    if (!response.ok) {
+      console.log(response);
+      return;
+    }
+  };
+
+  const likeCommentHandler = async () => {
+    let method = "POST";
+    if (isLiked) {
+      method = "DELETE";
+    }
+    const response = await fetch(
+      process.env.REACT_APP_API_URL +
+        `blog/posts/${postId}/comments/${comment.id}/like/`,
+      {
+        method: method,
+        headers: {
+          Authorization: "Bearer " + localStorage.access,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.log(response);
+      return;
+    }
+    if (isLiked) {
+      setIsLiked(false);
+      setLikes((prev) => prev--);
+    } else {
+      setIsLiked(true);
+      setLikes((prev) => Number(prev) + 1);
+    }
+  };
+
   const toggleMenuHandler = () => {
     btnContainerRef.current.classList.toggle("comment__btn-container--hidden");
     btnContainerRef.current.classList.toggle("comment__btn-container--visible");
   };
-
   return (
     <>
       <div className="comment">
-        <div className="comment__author">
-          <div className="post-preview__author-img-container">
-            <ProfilePicture
-              profile_picture_url={comment.author.profile_picture_url}
+        <div className="comment__favourite-container">
+          {!isLiked ? (
+            <FavoriteBorderIcon
+              className="comment__favourite"
+              onClick={likeCommentHandler}
             />
-          </div>
-          <div>
-            <p className="comment__author-name">{comment.author.name}</p>
-            <p className="comment__date">
-              {new Date(comment.created).toDateString()}
-            </p>
-          </div>
+          ) : (
+            <FavoriteIcon
+              onClick={likeCommentHandler}
+              className="comment__favourite comment__favourite--active"
+            />
+          )}
+          <p className="comment__likes-number">{likes}</p>
         </div>
-        <div className="comment__content">
-          <p ref={textRef}>{comment.text}</p>
-        </div>
-        {authCtx.user && authCtx.user.name === comment.author.name && (
-          <div className="comment__actions">
-            <MoreVertIcon onClick={toggleMenuHandler} />
-            <div
-              className="comment__btn-container comment__btn-container--hidden"
-              ref={btnContainerRef}
-            >
-              <div className="comment__action-btn">
-                <button className="account-btn comment__edit-btn">Edit</button>
+        {!isEditing && (
+          <>
+            <div className="comment__author">
+              <div className="post-preview__author-img-container">
+                <ProfilePicture
+                  profile_picture_url={comment.author.profile_picture_url}
+                />
               </div>
-              <div className="comment__action-btn">
-                <button
-                  onClick={deleteHandler}
-                  className="account-btn account-btn--red comment__delete-btn"
-                >
-                  Delete
-                </button>
+              <div>
+                <p className="comment__author-name">{comment.author.name}</p>
+                <p className="comment__date">
+                  {new Date(comment.created).toDateString()}
+                </p>
               </div>
             </div>
-          </div>
+            <div className="comment__content">
+              <p ref={textRef}>{comment.text}</p>
+            </div>
+            {authCtx.user && authCtx.user.name === comment.author.name && (
+              <div className="comment__actions">
+                <MoreVertIcon onClick={toggleMenuHandler} />
+                <div
+                  className="comment__btn-container comment__btn-container--hidden"
+                  ref={btnContainerRef}
+                >
+                  <div className="comment__action-btn">
+                    <button
+                      className="account-btn comment__edit-btn"
+                      onClick={() => {
+                        setIsEditing(true);
+                      }}
+                    >
+                      Edit
+                    </button>
+                  </div>
+                  <div className="comment__action-btn">
+                    <button
+                      onClick={deleteHandler}
+                      className="account-btn account-btn--red comment__delete-btn"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+        {isEditing && (
+          <CommentForm
+            submitHandler={editSubmitHandler}
+            defaultValue={comment.text}
+            btnText="Save"
+            cancelHandler={() => {
+              setIsEditing(false);
+            }}
+          />
         )}
       </div>
     </>

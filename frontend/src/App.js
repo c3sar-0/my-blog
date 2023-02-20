@@ -16,6 +16,7 @@ import NewPostPage, { action as newPostAction } from "./pages/NewPost";
 import EditPostPage, { action as editPostAction } from "./pages/EditPost";
 import AuthPage from "./pages/Auth";
 import MePage, { loader as meLoader } from "./pages/Me";
+import UserPage, { loader as userLoader } from "./pages/User";
 
 import PrivateRoute from "./utils/PrivateRoute";
 
@@ -46,6 +47,11 @@ const router = createBrowserRouter([
             element: <EditPostPage />,
             loader: postLoader,
             action: editPostAction,
+          },
+          {
+            path: "user/:slug",
+            element: <UserPage />,
+            loader: userLoader,
           },
           {
             element: <PrivateRoute />,
