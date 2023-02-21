@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ProfilePicture from "./ProfilePicture";
 
@@ -13,6 +13,7 @@ const PostPreview = (props) => {
   const [isLiked, setIsLiked] = useState(post.is_liked_by_user);
   const [likes, setLikes] = useState(post.likes);
   const [isBookmarked, setIsBookmarked] = useState(post.is_bookmarked_by_user);
+  const postPreviewRef = useRef();
 
   const likePostHandler = async () => {
     let method = "POST";
@@ -64,25 +65,39 @@ const PostPreview = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (!post.image_url) {
+      postPreviewRef.current.style["min-height"] = "0";
+    }
+  });
+
   return (
-    <article className="post-preview">
-      <div className="post-preview__img-container">
-        <img src={post.image_url} alt="Post" className="post-preview__img" />
-      </div>
-      <div className="post-preview__content">
-        <div className="post-preview__author">
-          <div className="post-preview__author-img-container">
-            <ProfilePicture
-              profile_picture_url={post.author.profile_picture_url}
-            />
-          </div>
-          <div>
-            <p className="post-preview__author-name">{post.author.name}</p>
-            <p className="post-preview__date">
-              {new Date(post.created).toDateString()}
-            </p>
-          </div>
+    <article className="post-preview" ref={postPreviewRef}>
+      {post.image_url && (
+        <div className="post-preview__img-container">
+          <img src={post.image_url} alt="Post" className="post-preview__img" />
         </div>
+      )}
+      <div
+        className={`post-preview__content ${
+          post.image_url ? "" : "post-preview__content--horizontal"
+        }`}
+      >
+        <Link to={`/user/${post.author.slug}`}>
+          <div className="post-preview__author">
+            <div className="post-preview__author-img-container">
+              <ProfilePicture
+                profile_picture_url={post.author.profile_picture_url}
+              />
+            </div>
+            <div>
+              <p className="post-preview__author-name">{post.author.name}</p>
+              <p className="post-preview__date">
+                {new Date(post.created).toDateString()}
+              </p>
+            </div>
+          </div>
+        </Link>
         <div className="post-preview__title-container">
           <Link to={`/posts/${post.id}`} className="post-preview__title">
             <p>{post.title.toUpperCase()}</p>

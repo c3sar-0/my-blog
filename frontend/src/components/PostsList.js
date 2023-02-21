@@ -5,13 +5,11 @@ const PostsList = (props) => {
   const posts = props.posts;
 
   return (
-    <>
-      <ul>
-        {posts.map((post) => (
-          <PostPreview post={post} key={post.id} />
-        ))}
-      </ul>
-    </>
+    <ul>
+      {posts.map((post) => (
+        <PostPreview post={post} key={post.id} />
+      ))}
+    </ul>
   );
 };
 

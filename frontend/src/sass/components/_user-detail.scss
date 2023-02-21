@@ -1,0 +1,24 @@
+.user-detail {
+  display: flex;
+  padding: 1rem;
+  flex-direction: column;
+  text-align: center;
+
+  &__img-container {
+    width: 8rem;
+    height: 8rem;
+    align-self: center;
+  }
+
+  &__posts-info, &__comments-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__edit-profile-btn {
+    &::after {
+      content: none;
+    }    
+  }
+}

@@ -1,10 +1,10 @@
 @keyframes lightFromLeft {
   50% {
-    transform: translateX(10rem);
+    transform: translateX(10rem) skew(20deg);
   }
 
   100% {
-    transform: translateX(10rem)
+    transform: translateX(10rem) skew(20deg);
   }
 }
 

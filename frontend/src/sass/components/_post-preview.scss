@@ -1,6 +1,7 @@
 .post-preview {
   background-color: $color-white;
   width: 60vw;
+  // width: 100%;
   border-radius: $border-radius;
   border-style: solid;
   border-color: $border-color;
@@ -35,6 +36,11 @@
     width: 30%;
     display: flex;
     flex-direction: column;
+
+    &--horizontal {
+      width: 100%;
+      margin: 0;
+    }
   }
 
   &__author {

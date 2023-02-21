@@ -10,7 +10,10 @@ class CustomUserAdmin(UserAdmin):
     list_display = ["email", "name"]
     fieldsets = (
         (None, {"fields": ("email", "password")}),
-        (("Personal info"), {"fields": ("name", "profile_picture_url", "slug")}),
+        (
+            ("Personal info"),
+            {"fields": ("name", "profile_picture_url", "slug", "description")},
+        ),
         (
             ("Permissions"),
             {

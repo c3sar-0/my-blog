@@ -18,7 +18,7 @@ from .serializers import (
     LikeSerializer,
     BookmarkSerializer,
 )
-from core.models import Post, Comment
+from core.models import Post, Comment, User
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -38,9 +38,14 @@ class PostsViewSet(ModelViewSet):
     def get_queryset(self):
         """For delete and put, the queryset is only the user's posts (not every post)."""
         actions = ["destroy", "update", "partial_update"]
+        # /api/blog/posts?user=<user-slug>
+        user_filter = self.request.query_params.get("user")
+        queryset = super().get_queryset()
+        if user_filter:
+            queryset = queryset.filter(author__slug=user_filter)
         if self.action in actions:
-            return Post.objects.filter(author=self.request.user)
-        return super().get_queryset()
+            return queryset.filter(author=self.request.user)
+        return queryset
 
     def get_permissions(self):
         """Only authorized users can post, delete and update."""

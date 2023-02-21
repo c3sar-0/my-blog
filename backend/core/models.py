@@ -38,11 +38,14 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=100, unique=True)
-    profile_picture_url = models.ImageField(upload_to="users/", null=True, blank=True)
+    profile_picture_url = models.ImageField(upload_to="users", null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     created = models.DateField(auto_now_add=True)
-    slug = models.SlugField(null=False, unique=True, default="")
+    slug = models.SlugField(null=False, unique=True)
+    description = models.TextField(
+        max_length=1000, null=True, blank=True, default="No description provided..."
+    )
 
     objects = UserManager()
 
@@ -54,7 +57,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Post(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, related_name="posts"
+    )
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=150, default="default title")
@@ -74,7 +79,6 @@ class Post(models.Model):
             }
         }
     )
-
     image_url = models.ImageField(upload_to="posts", null=True, blank=True)
 
 
