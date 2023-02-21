@@ -34,7 +34,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """Custom user model."""
+    """Custom user model. The primary key is the slugified name."""
 
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=100, unique=True)
@@ -83,12 +83,18 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+    """Comment model. It can be a post comment OR a user's wall comment."""
+
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    created = models.DateTimeField(auto_now_add=True)
+    text = models.TextField(max_length=500)
+
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, null=True, related_name="comments"
     )
-    created = models.DateTimeField(auto_now_add=True)
-    text = models.TextField(max_length=500)
+    wall_user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, related_name="wall_comments"
+    )
 
 
 class Like(models.Model):

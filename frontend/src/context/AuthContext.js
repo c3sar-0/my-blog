@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
 
   const authenticate = async (data) => {
     let url = process.env.REACT_APP_API_URL + "user/";
-    url = data.isLogin ? url + "token/" : url + "create/";
+    url = data.isLogin ? url + "token/" : url + "users/";
 
     const response = await fetch(url, {
       method: "POST",

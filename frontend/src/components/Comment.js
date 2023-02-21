@@ -7,7 +7,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
-const Comment = ({ comment, postId }) => {
+const Comment = ({ comment, postId, userId }) => {
   const authCtx = useContext(AuthContext);
   const textRef = useRef();
   const btnContainerRef = useRef();
@@ -18,19 +18,22 @@ const Comment = ({ comment, postId }) => {
   const [isLiked, setIsLiked] = useState(comment.is_liked_by_user);
   const [likes, setLikes] = useState(comment.likes);
 
+  let url = process.env.REACT_APP_API_URL;
+  if (postId) {
+    url = url + `blog/posts/${postId}/comments/${comment.id}/`;
+  } else if (!postId && userId) {
+    url = url + `user/users/${userId}/comments/${comment.id}/`;
+  }
+
   const deleteHandler = async () => {
     if (!window.confirm("Are you sure you want to delete the comment?")) return;
-    const res = await fetch(
-      process.env.REACT_APP_API_URL +
-        `blog/posts/${postId}/comments/${comment.id}/`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.access,
-        },
-      }
-    );
+    const res = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.access,
+      },
+    });
 
     if (!res.ok) {
       console.log(res.statusText);
@@ -40,20 +43,16 @@ const Comment = ({ comment, postId }) => {
   };
 
   const editSubmitHandler = async () => {
-    const response = await fetch(
-      process.env.REACT_APP_API_URL +
-        `blog/posts/${postId}/comments/${comment.id}/`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.access,
-        },
-        body: JSON.stringify({
-          text: textInputRef.current.value(),
-        }),
-      }
-    );
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.access,
+      },
+      body: JSON.stringify({
+        text: textInputRef.current.value(),
+      }),
+    });
     if (!response.ok) {
       console.log(response);
       return;
@@ -65,16 +64,12 @@ const Comment = ({ comment, postId }) => {
     if (isLiked) {
       method = "DELETE";
     }
-    const response = await fetch(
-      process.env.REACT_APP_API_URL +
-        `blog/posts/${postId}/comments/${comment.id}/like/`,
-      {
-        method: method,
-        headers: {
-          Authorization: "Bearer " + localStorage.access,
-        },
-      }
-    );
+    const response = await fetch(url + "like/", {
+      method: method,
+      headers: {
+        Authorization: "Bearer " + localStorage.access,
+      },
+    });
 
     if (!response.ok) {
       console.log(response);

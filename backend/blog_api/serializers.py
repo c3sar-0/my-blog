@@ -10,12 +10,12 @@ class LikeSerializer(serializers.ModelSerializer):
         model = Like
         fields = "__all__"
 
-    def get_is_liked_by_user(self, obj):
-        post = Post.objects.get(id=obj.id)
-        return post.likes.filter(author=self.context["request"].user.id).exists()
+    # def get_is_liked_by_user(self, obj):
+    #     post = Post.objects.get(id=obj.id)
+    #     return post.likes.filter(author=self.context["request"].user.id).exists()
 
-    def get_likes(self, obj):
-        return str(obj.likes.count())
+    # def get_likes(self, obj):
+    #     return str(obj.likes.count())
 
 
 class CommentSerializer(serializers.ModelSerializer):

@@ -3,7 +3,6 @@ import { json, useLoaderData, defer, Await } from "react-router-dom";
 
 import UserDetail from "../components/UserDetail";
 import PostsList from "../components/PostsList";
-import CommentForm from "../components/CommentForm";
 import Wall from "../components/Wall";
 
 const User = () => {
@@ -15,13 +14,21 @@ const User = () => {
         <section className="user-page__user-section">
           <Suspense fallback={<p>Loading user...</p>}>
             <Await resolve={user}>
-              {(loadedUser) => <UserDetail user={loadedUser} />}
+              {(loadedUser) => {
+                return <UserDetail user={loadedUser} />;
+              }}
             </Await>
           </Suspense>
         </section>
         <section className="user-page__wall-section">
           <div className="user-page__wall-container">
-            <Wall user={user} />
+            <Suspense fallback={<p>Loading user's wall...</p>}>
+              <Await resolve={user}>
+                {(loadedUser) => {
+                  return <Wall user={loadedUser} />;
+                }}
+              </Await>
+            </Suspense>
           </div>
         </section>
       </div>
@@ -42,7 +49,7 @@ export default User;
 
 async function loadUser(userSlug) {
   const response = await fetch(
-    process.env.REACT_APP_API_URL + `user/${userSlug}/`
+    process.env.REACT_APP_API_URL + `user/users/${userSlug}/`
   );
   if (!response.ok) {
     throw json({ message: response.statusText }, { status: response.status });

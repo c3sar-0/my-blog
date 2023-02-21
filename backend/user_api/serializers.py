@@ -1,6 +1,28 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from core.models import User
+from core.models import User, Comment, Like
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    """Serialzier for comments."""
+
+    # author = UserSerializer(many=False, required=False)
+    likes = serializers.SerializerMethodField()
+    is_liked_by_user = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Comment
+        fields = "__all__"
+        read_only_fields = ["author", "id", "created", "wall_user", "likes"]
+
+    def get_is_liked_by_user(self, obj):
+        """Boolean. True if the user that sent the request has already liked the comment."""
+        comment = Comment.objects.get(id=obj.id)
+        return comment.likes.filter(author=self.context["request"].user.id).exists()
+
+    def get_likes(self, obj):
+        """Number of likes of the comment."""
+        return str(obj.likes.count())
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -9,6 +31,7 @@ class UserSerializer(serializers.ModelSerializer):
     profile_picture_url = serializers.ImageField(required=False)
     number_of_comments = serializers.SerializerMethodField()
     number_of_posts = serializers.SerializerMethodField()
+    wall_comments = CommentSerializer(many=True, required=False)
 
     class Meta:
         model = User
@@ -24,6 +47,7 @@ class UserSerializer(serializers.ModelSerializer):
             "description",
             "number_of_comments",
             "number_of_posts",
+            "wall_comments",
         ]
         extra_kwargs = {
             "password": {"write_only": True, "min_length": 8},
@@ -52,3 +76,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_number_of_posts(self, user):
         return user.posts.count()
+
+
+class LikeSerializer(serializers.ModelSerializer):
+    """Serializer for likes."""
+
+    class Meta:
+        model = Like
+        fields = "__all__"
