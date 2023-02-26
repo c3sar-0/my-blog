@@ -2,10 +2,10 @@ import React from "react";
 import CommentForm from "./CommentForm";
 import CommentList from "./CommentList";
 
-const Wall = ({ user }) => {
+const Wall = ({ username, userSlug, wallComments }) => {
   const submitHandler = async (text) => {
     const response = await fetch(
-      process.env.REACT_APP_API_URL + `user/users/${user.id}/comments/`,
+      process.env.REACT_APP_API_URL + `user/users/${userSlug}/comments/`,
       {
         method: "POST",
         headers: {
@@ -21,13 +21,13 @@ const Wall = ({ user }) => {
     <div className="wall">
       <div className="wall__form">
         <CommentForm
-          placeholder={`Write on ${user.name}'s wall!`}
+          placeholder={`Write on ${username}'s wall!`}
           btnText="Submit"
           submitHandler={submitHandler}
         />
       </div>
       <div className="wall__comments">
-        <CommentList comments={user.wall_comments} userId={user.id} />
+        <CommentList comments={wallComments} userSlug={userSlug} />
       </div>
     </div>
   );

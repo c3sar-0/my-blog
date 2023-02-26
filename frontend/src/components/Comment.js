@@ -7,7 +7,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
-const Comment = ({ comment, postId, userId }) => {
+const Comment = ({ comment, postId, userSlug }) => {
   const authCtx = useContext(AuthContext);
   const textRef = useRef();
   const btnContainerRef = useRef();
@@ -21,8 +21,8 @@ const Comment = ({ comment, postId, userId }) => {
   let url = process.env.REACT_APP_API_URL;
   if (postId) {
     url = url + `blog/posts/${postId}/comments/${comment.id}/`;
-  } else if (!postId && userId) {
-    url = url + `user/users/${userId}/comments/${comment.id}/`;
+  } else if (!postId && userSlug) {
+    url = url + `user/users/${userSlug}/comments/${comment.id}/`;
   }
 
   const deleteHandler = async () => {

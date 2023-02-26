@@ -1,7 +1,7 @@
 import React from "react";
 import Comment from "./Comment";
 
-const CommentList = ({ comments, postId, userId }) => {
+const CommentList = ({ comments, postId, userSlug }) => {
   return (
     <>
       {comments.map((comment) => {
@@ -10,7 +10,7 @@ const CommentList = ({ comments, postId, userId }) => {
             key={comment.id}
             comment={comment}
             postId={postId}
-            userId={userId}
+            userSlug={userSlug}
           />
         );
       })}

@@ -103,8 +103,11 @@ class CommentsViewSet(ModelViewSet):
     def like(self, request, user_pk, pk):
         """Like action for comments."""
 
-        user = get_object_or_404(User.objects.all(), pk=user_pk)
-        comment = get_object_or_404(user.wall_comments, id=pk)
+        user = get_object_or_404(User.objects.all(), slug=user_pk)
+        print("############### PK: ", pk)
+        comment = get_object_or_404(
+            user.wall_comments, id=pk
+        )  # does not find the comment # MAYBE OVERRIDE CREATE METHOD
         isLiked = comment.likes.filter(author=request.user).exists()
         if request.method == "POST":
             if isLiked:
