@@ -79,9 +79,11 @@ class CommentsViewSet(ModelViewSet):
     def get_queryset(self):
         """For delete and put, the queryset is only the user's comments."""
         actions = ["destroy", "update", "partial_update"]
+        wall_user = User.objects.get(slug=self.kwargs["user_pk"])
+        queryset = wall_user.wall_comments
         if self.action in actions:
-            return Comment.objects.filter(author=self.request.user)
-        return super().get_queryset()
+            queryset.filter(author=self.request.user)
+        return queryset
 
     def get_permissions(self):
         "Only authorized users can comment, delete and update."
@@ -91,7 +93,8 @@ class CommentsViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         author = self.request.user
-        wall_user = User.objects.get(id=self.kwargs["user_pk"])
+        # wall_user = User.objects.get(id=self.kwargs["user_pk"])
+        wall_user = User.objects.get(slug=self.kwargs["user_pk"])
         serializer.save(author=author, wall_user=wall_user)
 
     @action(
@@ -104,7 +107,6 @@ class CommentsViewSet(ModelViewSet):
         """Like action for comments."""
 
         user = get_object_or_404(User.objects.all(), slug=user_pk)
-        print("############### PK: ", pk)
         comment = get_object_or_404(
             user.wall_comments, id=pk
         )  # does not find the comment # MAYBE OVERRIDE CREATE METHOD

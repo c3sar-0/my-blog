@@ -16,7 +16,7 @@ const UserDetail = ({ user }) => {
       </div>
       <h1>{user.name}</h1>
       {authCtx.user?.name === user.name && (
-        <Link className="account-btn user-detail__edit-profile-btn">
+        <Link to="edit" className="account-btn user-detail__edit-profile-btn">
           Edit profile
         </Link>
       )}

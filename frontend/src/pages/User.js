@@ -11,7 +11,6 @@ const User = () => {
     <Suspense fallback={<p>Loading user...</p>}>
       <Await resolve={user}>
         {(user) => {
-          console.log(user);
           return (
             <div className="user-page">
               <div className="user-page__left">
@@ -79,7 +78,12 @@ async function loadPosts(userSlug) {
 
 async function loadWall(userSlug) {
   const response = await fetch(
-    process.env.REACT_APP_API_URL + `user/users/${userSlug}/comments/`
+    process.env.REACT_APP_API_URL + `user/users/${userSlug}/comments/`,
+    localStorage.access
+      ? {
+          headers: { Authorization: "Bearer " + localStorage.access },
+        }
+      : {}
   );
   if (!response.ok) {
     throw json({ message: response.statusText }, { status: response.status });

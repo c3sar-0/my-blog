@@ -59,7 +59,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     likes = serializers.SerializerMethodField()
     is_liked_by_user = serializers.SerializerMethodField()
-    author = UserSerializer(many=False, required=True)
+    author = UserSerializer(many=False, required=False)
 
     class Meta:
         model = Comment
@@ -68,8 +68,8 @@ class CommentSerializer(serializers.ModelSerializer):
 
     def get_is_liked_by_user(self, obj):
         """Boolean. True if the user that sent the request has already liked the comment."""
-        comment = Comment.objects.get(id=obj.id)
-        return comment.likes.filter(author=self.context["request"].user.id).exists()
+        # comment = Comment.objects.get(id=obj.id)
+        return obj.likes.filter(author=self.context["request"].user.id).exists()
 
     def get_likes(self, obj):
         """Number of likes of the comment."""

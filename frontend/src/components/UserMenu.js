@@ -22,7 +22,7 @@ const UserMenu = ({ user }) => {
           />
         </div>
         <div className="user-menu__menu user-menu__menu--hidden" ref={menuRef}>
-          <Link to="/me" className="user-menu__link">
+          <Link to={`/user/${authCtx.user.slug}`} className="user-menu__link">
             {user.name}
           </Link>
           <Link to="/posts/new" className="user-menu__link">

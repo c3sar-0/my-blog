@@ -4,12 +4,13 @@
   column-gap: 2rem;
 
   &__left {
+    flex: 0 0 30%;
   }
 
   &__user-section {
     background-color: $color-white;
     flex-grow: 6;
-    width: 100%;
+    // width: 100%;
     max-width: 50vw;
     align-self: flex-start;
     border: solid $border-color $width-border;
@@ -19,13 +20,12 @@
 
   &__wall-section {
     background-color: $color-white;
-    width: 100%;
+    // width: 100%;
     border: solid $border-color $width-border;
     border-radius: $border-radius;
   }
 
   &__posts-section {
-    flex-grow: 3;
 
     ul {
       padding-left: 0;
