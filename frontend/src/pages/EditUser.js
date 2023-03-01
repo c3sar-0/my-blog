@@ -28,7 +28,8 @@ export async function action({ request, params }) {
         // "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.access,
       },
-      body: JSON.stringify(Object.fromEntries(formData)),
+      // body: JSON.stringify(Object.fromEntries(formData)),
+      body: formData,
     }
   );
 

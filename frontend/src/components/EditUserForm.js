@@ -12,12 +12,18 @@ const EditUserForm = ({ user, errors }) => {
       className="user-form"
       method="patch"
       action={`/user/${user?.slug}/edit/`}
+      encType="multipart/form-data"
     >
       <div className="user-detail__img-container user-form__pp-container u-margin-bottom-medium">
         <label className="user-form__pp-label" htmlFor="user-form-pp">
           Change picture...
         </label>
-        <input type="file" id="user-form-pp" name="image" hidden />
+        <input
+          type="file"
+          id="user-form-pp"
+          name="profile_picture_url"
+          hidden
+        />
         <ProfilePicture profile_picture_url={user?.profile_picture_url} />
       </div>
       {errors?.name && <p>{errors.name}</p>}
