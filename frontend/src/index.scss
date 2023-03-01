@@ -2,6 +2,8 @@
 
 @import "./sass/base/base";
 
+@import "./sass/base/utilities";
+
 @import "./sass/layout/header";
 
 @import "./sass/components/post-preview";
@@ -17,6 +19,7 @@
 @import "./sass/components/comment-form";
 @import "./sass/components/user-detail";
 @import "./sass/components/wall";
+@import "./sass/components/edit-user-form";
 
 @import "./sass/base/animations";
 

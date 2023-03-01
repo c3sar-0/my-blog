@@ -12,8 +12,6 @@ const Comment = ({ comment, postId, userSlug }) => {
   const textRef = useRef();
   const btnContainerRef = useRef();
 
-  const textInputRef = useRef();
-
   const [isEditing, setIsEditing] = useState(false);
   const [isLiked, setIsLiked] = useState(comment.is_liked_by_user);
   const [likes, setLikes] = useState(comment.likes);
@@ -42,7 +40,7 @@ const Comment = ({ comment, postId, userSlug }) => {
     textRef.current.value = "deleted";
   };
 
-  const editSubmitHandler = async () => {
+  const editSubmitHandler = async (text) => {
     const response = await fetch(url, {
       method: "PUT",
       headers: {
@@ -50,7 +48,7 @@ const Comment = ({ comment, postId, userSlug }) => {
         Authorization: "Bearer " + localStorage.access,
       },
       body: JSON.stringify({
-        text: textInputRef.current.value(),
+        text: text,
       }),
     });
     if (!response.ok) {
