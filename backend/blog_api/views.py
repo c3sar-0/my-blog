@@ -1,5 +1,6 @@
 from rest_framework import permissions, status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.parsers import (
@@ -18,11 +19,17 @@ from .serializers import (
     LikeSerializer,
     BookmarkSerializer,
 )
-from core.models import Post, Comment, User
+
+from core.models import Post, Comment, User, Tag
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 import json
+
+
+class tags_view(APIView):
+    def get():
+        return Response([tag.text for tag in Tag.objects.all()])
 
 
 class PostsViewSet(ModelViewSet):
@@ -40,9 +47,14 @@ class PostsViewSet(ModelViewSet):
         actions = ["destroy", "update", "partial_update"]
         # /api/blog/posts?user=<user-slug>
         user_filter = self.request.query_params.get("user")
+        tags = self.request.query_params.get("tags")
+
         queryset = super().get_queryset()
         if user_filter:
             queryset = queryset.filter(author__slug=user_filter)
+        if tags:
+            queryset = queryset.filter(tags=tags.split(","))
+
         if self.action in actions:
             return queryset.filter(author=self.request.user)
         return queryset

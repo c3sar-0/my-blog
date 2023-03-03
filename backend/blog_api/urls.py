@@ -22,3 +22,5 @@ urlpatterns = [
     path(r"", include(router.urls)),
     path(r"", include(posts_router.urls)),
 ]  # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += [path("tags/", views.tags_view.as_view())]

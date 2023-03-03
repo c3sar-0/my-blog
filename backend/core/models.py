@@ -80,6 +80,7 @@ class Post(models.Model):
         }
     )
     image_url = models.ImageField(upload_to="posts", null=True, blank=True)
+    tags = models.ManyToManyField("Tag")
 
 
 class Comment(models.Model):
@@ -112,3 +113,7 @@ class Like(models.Model):
 class Bookmark(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bookmarks")
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="bookmarks")
+
+
+class Tag(models.Model):
+    text = models.TextField(max_length=10)

@@ -1,16 +1,16 @@
-- User tab on header *
-- Render header content conditionally *
-- New Post page *
-- Edit Post page *
-- Send number of comments and if user has bookmarked in post view *
-- Finish post previews (icons, title) *
-- Add handlers to send like and bookmark requests *
-- Add comment form *
-- Make image optional, if not image, the preview is just the rest (it's smaller) *
-
+- User tab on header
+- Render header content conditionally
+- New Post page
+- Edit Post page
+- Send number of comments and if user has bookmarked in post view
+- Finish post previews (icons, title)
+- Add handlers to send like and bookmark requests
+- Add comment form
+- Make image optional, if not image, the preview is just the rest (it's smaller)
 - User page
 
 - Tags
+
 - When editing or creating a post, if I leave without saving the images uploaded to the server should be deleted.
 - /api lists endpoints
 - Put post owner actions inside a menu (3 dots), same with delete/edit comment.

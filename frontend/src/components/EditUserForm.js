@@ -5,7 +5,9 @@ import ProfilePicture from "./ProfilePicture";
 import ArticleIcon from "@mui/icons-material/Article";
 import CommentIcon from "@mui/icons-material/Comment";
 
-const EditUserForm = ({ user, errors }) => {
+const EditUserForm = ({ user, data }) => {
+  const errors = data?.errors;
+
   return (
     // <div className="user-detail">
     <Form
