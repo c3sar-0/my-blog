@@ -26,6 +26,18 @@
     }
   }
 
+  &__tags-input {
+    font-size: 1rem;
+    border: none;
+    outline: none;
+    font-weight: bold;
+    color: inherit;
+
+    &::placeholder {
+      color: inherit;
+    }
+  }
+
   &__img-input {
     visibility: hidden;
   }

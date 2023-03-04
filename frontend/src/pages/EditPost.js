@@ -27,13 +27,14 @@ const EditPost = () => {
     }
   }, [authCtx.user]);
 
-  const saveHandler = async ({ image_url, text, title }) => {
+  const saveHandler = async ({ image_url, text, title, tags }) => {
     const formData = new FormData();
     if (image_url) {
       formData.append("image_url", image_url);
     }
     formData.append("title", title);
     formData.append("text", text);
+    formData.append("tags", tags);
     submit(formData, {
       action: `/posts/${post.id}/edit/`,
       method: "PUT",
@@ -55,6 +56,7 @@ export async function action({ request, params }) {
 
   const postId = params.id;
   const formData = await request.formData();
+  console.log(formData);
   const response = await fetch(
     `${process.env.REACT_APP_API_URL}blog/posts/${postId}/`,
     {
@@ -68,6 +70,10 @@ export async function action({ request, params }) {
       body: formData.get("image_url")
         ? formData
         : JSON.stringify(Object.fromEntries(formData)),
+      // body: JSON.stringify({
+      //   ...Object.fromEntries(formData),
+      //   tags: formData.get("tags").split(","),
+      // }),
     }
   );
 

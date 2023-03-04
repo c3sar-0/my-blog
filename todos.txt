@@ -15,3 +15,4 @@
 - /api lists endpoints
 - Put post owner actions inside a menu (3 dots), same with delete/edit comment.
 - Make request util (try/catch). Check firebase's video short on that
+- Make list and detail serializers separate, specially for posts. (!)

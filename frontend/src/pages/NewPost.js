@@ -9,13 +9,14 @@ const NewPost = () => {
   const [data, setData] = useState();
   const submit = useSubmit();
 
-  const saveHandler = async ({ image_url, text, title }) => {
+  const saveHandler = async ({ image_url, text, title, tags }) => {
     const formData = new FormData();
     if (image_url) {
       formData.append("image_url", image_url);
     }
     formData.append("title", title);
     formData.append("text", text);
+    formData.append("tags", tags);
 
     submit(formData, {
       action: `/posts/new/`,

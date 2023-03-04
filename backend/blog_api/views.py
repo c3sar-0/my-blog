@@ -18,6 +18,7 @@ from .serializers import (
     CommentSerializer,
     LikeSerializer,
     BookmarkSerializer,
+    TagSerializer,
 )
 
 from core.models import Post, Comment, User, Tag
@@ -83,6 +84,10 @@ class PostsViewSet(ModelViewSet):
         updated post, it has to be deleted from te filesystem storage.
         """
         instance = self.get_object()
+
+        tags = request.data.pop("tags").split(",")
+        # request.data["tags"] = tags.split(",")
+        # MAYBE ADD THE TAG SERIALIZER DATA TO THE REQUEST.DATA AND PASS THAT (POPPING TAGS FIRST)
 
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)

@@ -8,6 +8,7 @@ const Editor = ({ onSave, data }) => {
   const navigate = useNavigate();
   const imageRef = useRef();
   const titleRef = useRef();
+  const tagsRef = useRef();
   const coverImageUrl = data?.image_url;
 
   const configuration = {
@@ -68,9 +69,16 @@ const Editor = ({ onSave, data }) => {
   const saveHandler = async () => {
     const outputData = await editor.current.save();
     const text = JSON.stringify(outputData);
+    let tags;
+    if (tagsRef.current.value) {
+      tags = tagsRef.current.value.split(",");
+    } else {
+      tags = [];
+    }
     onSave({
       image_url: file?.[0],
       title: titleRef.current.value,
+      tags,
       text,
     });
   };
@@ -121,6 +129,13 @@ const Editor = ({ onSave, data }) => {
           ref={titleRef}
           defaultValue={data ? data.title : ""}
           maxLength="150"
+        />
+        <input
+          type="text"
+          className="editor__tags-input"
+          placeholder="add,your,tags,like,this"
+          name="tags"
+          ref={tagsRef}
         />
       </div>
       <div id="editorjs" className="editor__editor" />

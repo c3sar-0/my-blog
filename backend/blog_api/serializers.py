@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from core.models import Post, Comment, Like, Bookmark
+from core.models import Post, Comment, Like, Bookmark, Tag
 from user_api.serializers import UserSerializer
 
 
@@ -41,6 +41,13 @@ class CommentSerializer(serializers.ModelSerializer):
         return str(obj.likes.count())
 
 
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = "__all__"
+        read_only_fields = ["id"]
+
+
 class PostSerializer(serializers.ModelSerializer):
     """Serializer for posts."""
 
@@ -50,6 +57,8 @@ class PostSerializer(serializers.ModelSerializer):
     likes = serializers.SerializerMethodField()
     is_liked_by_user = serializers.SerializerMethodField()
     is_bookmarked_by_user = serializers.SerializerMethodField()
+
+    # tags = TagSerializer(many=True, required=False)
 
     class Meta:
         model = Post
@@ -69,6 +78,30 @@ class PostSerializer(serializers.ModelSerializer):
     def get_likes(self, obj):
         """Number of likes of the post."""
         return str(obj.likes.count())
+
+    def create(self, validated_data):
+        tags = validated_data.pop("tags", "")
+        post = Post.objects.create(**validated_data)
+
+        for tag in tags:
+            obj, created = Tag.objects.get_or_create(text=tag)
+            post.tags.add(obj)
+
+        return post
+
+    def update(self, instance, validated_data):
+        tags = validated_data.pop("tags", None)
+        if tags:
+            instance.tags.clear()
+            for tag in tags:
+                obj, created = Tag.objects.get_or_create(text=tag)
+                instance.tags.add(obj)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+            instance.save()
+
+        return instance
 
     # def to_representation(self, instance):
     #     rep = super().to_representation(instance)

@@ -104,7 +104,11 @@ const PostPreview = (props) => {
           </Link>
         </div>
         <div className="post-preview__info">
-          <div className="post-preview__tags">#insert #tags</div>
+          <ul className="post-preview__tags">
+            {post.tags.map((tag) => (
+              <li key={tag.id}>{tag.text}</li>
+            ))}
+          </ul>
           <div className="post-preview__actions">
             <div className="post-preview__comments">
               <CommentIcon />
