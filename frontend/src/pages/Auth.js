@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import AuthContext from "../context/AuthContext";
 import AuthForm from "../components/AuthForm";
 import { useNavigate, useSearchParams } from "react-router-dom";

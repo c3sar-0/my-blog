@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import AuthContext from "../context/AuthContext";
-import { NavLink, Link, useSearchParams } from "react-router-dom";
+import { NavLink, Link, useSearchParams, useNavigate } from "react-router-dom";
 import byteBustersLogo from "../assets/ByteBustersLogoTransparent.png";
 import UserMenu from "./UserMenu";
 
@@ -12,18 +12,27 @@ const RootHeader = () => {
   const me = authCtx.user;
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const searchRef = useRef();
+  const navigate = useNavigate();
+
+  const searchHandler = async (e) => {
+    e.preventDefault();
+    navigate(`/?search=${searchRef.current.value}`);
+  };
+
   return (
     <header className="root-header">
       <NavLink className="root-header__link" to="/">
         <img className="root-header__logo" src={byteBustersLogo} />
       </NavLink>
-      <form className="root-header__search-form">
+      <form className="root-header__search-form" onSubmit={searchHandler}>
         <button className="root-header__btn" type="submit">
           <SearchIcon className="root-header__search-icon" />
         </button>
         <input
           className="root-header__search-form--bar"
           placeholder="Search..."
+          ref={searchRef}
         />
       </form>
       {!isLoggedIn && (

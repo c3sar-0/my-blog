@@ -1,0 +1,10 @@
+.read-later {
+  display: flex;
+  flex-direction: row;
+  margin: 0 2rem 2rem 2rem;
+
+  &__sidebar {
+    margin: 0;
+    margin-right: 1.5rem;
+  }
+}

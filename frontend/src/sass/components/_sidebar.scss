@@ -9,6 +9,23 @@
   border-width: $width-border;
   font-size: .85rem;
 
+  &__welcome {
+    font-size: 1.5rem;
+    font-weight: bold;
+
+    border-bottom: $width-border solid $border-color;
+  }
+
+  &__welcome-content {
+    font-size: 1rem;
+  }
+
+  &__bytebusters {
+    background-image: linear-gradient(to right, $color-light-blue, $color-dark-blue);
+    background-clip: text;
+    color: transparent;
+  }
+
   &__create-account {
     padding-bottom: 1rem;
     border-bottom: $width-border solid $color-light-gray;
@@ -16,5 +33,36 @@
 
   &__feeds {
     font-size: 1rem;
+    border-bottom: $width-border solid $color-light-gray;
+  }
+
+  &__feeds-header {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  &__tags-header {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  &__tag-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__tag-item {
+    a:visited,
+    a:link {
+      &:hover {
+        text-decoration: underline;
+      }
+
+      &::before {
+        content: "#";
+        color: $color-dark-blue;
+      }
+    }
   }
 }

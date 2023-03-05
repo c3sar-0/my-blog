@@ -28,7 +28,7 @@ const UserMenu = ({ user }) => {
           <Link to="/posts/new" className="user-menu__link">
             Create post
           </Link>
-          <Link to="#" className="user-menu__link">
+          <Link to="/read-later" className="user-menu__link">
             Read later
           </Link>
           <button className="user-menu__link" onClick={authCtx.logout}>

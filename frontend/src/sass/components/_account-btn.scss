@@ -4,7 +4,7 @@
   margin: 0 0.5rem;
   color: $color-white;
   font-weight: 600;
-  background-image: linear-gradient(to right, $color-light-blue, $color-dark-blue);
+  background-image: $linear-gradient-blue;
   padding: .55rem;
   border-radius: 2px;
 	background-color: transparent;
@@ -15,7 +15,7 @@
   overflow: hidden;
   transition: transform .2s;
 
-  // box-shadow: 2px 2px 2px lighten($color-light-blue, 10);
+  box-shadow: 2px 2px 2px lighten($color-light-blue, 10);
 
   &::after {
     content: "";

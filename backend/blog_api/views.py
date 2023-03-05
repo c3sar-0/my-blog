@@ -1,4 +1,4 @@
-from rest_framework import permissions, status
+from rest_framework import permissions, status, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -11,14 +11,13 @@ from rest_framework.parsers import (
 
 from django.shortcuts import get_object_or_404
 from django.core.files.storage import FileSystemStorage
-from django.http.request import QueryDict
+from django.db.models import Count
 
 from .serializers import (
     PostSerializer,
     CommentSerializer,
     LikeSerializer,
     BookmarkSerializer,
-    TagSerializer,
 )
 
 from core.models import Post, Comment, User, Tag
@@ -33,6 +32,11 @@ class tags_view(APIView):
         return Response([tag.text for tag in Tag.objects.all()])
 
 
+class bookmarks_view(APIView):
+    def get(self, request):
+        pass
+
+
 class PostsViewSet(ModelViewSet):
     """Viewset for posts."""
 
@@ -40,14 +44,17 @@ class PostsViewSet(ModelViewSet):
     serializer_class = PostSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated]
-
     parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+    search_fields = ["title"]
+    filter_backends = [filters.SearchFilter]
 
     def get_queryset(self):
         """For delete and put, the queryset is only the user's posts (not every post)."""
         actions = ["destroy", "update", "partial_update"]
         # /api/blog/posts?user=<user-slug>
         user_filter = self.request.query_params.get("user")
+        ordering = self.request.query_params.get("ordering")
         tags = self.request.query_params.get("tags")
         if tags:
             tags = tags.split(",")
@@ -57,6 +64,17 @@ class PostsViewSet(ModelViewSet):
             queryset = queryset.filter(author__slug=user_filter)
         if tags:
             queryset = queryset.filter(tags__text__in=tags)
+        if ordering:
+            if "comments" in ordering:
+                queryset = queryset.annotate(num_comments=Count("comments")).order_by(
+                    "-num_comments"
+                )
+            elif "likes" in ordering:
+                queryset = queryset.annotate(num_likes=Count("likes")).order_by(
+                    "-num_likes"
+                )
+            elif "created" in ordering:
+                queryset = queryset.order_by("-created")
 
         if self.action in actions:
             return queryset.filter(author=self.request.user)
@@ -88,11 +106,11 @@ class PostsViewSet(ModelViewSet):
         instance = self.get_object()
 
         r_tags = request.data.pop("tags").split(",")
-        tags = []
-        for tag in r_tags:
-            tags.append({"text": tag})
-            print("#### TAG: ", tag)
-        request.data["tags"] = tags
+        if r_tags != [""]:
+            tags = []
+            for tag in r_tags:
+                tags.append({"text": tag})
+                request.data["tags"] = tags
 
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -193,6 +211,18 @@ class PostsViewSet(ModelViewSet):
                     {"detail": "The post has not been bookmarked."},
                     status.HTTP_401_UNAUTHORIZED,
                 )
+
+    # @action(
+    #     detail=False,
+    #     methods=["GET"],
+    #     authentication_classes=[JWTAuthentication],
+    #     permission_classes=[permissions.IsAuthenticated],
+    # )
+    # def bookmark(self, request):
+    #     posts = Post.objects.filter(bookmarks__user=request.user)
+    #     serializer = self.get_serializer(posts, many=True, data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     return Response(serializer.data, status.HTTP_200_OK)
 
     @action(
         methods=["POST"],

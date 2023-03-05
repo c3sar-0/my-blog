@@ -1,10 +1,19 @@
 import React, { Suspense } from "react";
-import { defer, json, NavLink, useLoaderData, Await } from "react-router-dom";
+import {
+  defer,
+  json,
+  NavLink,
+  useLoaderData,
+  Await,
+  useSearchParams,
+} from "react-router-dom";
 import PostsList from "../components/PostsList";
 import Sidebar from "../components/Sidebar";
 
 const Home = () => {
   const { posts, tags } = useLoaderData();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const ordering = searchParams.get("ordering");
 
   return (
     <div className="home">
@@ -16,9 +25,35 @@ const Home = () => {
       <div className="home__posts-list">
         <div>
           <nav>
-            <NavLink to="#">🕒 Latest</NavLink>
-            <NavLink to="#">🔥 Hot</NavLink>
-            <NavLink to="#">🔝 Top</NavLink>
+            <NavLink to="/?ordering=created">
+              <p
+                className={`home__order ${
+                  ordering === "created" || !ordering
+                    ? "home__order--active"
+                    : ""
+                }`}
+              >
+                🕒 Latest
+              </p>
+            </NavLink>
+            <NavLink to="/?ordering=likes">
+              <p
+                className={`home__order ${
+                  ordering === "likes" ? "home__order--active" : ""
+                }`}
+              >
+                🔝 Top
+              </p>
+            </NavLink>
+            <NavLink to="/?ordering=comments">
+              <p
+                className={`home__order ${
+                  ordering === "comments" ? "home__order--active" : ""
+                }`}
+              >
+                🔥 Hot
+              </p>
+            </NavLink>
           </nav>
           <Suspense fallback={<p>Loading posts...</p>}>
             <Await resolve={posts}>
@@ -34,12 +69,20 @@ const Home = () => {
 export default Home;
 
 async function postsLoader(requestUrl) {
-  const searchParams = new URL(requestUrl).searchParams;
-  const tag = searchParams.get("tag");
+  const queryParams = new URL(requestUrl).searchParams;
+  const tag = queryParams.get("tag");
+  const search = queryParams.get("search");
+  const ordering = queryParams.get("ordering");
 
   let url = process.env.REACT_APP_API_URL + "blog/posts";
   if (tag) {
     url += `?tags=${tag}`;
+  }
+  if (search) {
+    url += `?search=${search}`;
+  }
+  if (ordering) {
+    url += `?ordering=${ordering}`;
   }
 
   const response = await fetch(url, {

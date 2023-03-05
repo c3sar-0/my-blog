@@ -80,7 +80,7 @@ class Post(models.Model):
         }
     )
     image_url = models.ImageField(upload_to="posts", null=True, blank=True)
-    tags = models.ManyToManyField("Tag")
+    tags = models.ManyToManyField("Tag", blank=True, null=True)
 
 
 class Comment(models.Model):

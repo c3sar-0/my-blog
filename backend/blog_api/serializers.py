@@ -85,9 +85,10 @@ class PostSerializer(serializers.ModelSerializer):
         tags = validated_data.pop("tags", "")
         post = Post.objects.create(**validated_data)
 
-        for tag in tags:
-            obj, created = Tag.objects.get_or_create(text=tag)
-            post.tags.add(obj)
+        if tags:
+            for tag in tags:
+                obj, created = Tag.objects.get_or_create(text=tag)
+                post.tags.add(obj)
 
         return post
 
