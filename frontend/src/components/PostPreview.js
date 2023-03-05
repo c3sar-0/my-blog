@@ -106,7 +106,9 @@ const PostPreview = (props) => {
         <div className="post-preview__info">
           <ul className="post-preview__tags">
             {post.tags.map((tag) => (
-              <li key={tag.id}>{tag.text}</li>
+              <li key={tag.id}>
+                <Link to={`/?tag=${tag.text}`}>{tag.text}</Link>
+              </li>
             ))}
           </ul>
           <div className="post-preview__actions">

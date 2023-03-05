@@ -2,9 +2,9 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 
-const Sidebar = () => {
+const Sidebar = ({ tags }) => {
   const authCtx = useContext(AuthContext);
-
+  console.log(tags);
   return (
     <section className="sidebar">
       {!authCtx.isLoggedIn && (
@@ -25,6 +25,12 @@ const Sidebar = () => {
         <p>🔖 Saved</p>
         <p>💖 Liked</p>
       </div>
+
+      <ul className="sidebar__tags">
+        {tags.map((tag, i) => (
+          <li key={i}>{tag}</li>
+        ))}
+      </ul>
     </section>
   );
 };

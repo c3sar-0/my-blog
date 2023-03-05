@@ -111,7 +111,24 @@
   }
 
   &__tags {
-    margin-bottom: .3rem;
+    list-style: none;
+    margin-bottom: 1rem;
+    display: flex;
+    padding: 0;
+
+    li {
+      &::before {
+        content: "#"
+      }
+
+      &:not(:last-child) {
+        margin-right: .5rem;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
   &__comments {

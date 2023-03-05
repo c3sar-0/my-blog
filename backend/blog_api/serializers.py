@@ -58,6 +58,8 @@ class PostSerializer(serializers.ModelSerializer):
     is_liked_by_user = serializers.SerializerMethodField()
     is_bookmarked_by_user = serializers.SerializerMethodField()
 
+    tags = TagSerializer(many=True, required=False)
+
     # tags = TagSerializer(many=True, required=False)
 
     class Meta:
@@ -94,7 +96,7 @@ class PostSerializer(serializers.ModelSerializer):
         if tags:
             instance.tags.clear()
             for tag in tags:
-                obj, created = Tag.objects.get_or_create(text=tag)
+                obj, created = Tag.objects.get_or_create(text=tag["text"])
                 instance.tags.add(obj)
 
         for attr, value in validated_data.items():

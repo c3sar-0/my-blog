@@ -29,7 +29,7 @@ import json
 
 
 class tags_view(APIView):
-    def get():
+    def get(self, request):
         return Response([tag.text for tag in Tag.objects.all()])
 
 
@@ -49,12 +49,14 @@ class PostsViewSet(ModelViewSet):
         # /api/blog/posts?user=<user-slug>
         user_filter = self.request.query_params.get("user")
         tags = self.request.query_params.get("tags")
+        if tags:
+            tags = tags.split(",")
 
         queryset = super().get_queryset()
         if user_filter:
             queryset = queryset.filter(author__slug=user_filter)
         if tags:
-            queryset = queryset.filter(tags=tags.split(","))
+            queryset = queryset.filter(tags__text__in=tags)
 
         if self.action in actions:
             return queryset.filter(author=self.request.user)
@@ -85,9 +87,12 @@ class PostsViewSet(ModelViewSet):
         """
         instance = self.get_object()
 
-        tags = request.data.pop("tags").split(",")
-        # request.data["tags"] = tags.split(",")
-        # MAYBE ADD THE TAG SERIALIZER DATA TO THE REQUEST.DATA AND PASS THAT (POPPING TAGS FIRST)
+        r_tags = request.data.pop("tags").split(",")
+        tags = []
+        for tag in r_tags:
+            tags.append({"text": tag})
+            print("#### TAG: ", tag)
+        request.data["tags"] = tags
 
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
