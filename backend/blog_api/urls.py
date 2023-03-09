@@ -24,3 +24,4 @@ urlpatterns = [
 ]  # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += [path("tags/", views.tags_view.as_view())]
+urlpatterns += [path("bookmarks/", views.get_bookmarks_view.as_view())]

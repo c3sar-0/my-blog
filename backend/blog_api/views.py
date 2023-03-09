@@ -34,9 +34,14 @@ class tags_view(APIView):
         return Response([tag.text for tag in Tag.objects.all()])
 
 
-class bookmarks_view(APIView):
+class get_bookmarks_view(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request):
-        pass
+        posts = Post.objects.filter(bookmarks__user=request.user)
+        serializer = PostSerializer(posts, many=True, context={"request": request})
+        return Response(serializer.data, status.HTTP_200_OK)
 
 
 class PostsViewSet(ModelViewSet):
@@ -56,6 +61,7 @@ class PostsViewSet(ModelViewSet):
         actions = ["destroy", "update", "partial_update"]
         # /api/blog/posts?user=<user-slug>
         user_filter = self.request.query_params.get("user")
+        # bookmarks_filter = self.request.query_params.get("bookmarks")
         ordering = self.request.query_params.get("ordering")
         tags = self.request.query_params.get("tags")
         if tags:

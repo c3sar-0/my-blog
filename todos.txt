@@ -15,3 +15,4 @@
 - Make request util (try/catch). Check firebase's video short on that
 - When editing or creating a post, if I leave without saving, the images uploaded to the server should be deleted.
 - /api lists endpoints
+- order bookmarks from date bookmarked
