@@ -5,3 +5,7 @@ even if post_pk does not exist
 I should make a request util and use that for every request. If the request returns a 401, log user out.
 
 - text overflows editor
+
+######## UPDATE REQUEST DATA:  {'title': 'asd', 'text': '{"time":1678395715419,"blocks":[{"id":"J-ZzNL1-YB","type":"paragraph","data":{"text":"asd"}}],"version":"2.26.5"}', 'tags': [{'text': 'tag1'}]}
+
+####### VIEW DATA:             {'title': 'qwe', 'text': '{"time":1678395882700,"blocks":[{"id":"k19MZIlby7","type":"paragraph","data":{"text":"sda"}}],"version":"2.26.5"}', 'tags': {'text': 'tag1'}}

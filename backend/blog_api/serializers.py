@@ -82,12 +82,12 @@ class PostSerializer(serializers.ModelSerializer):
         return str(obj.likes.count())
 
     def create(self, validated_data):
-        tags = validated_data.pop("tags", "")
+        print("####### SERIALIZER DATA: ", validated_data)
+        tags = validated_data.pop("tags", None)
         post = Post.objects.create(**validated_data)
-
         if tags:
             for tag in tags:
-                obj, created = Tag.objects.get_or_create(text=tag)
+                obj, created = Tag.objects.get_or_create(text=tag["text"])
                 post.tags.add(obj)
 
         return post

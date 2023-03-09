@@ -13,6 +13,8 @@ from django.shortcuts import get_object_or_404
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Count
 
+from django.http import QueryDict
+
 from .serializers import (
     PostSerializer,
     CommentSerializer,
@@ -97,6 +99,32 @@ class PostsViewSet(ModelViewSet):
         image_urls = map(lambda image: image["data"]["file"]["url"], images)
         return list(image_urls)
 
+    def create(self, request, *args, **kwargs):
+        # print("#### TYPE: ", type(request.data))
+        data = QueryDict.copy(request.data)  ### Shallow copy ###
+        data = data.dict()
+
+        r_tags = data.pop("tags").split(",")
+        print("###### TAGS NOT EMPTY: ", r_tags == [""])
+        if r_tags != [""]:
+            tags = []
+            for tag in r_tags:
+                tags.append({"text": tag})
+            data["tags"] = tags
+
+        print("####### TAGS: ", r_tags)
+        print("####### VIEW DATA: ", data)
+
+        # serializer = self.get_serializer(data=data)
+        serializer = PostSerializer(context={"request": request}, data=data)
+        serializer.is_valid(raise_exception=True)
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
+
     def update(self, request, *args, **kwargs):
         """
         When updating a post, the images sent by editorjs in the updated post have to be
@@ -110,7 +138,9 @@ class PostsViewSet(ModelViewSet):
             tags = []
             for tag in r_tags:
                 tags.append({"text": tag})
-                request.data["tags"] = tags
+            request.data["tags"] = tags  # this was inside the for loop before
+
+        print("######## UPDATE REQUEST DATA: ", request.data)
 
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
