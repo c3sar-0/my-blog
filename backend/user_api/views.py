@@ -14,7 +14,12 @@ from rest_framework import permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from core.models import User, Comment
-from .serializers import UserSerializer, CommentSerializer, LikeSerializer
+from .serializers import (
+    UserSerializer,
+    UserDetailSerializer,
+    CommentSerializer,
+    LikeSerializer,
+)
 
 
 class UserViewSet(ModelViewSet):
@@ -41,6 +46,12 @@ class UserViewSet(ModelViewSet):
             return get_object_or_404(User.objects.all(), id=self.request.user.id)
         return get_object_or_404(User.objects.all(), slug=self.kwargs["pk"])
 
+    def get_serializer_class(self):
+        actions = ["retrieve", "update", "partial_update", "destroy", "create"]
+        if self.action in actions:
+            return UserDetailSerializer
+        return UserSerializer
+
 
 # class CreateUserView(CreateAPIView):
 #     """View for creating a user."""
@@ -60,7 +71,7 @@ class UserViewSet(ModelViewSet):
 class MeView(RetrieveUpdateDestroyAPIView):
     """View for getting authenticated user."""
 
-    serializer_class = UserSerializer
+    serializer_class = UserDetailSerializer
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 

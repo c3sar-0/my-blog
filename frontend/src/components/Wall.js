@@ -1,20 +1,19 @@
 import React from "react";
+import { apiRequest } from "../utils/apiRequest";
 import CommentForm from "./CommentForm";
 import CommentList from "./CommentList";
 
-const Wall = ({ username, userSlug, wallComments }) => {
+const Wall = ({ username, userSlug, wallComments, updateCommentsHandler }) => {
   const submitHandler = async (text) => {
-    const response = await fetch(
+    const data = await apiRequest(
       process.env.REACT_APP_API_URL + `user/users/${userSlug}/comments/`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.access,
-        },
-        body: JSON.stringify({ text: text }),
-      }
+      "POST",
+      true,
+      JSON.stringify({ text: text }),
+      "application/json"
     );
+
+    updateCommentsHandler();
   };
 
   return (
@@ -27,7 +26,11 @@ const Wall = ({ username, userSlug, wallComments }) => {
         />
       </div>
       <div className="wall__comments">
-        <CommentList comments={wallComments} userSlug={userSlug} />
+        <CommentList
+          comments={wallComments}
+          userSlug={userSlug}
+          updateCommentsHandler={updateCommentsHandler}
+        />
       </div>
     </div>
   );

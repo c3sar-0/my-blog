@@ -1,3 +1,4 @@
+import { apiRequest } from "../utils/apiRequest";
 import React, { Suspense } from "react";
 import {
   defer,
@@ -57,7 +58,9 @@ const Home = () => {
           </nav>
           <Suspense fallback={<p>Loading posts...</p>}>
             <Await resolve={posts}>
-              {(posts) => <PostsList posts={posts} />}
+              {(posts) => {
+                return <PostsList posts={posts} />;
+              }}
             </Await>
           </Suspense>
         </div>
@@ -85,28 +88,12 @@ async function postsLoader(requestUrl) {
     url += `?ordering=${ordering}`;
   }
 
-  const response = await fetch(url, {
-    ...(localStorage.access && {
-      headers: { Authorization: "Bearer " + localStorage.access },
-    }),
-  });
-
-  if (!response.ok) {
-    throw json({ message: response.statusText }, { status: response.status });
-  }
-
-  const data = await response.json();
+  const data = await apiRequest(url);
   return data;
 }
 
 async function tagsLoader() {
-  const response = await fetch(process.env.REACT_APP_API_URL + "blog/tags");
-
-  if (!response.ok) {
-    throw json({ message: response.statusText }, { status: response.status });
-  }
-
-  const data = await response.json();
+  const data = apiRequest(process.env.REACT_APP_API_URL + "blog/tags");
   return data;
 }
 

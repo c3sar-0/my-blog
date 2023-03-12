@@ -10,7 +10,12 @@ const PostDetail = (props) => {
   const submit = useSubmit();
   // const navigate = useNavigate();
 
-  const data = JSON.parse(post.text);
+  let data;
+  try {
+    data = JSON.parse(post.text);
+  } catch {
+    data = "";
+  }
 
   const deletePostHandler = () => {
     if (!window.confirm("Are you sure you want to delete this post?")) return;

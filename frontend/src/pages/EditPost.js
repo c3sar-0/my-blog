@@ -9,6 +9,7 @@ import {
   useSubmit,
 } from "react-router-dom";
 import Editor from "../components/Editor";
+import { apiRequest } from "../utils/apiRequest";
 
 const EditPost = () => {
   const authCtx = useContext(AuthContext);
@@ -56,34 +57,43 @@ export async function action({ request, params }) {
 
   const postId = params.id;
   const formData = await request.formData();
-  console.log(formData);
-  const response = await fetch(
+
+  await apiRequest(
     `${process.env.REACT_APP_API_URL}blog/posts/${postId}/`,
-    {
-      method: "PUT",
-      headers: {
-        ...(!formData.get("image_url") && {
-          "Content-Type": "application/json",
-        }),
-        Authorization: "Bearer " + localStorage.access,
-      },
-      body: formData.get("image_url")
-        ? formData
-        : JSON.stringify(Object.fromEntries(formData)),
-      // body: JSON.stringify({
-      //   ...Object.fromEntries(formData),
-      //   tags: formData.get("tags").split(","),
-      // }),
-    }
+    "PUT",
+    true,
+    formData.get("image_url")
+      ? formData
+      : JSON.stringify(Object.fromEntries(formData))
   );
 
-  if (!response.ok && response.status === 400) {
-    return response;
-  }
+  // const response = await fetch(
+  //   `${process.env.REACT_APP_API_URL}blog/posts/${postId}/`,
+  //   {
+  //     method: "PUT",
+  //     headers: {
+  //       ...(!formData.get("image_url") && {
+  //         "Content-Type": "application/json",
+  //       }),
+  //       Authorization: "Bearer " + localStorage.access,
+  //     },
+  //     body: formData.get("image_url")
+  //       ? formData
+  //       : JSON.stringify(Object.fromEntries(formData)),
+  //     // body: JSON.stringify({
+  //     //   ...Object.fromEntries(formData),
+  //     //   tags: formData.get("tags").split(","),
+  //     // }),
+  //   }
+  // );
 
-  if (!response.ok) {
-    throw json({ message: response.statusText }, { status: response.status });
-  }
+  // if (!response.ok && response.status === 400) {
+  //   return response;
+  // }
+
+  // if (!response.ok) {
+  //   throw json({ message: response.statusText }, { status: response.status });
+  // }
 
   return redirect("/");
   // return redirect("/posts/" + postId);

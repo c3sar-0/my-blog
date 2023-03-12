@@ -9,10 +9,19 @@
 - Make image optional, if not image, the preview is just the rest (it's smaller)
 - User page
 - Tags
-
-- Put post owner actions inside a menu (3 dots), same with delete/edit comment.
 - Make list and detail serializers separate, specially for posts. (!)
 - Make request util (try/catch). Check firebase's video short on that
-- When editing or creating a post, if I leave without saving, the images uploaded to the server should be deleted.
-- /api lists endpoints
+- Comments likes are not working (deleting them)
+- Commenting should update state
+
+
+- Put post owner actions inside a menu (3 dots), same with delete/edit comment.
+- When editing or creating a post, if I leave without saving, the images uploaded to the server should be deleted. Same when editing user
 - order bookmarks from date bookmarked
+- User description shouldn't have a default on the backend. If not description, put a default on the frontend.
+- Add filtering and ordering at the same time
+- /api lists endpoints
+- Add error pages (error elements on App.js)
+- If request fails because of token, redirect to login
+
+- APPLY REST PRACTICES

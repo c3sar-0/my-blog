@@ -17,6 +17,7 @@ from django.http import QueryDict
 
 from .serializers import (
     PostSerializer,
+    PostDetailSerializer,
     CommentSerializer,
     LikeSerializer,
     BookmarkSerializer,
@@ -88,6 +89,12 @@ class PostsViewSet(ModelViewSet):
             return queryset.filter(author=self.request.user)
         return queryset
 
+    def get_serializer_class(self):
+        actions = ["retrieve", "update", "partial_update", "destroy", "create"]
+        if self.action in actions:
+            return PostDetailSerializer
+        return PostSerializer
+
     def get_permissions(self):
         """Only authorized users can post, delete and update."""
         if self.action == "retrieve" or self.action == "list":
@@ -106,23 +113,17 @@ class PostsViewSet(ModelViewSet):
         return list(image_urls)
 
     def create(self, request, *args, **kwargs):
-        # print("#### TYPE: ", type(request.data))
         data = QueryDict.copy(request.data)  ### Shallow copy ###
         data = data.dict()
 
         r_tags = data.pop("tags").split(",")
-        print("###### TAGS NOT EMPTY: ", r_tags == [""])
         if r_tags != [""]:
             tags = []
             for tag in r_tags:
                 tags.append({"text": tag})
             data["tags"] = tags
 
-        print("####### TAGS: ", r_tags)
-        print("####### VIEW DATA: ", data)
-
-        # serializer = self.get_serializer(data=data)
-        serializer = PostSerializer(context={"request": request}, data=data)
+        serializer = self.get_serializer(context={"request": request}, data=data)
         serializer.is_valid(raise_exception=True)
 
         self.perform_create(serializer)
@@ -145,8 +146,6 @@ class PostsViewSet(ModelViewSet):
             for tag in r_tags:
                 tags.append({"text": tag})
             request.data["tags"] = tags  # this was inside the for loop before
-
-        print("######## UPDATE REQUEST DATA: ", request.data)
 
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -248,18 +247,6 @@ class PostsViewSet(ModelViewSet):
                     status.HTTP_401_UNAUTHORIZED,
                 )
 
-    # @action(
-    #     detail=False,
-    #     methods=["GET"],
-    #     authentication_classes=[JWTAuthentication],
-    #     permission_classes=[permissions.IsAuthenticated],
-    # )
-    # def bookmark(self, request):
-    #     posts = Post.objects.filter(bookmarks__user=request.user)
-    #     serializer = self.get_serializer(posts, many=True, data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     return Response(serializer.data, status.HTTP_200_OK)
-
     @action(
         methods=["POST"],
         detail=False,
@@ -282,7 +269,6 @@ class PostsViewSet(ModelViewSet):
 class CommentsViewSet(ModelViewSet):
     """Viewset for comments. Post and comment pk here are accessed through self.kwargs['post_pk'/'comment_pk']"""
 
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -290,9 +276,10 @@ class CommentsViewSet(ModelViewSet):
     def get_queryset(self):
         """For delete and put, the queryset is only the user's comments."""
         actions = ["destroy", "update", "partial_update"]
+        queryset = Comment.objects.filter(post__id=self.kwargs["post_pk"])
         if self.action in actions:
-            return Comment.objects.filter(author=self.request.user)
-        return super().get_queryset()
+            return queryset.filter(author=self.request.user)
+        return queryset
 
     def get_permissions(self):
         "Only authorized users can comment, delete and update."

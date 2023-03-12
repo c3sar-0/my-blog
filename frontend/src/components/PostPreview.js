@@ -7,6 +7,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
+import { apiRequest } from "../utils/apiRequest";
 
 const PostPreview = (props) => {
   const post = props.post;
@@ -46,18 +47,12 @@ const PostPreview = (props) => {
     if (isBookmarked) {
       method = "DELETE";
     }
-    const response = await fetch(
+
+    await apiRequest(
       process.env.REACT_APP_API_URL + `blog/posts/${post.id}/bookmark/`,
-      {
-        method: method,
-        headers: { Authorization: "Bearer " + localStorage.access },
-        body: {},
-      }
+      method
     );
-    if (!response.ok) {
-      console.log(response);
-      return;
-    }
+
     if (isBookmarked) {
       setIsBookmarked(false);
     } else {
@@ -114,7 +109,7 @@ const PostPreview = (props) => {
           <div className="post-preview__actions">
             <div className="post-preview__comments">
               <CommentIcon />
-              <p>{post.comments.length}</p>
+              <p>{post.comments}</p>
             </div>
             <div className="post-preview__likes">
               {isLiked ? (

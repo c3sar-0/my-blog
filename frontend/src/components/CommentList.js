@@ -1,7 +1,7 @@
 import React from "react";
 import Comment from "./Comment";
 
-const CommentList = ({ comments, postId, userSlug }) => {
+const CommentList = ({ comments, postId, userSlug, updateCommentsHandler }) => {
   return (
     <>
       {comments.map((comment) => {
@@ -11,6 +11,7 @@ const CommentList = ({ comments, postId, userSlug }) => {
             comment={comment}
             postId={postId}
             userSlug={userSlug}
+            updateCommentsHandler={updateCommentsHandler}
           />
         );
       })}

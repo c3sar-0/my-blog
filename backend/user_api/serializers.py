@@ -4,30 +4,33 @@ from core.models import User, Comment, Like
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     profile_picture_url = serializers.ImageField(required=False)
-    number_of_comments = serializers.SerializerMethodField()
-    number_of_posts = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = [
             "name",
-            "email",
-            "password",
-            "profile_picture_url",
             "slug",
             "id",
             "created",
             "last_login",
             "description",
-            "number_of_comments",
-            "number_of_posts",
-            "wall_comments",
+            "profile_picture_url",
         ]
-        extra_kwargs = {
-            "password": {"write_only": True, "min_length": 8},
-        }
+        # fields = [
+        #     "name",
+        #     "email",
+        #     "password",
+        #     "profile_picture_url",
+        #     "slug",
+        #     "id",
+        #     "created",
+        #     "last_login",
+        #     "description",
+        #     "number_of_comments",
+        #     "number_of_posts",
+        #     "wall_comments",
+        # ]
         read_only_fields = ["slug", "created", "last_login"]
 
     def create(self, validated_data):
@@ -52,6 +55,20 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_number_of_posts(self, user):
         return user.posts.count()
+
+
+class UserDetailSerializer(UserSerializer):
+    profile_picture_url = serializers.ImageField(required=False)
+    number_of_comments = serializers.SerializerMethodField()
+    number_of_posts = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        exclude = ["is_staff", "is_superuser"]
+        extra_kwargs = {
+            "password": {"write_only": True, "min_length": 8},
+        }
+        read_only_fields = ["slug", "created", "last_login", "wall_comments"]
 
 
 class CommentSerializer(serializers.ModelSerializer):

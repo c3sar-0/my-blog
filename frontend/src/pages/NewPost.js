@@ -1,8 +1,7 @@
+import { apiRequest } from "../utils/apiRequest";
 import React, { useState } from "react";
 import { json, useActionData, redirect, useSubmit } from "react-router-dom";
 import Editor from "../components/Editor";
-
-import Tiptap from "../components/TipTap/TipTap";
 
 const NewPost = () => {
   const errors = useActionData();
@@ -28,7 +27,6 @@ const NewPost = () => {
   return (
     <div className="new-post">
       <Editor onSave={saveHandler} />
-      {/* <Tiptap /> */}
     </div>
   );
 };
@@ -40,23 +38,29 @@ export async function action({ request, params }) {
   const formData = await request.formData();
   console.log("FORM DATA: ", formData);
 
-  const response = await fetch(process.env.REACT_APP_API_URL + "blog/posts/", {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer " + String(localStorage.access),
-    },
-    body: formData,
-  });
+  const data = await apiRequest(
+    process.env.REACT_APP_API_URL + "blog/posts/",
+    "POST",
+    true,
+    formData
+  );
+  // const response = await fetch(process.env.REACT_APP_API_URL + "blog/posts/", {
+  //   method: "POST",
+  //   headers: {
+  //     Authorization: "Bearer " + String(localStorage.access),
+  //   },
+  //   body: formData,
+  // });
 
-  if (!response.ok && response.status === 400) {
-    return response;
-  }
+  // if (!response.ok && response.status === 400) {
+  //   return response;
+  // }
 
-  if (!response.ok) {
-    throw json({ message: response.statusText }, { status: response.status });
-  }
+  // if (!response.ok) {
+  //   throw json({ message: response.statusText }, { status: response.status });
+  // }
 
-  const data = await response.json();
+  // const data = await response.json();
 
   return redirect(`/posts/${data.id}`);
 }

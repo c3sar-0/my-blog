@@ -1,37 +1,62 @@
-import React from "react";
-import { json, redirect, useLoaderData } from "react-router-dom";
+import { apiRequest } from "../utils/apiRequest";
+import React, { useState, Suspense } from "react";
+import {
+  defer,
+  redirect,
+  useLoaderData,
+  Await,
+  useParams,
+} from "react-router-dom";
 import AuthorPreview from "../components/AuthorPreview";
 import CommentForm from "../components/CommentForm";
 import CommentList from "../components/CommentList";
 import PostDetail from "../components/PostDetail";
 
 const Post = () => {
-  const data = useLoaderData();
+  const { post, comments: loaderComments } = useLoaderData();
+  const [comments, setComments] = useState(null);
+  const { id: postId } = useParams();
+
+  const updateComments = async () => {
+    const updated_comments = await apiRequest(
+      process.env.REACT_APP_API_URL + `blog/posts/${postId}/comments/`
+    );
+    setComments(updated_comments);
+  };
 
   const commentSubmitHandler = async (text) => {
-    const response = await fetch(
-      process.env.REACT_APP_API_URL + `blog/posts/${data.id}/comments/`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.access,
-        },
-        body: JSON.stringify({
-          text: text,
-        }),
-      }
+    // MAYBE RETURN COMMENTS ON THE BACKEND WHEN POSTING A COMMENT AND UPDATE A COMMENTS STATE HERE
+    const data = await apiRequest(
+      process.env.REACT_APP_API_URL + `blog/posts/${postId}/comments/`,
+      "POST",
+      true,
+      JSON.stringify({ text: text }),
+      "application/json"
     );
+
+    updateComments();
   };
 
   return (
     <>
       <div className="post-page">
         <section className="post-page__post-section">
-          <PostDetail post={data} />
+          <Suspense fallback={<p>Loading post...</p>}>
+            <Await resolve={post}>
+              {(data) => {
+                return <PostDetail post={data} />;
+              }}
+            </Await>
+          </Suspense>
         </section>
         <section className="post-page__author-section">
-          <AuthorPreview author={data.author} />
+          <Suspense fallback={<p>Loading post...</p>}>
+            <Await resolve={post}>
+              {(data) => {
+                return <AuthorPreview author={data.author} />;
+              }}
+            </Await>
+          </Suspense>
         </section>
         <section className="post-page__comment-section">
           <div className="post-page__comments-header">Comments</div>
@@ -40,7 +65,19 @@ const Post = () => {
             placeholder="Add a new comment..."
             btnText="Comment"
           />
-          <CommentList comments={data.comments} postId={data.id} />
+          <Suspense fallback={<p>Loading comments...</p>}>
+            <Await resolve={loaderComments}>
+              {(data) => {
+                return (
+                  <CommentList
+                    comments={comments || data}
+                    postId={postId}
+                    updateCommentsHandler={updateComments}
+                  />
+                );
+              }}
+            </Await>
+          </Suspense>
         </section>
       </div>
     </>
@@ -49,41 +86,38 @@ const Post = () => {
 
 export default Post;
 
+async function postLoader(postId) {
+  const data = await apiRequest(
+    process.env.REACT_APP_API_URL + `blog/posts/${postId}`
+  );
+  return data;
+}
+
+async function postCommentsLoader(postId) {
+  const data = await apiRequest(
+    process.env.REACT_APP_API_URL + `blog/posts/${postId}/comments`
+  );
+  console.log(data);
+  return data;
+}
+
 export async function loader({ request, params }) {
   const postId = params.id;
 
-  const response = await fetch(
-    `http://localhost:8000/api/blog/posts/${postId}`,
-    localStorage.access
-      ? { headers: { Authorization: "Bearer " + localStorage.access } }
-      : {}
-  );
-
-  if (!response.ok) {
-    throw json({ message: response.statusText }, { status: response.status });
-  }
-
-  return response;
+  return defer({
+    post: postLoader(postId),
+    comments: postCommentsLoader(postId),
+  });
 }
 
 export async function action({ request, params }) {
   /**
    * Action for deleting posts.
    */
-  const response = await fetch(
+  await apiRequest(
     `${process.env.REACT_APP_API_URL}blog/posts/${params.id}`,
-    {
-      method: "DELETE",
-      headers: {
-        Authorization: "Bearer " + localStorage.access,
-      },
-    }
+    "DELETE"
   );
-
-  if (!response.ok) {
-    throw json({ message: response.statusText }, { status: response.status });
-  }
-
   return redirect("/");
 }
 

@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import EditUserForm from "../components/EditUserForm";
 import { json, useActionData } from "react-router-dom";
+import { apiRequest } from "../utils/apiRequest";
 
 const EditUser = () => {
   const { user } = useContext(AuthContext);
@@ -18,24 +19,31 @@ export default EditUser;
 
 export async function action({ request, params }) {
   const formData = await request.formData();
-  // const image = formData.get("image");
-  const response = await fetch(
+
+  const data = await apiRequest(
     process.env.REACT_APP_API_URL + `user/users/${params.slug}/`,
-    {
-      method: "PATCH",
-      headers: {
-        // "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.access,
-      },
-      // body: JSON.stringify(Object.fromEntries(formData)),
-      body: formData,
-    }
+    "PATCH",
+    true,
+    formData
   );
 
-  if (!response.ok) {
-    const errors = await response.json();
-    return { errors: errors };
-  }
+  // const response = await fetch(
+  //   process.env.REACT_APP_API_URL + `user/users/${params.slug}/`,
+  //   {
+  //     method: "PATCH",
+  //     headers: {
+  //       // "Content-Type": "application/json",
+  //       Authorization: "Bearer " + localStorage.access,
+  //     },
+  //     // body: JSON.stringify(Object.fromEntries(formData)),
+  //     body: formData,
+  //   }
+  // );
 
-  return response;
+  // if (!response.ok) {
+  //   const errors = await response.json();
+  //   return { errors: errors };
+  // }
+
+  // return response;
 }

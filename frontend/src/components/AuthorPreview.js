@@ -18,16 +18,15 @@ const AuthorPreview = ({ author }) => {
       </div>
       <div className="author-preview__bottom">
         <p className="author-preview__joined">Joined on {author.created}.</p>
-        <p>
-          {descriptionSlice}
-          {descriptionSlice.length >= 30 ? (
-            <div className="author-preview__see-more">
-              <Link to={`/user/${author.slug}`}>See more.</Link>
-            </div>
-          ) : (
-            ""
-          )}
-        </p>
+        <p>{descriptionSlice}</p>
+        {descriptionSlice.length >= 30 ? (
+          <div className="author-preview__see-more">
+            <Link to={`/user/${author.slug}`}>See more.</Link>
+          </div>
+        ) : (
+          ""
+        )}
+        <p> ADD MORE BY USER BELOW</p>
       </div>
     </div>
   );

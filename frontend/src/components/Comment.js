@@ -1,4 +1,5 @@
-import React, { useContext, useRef, useState, useEffect } from "react";
+import { apiRequest } from "../utils/apiRequest";
+import React, { useContext, useRef, useState } from "react";
 import AuthContext from "../context/AuthContext";
 import ProfilePicture from "./ProfilePicture";
 import CommentForm from "./CommentForm";
@@ -7,7 +8,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
-const Comment = ({ comment, postId, userSlug }) => {
+const Comment = ({ comment, postId, userSlug, updateCommentsHandler }) => {
   const authCtx = useContext(AuthContext);
   const textRef = useRef();
   const btnContainerRef = useRef();
@@ -25,36 +26,23 @@ const Comment = ({ comment, postId, userSlug }) => {
 
   const deleteHandler = async () => {
     if (!window.confirm("Are you sure you want to delete the comment?")) return;
-    const res = await fetch(url, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.access,
-      },
-    });
 
-    if (!res.ok) {
-      console.log(res.statusText);
-      return;
-    }
-    textRef.current.value = "deleted";
+    await apiRequest(url, "DELETE");
+
+    updateCommentsHandler();
   };
 
   const editSubmitHandler = async (text) => {
-    const response = await fetch(url, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.access,
-      },
-      body: JSON.stringify({
-        text: text,
-      }),
-    });
-    if (!response.ok) {
-      console.log(response);
-      return;
-    }
+    const data = await apiRequest(
+      url,
+      "PUT",
+      true,
+      JSON.stringify({ text: text }),
+      "application/json"
+    );
+
+    updateCommentsHandler();
+    setIsEditing(false);
   };
 
   const likeCommentHandler = async () => {
@@ -62,20 +50,11 @@ const Comment = ({ comment, postId, userSlug }) => {
     if (isLiked) {
       method = "DELETE";
     }
-    const response = await fetch(url + "like/", {
-      method: method,
-      headers: {
-        Authorization: "Bearer " + localStorage.access,
-      },
-    });
+    const data = await apiRequest(url + "like/", method, true);
 
-    if (!response.ok) {
-      console.log(response);
-      return;
-    }
     if (isLiked) {
       setIsLiked(false);
-      setLikes((prev) => prev--);
+      setLikes((prev) => prev - 1);
     } else {
       setIsLiked(true);
       setLikes((prev) => Number(prev) + 1);

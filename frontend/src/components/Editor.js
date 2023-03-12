@@ -1,11 +1,10 @@
+import { apiRequest } from "../utils/apiRequest";
 import React, { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import ImageTool from "@editorjs/image";
-import { useNavigate } from "react-router-dom";
 
 const Editor = ({ onSave, data }) => {
-  const navigate = useNavigate();
   const imageRef = useRef();
   const titleRef = useRef();
   const tagsRef = useRef();
@@ -32,14 +31,11 @@ const Editor = ({ onSave, data }) => {
               try {
                 const formData = new FormData();
                 formData.append("image", file);
-                const response = await fetch(
+                const resData = await apiRequest(
                   process.env.REACT_APP_API_URL + `blog/posts/file_upload/`,
-                  {
-                    method: "POST",
-                    body: formData,
-                  }
+                  "POST",
+                  formData
                 );
-                const resData = await response.json();
                 console.log("RESDATA: ", resData);
                 return resData;
               } catch (err) {

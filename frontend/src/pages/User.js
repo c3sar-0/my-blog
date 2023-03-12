@@ -1,12 +1,23 @@
-import React, { Suspense, useEffect } from "react";
-import { json, useLoaderData, defer, Await } from "react-router-dom";
+import React, { Suspense, useState } from "react";
+import { useLoaderData, defer, Await, useParams } from "react-router-dom";
 
 import UserDetail from "../components/UserDetail";
 import PostsList from "../components/PostsList";
 import Wall from "../components/Wall";
+import { apiRequest } from "../utils/apiRequest";
 
 const User = () => {
   const { user, posts, wallComments } = useLoaderData();
+  const { slug: userSlug } = useParams();
+  const [comments, setComments] = useState(null);
+
+  const updateComments = async () => {
+    const updated_comments = await apiRequest(
+      process.env.REACT_APP_API_URL + `user/users/${userSlug}/comments/`
+    );
+    setComments(updated_comments);
+  };
+
   return (
     <Suspense fallback={<p>Loading user...</p>}>
       <Await resolve={user}>
@@ -21,12 +32,13 @@ const User = () => {
                   <div className="user-page__wall-container">
                     <Suspense fallback={<p>Loading user's wall...</p>}>
                       <Await resolve={wallComments}>
-                        {(comments) => {
+                        {(data) => {
                           return (
                             <Wall
                               username={user.name}
                               userSlug={user.slug}
-                              wallComments={comments}
+                              wallComments={comments || data}
+                              updateCommentsHandler={updateComments}
                             />
                           );
                         }}
@@ -55,40 +67,25 @@ const User = () => {
 export default User;
 
 async function loadUser(userSlug) {
-  const response = await fetch(
-    process.env.REACT_APP_API_URL + `user/users/${userSlug}/`
+  const data = apiRequest(
+    process.env.REACT_APP_API_URL + `user/users/${userSlug}/`,
+    "GET",
+    false
   );
-  if (!response.ok) {
-    throw json({ message: response.statusText }, { status: response.status });
-  }
-  const data = await response.json();
   return data;
 }
 
 async function loadPosts(userSlug) {
-  const response = await fetch(
+  const data = apiRequest(
     process.env.REACT_APP_API_URL + `blog/posts?user=${userSlug}`
   );
-  if (!response.ok) {
-    throw json({ message: response.statusText }, { status: response.status });
-  }
-  const data = await response.json();
   return data;
 }
 
 async function loadWall(userSlug) {
-  const response = await fetch(
-    process.env.REACT_APP_API_URL + `user/users/${userSlug}/comments/`,
-    localStorage.access
-      ? {
-          headers: { Authorization: "Bearer " + localStorage.access },
-        }
-      : {}
+  const data = apiRequest(
+    process.env.REACT_APP_API_URL + `user/users/${userSlug}/comments`
   );
-  if (!response.ok) {
-    throw json({ message: response.statusText }, { status: response.status });
-  }
-  const data = await response.json();
   return data;
 }
 

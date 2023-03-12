@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from core.models import Post, Comment, Like, Bookmark, Tag
 from user_api.serializers import UserSerializer
+from django_editorjs.fields import EditorJsField
 
 
 class LikeSerializer(serializers.ModelSerializer):
@@ -53,19 +54,21 @@ class PostSerializer(serializers.ModelSerializer):
 
     author = UserSerializer(many=False, required=False)
     image_url = serializers.ImageField(required=False)
-    comments = CommentSerializer(many=True, required=False)
     likes = serializers.SerializerMethodField()
     is_liked_by_user = serializers.SerializerMethodField()
     is_bookmarked_by_user = serializers.SerializerMethodField()
 
+    comments = serializers.SerializerMethodField()
     tags = TagSerializer(many=True, required=False)
-
-    # tags = TagSerializer(many=True, required=False)
 
     class Meta:
         model = Post
-        fields = "__all__"
+        # fields = "__all__"
+        exclude = ["text"]
         read_only_fields = ["author", "id", "created", "updated"]
+
+    def get_comments(self, obj):
+        return obj.comments.count()
 
     def get_is_liked_by_user(self, obj):
         """Boolean. True if the user that sent the request has already liked the post."""
@@ -80,6 +83,15 @@ class PostSerializer(serializers.ModelSerializer):
     def get_likes(self, obj):
         """Number of likes of the post."""
         return str(obj.likes.count())
+
+
+class PostDetailSerializer(PostSerializer):
+    # comments = CommentSerializer(many=True, required=False)
+
+    class Meta:
+        model = Post
+        fields = "__all__"
+        read_only_fields = ["author", "id", "created", "updated"]
 
     def create(self, validated_data):
         print("####### SERIALIZER DATA: ", validated_data)
@@ -105,11 +117,6 @@ class PostSerializer(serializers.ModelSerializer):
             instance.save()
 
         return instance
-
-    # def to_representation(self, instance):
-    #     rep = super().to_representation(instance)
-    #     rep["text"] = instance.text.delta
-    #     return rep
 
 
 class BookmarkSerializer(serializers.ModelSerializer):
