@@ -42,7 +42,6 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("access", resData.access);
       localStorage.setItem("refresh", resData.refresh);
       setAuthError(null);
-      console.log("logged in");
       return navigate("/");
     }
 

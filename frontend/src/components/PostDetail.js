@@ -1,14 +1,15 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import AuthContext from "../context/AuthContext";
 import { useSubmit, Link } from "react-router-dom";
 
 import Output from "editorjs-react-renderer";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const PostDetail = (props) => {
   const authCtx = useContext(AuthContext);
   const post = props.post;
   const submit = useSubmit();
-  // const navigate = useNavigate();
+  const actionsBoxRef = useRef();
 
   let data;
   try {
@@ -22,10 +23,25 @@ const PostDetail = (props) => {
     submit(null, { method: "DELETE" });
   };
 
+  const toggleActionsHandler = () => {
+    actionsBoxRef.current.classList.toggle(
+      "post-detail__owner-actions--hidden"
+    );
+  };
+
   return (
     <div className="post-detail">
       {post.author.name == authCtx.user?.name && (
-        <div className="post-detail__owner-actions">
+        <div
+          className="post-detail__owner-actions post-detail__owner-actions--hidden"
+          ref={actionsBoxRef}
+        >
+          <button
+            className="post-detail__toggle-actions-btn"
+            onClick={toggleActionsHandler}
+          >
+            <MoreVertIcon />
+          </button>
           <button
             onClick={deletePostHandler}
             className="account-btn account-btn--red post-detail__delete-btn"
@@ -53,36 +69,3 @@ const PostDetail = (props) => {
 };
 
 export default PostDetail;
-
-// <h1>
-//   {post.title} - {post.author?.name} (
-//   {new Date(post.created).toLocaleDateString()})
-// </h1>
-// <img src={post.image_url} alt="post image" style={{ height: "300px" }} />
-// <button>{post.is_liked_by_user ? "Already liked" : "Like"}</button>
-// <p>{post.text}</p>
-// {authCtx.isLoggedIn && post.author.name === authCtx.user?.name && (
-//   <button onClick={deletePostHandler}>Delete</button>
-// )}
-// {authCtx.isLoggedIn && post.author.name === authCtx.user?.name && (
-//   <button onClick={editPostHandler}>Edit</button>
-// )}
-// <CommentForm
-//   postId={post.id}
-//   onSubmit={commentSubmitHandler}
-//   error={commentFormError}
-// />
-// <ul>
-//   {post.comments.map((comment) => {
-//     return (
-//       <li key={comment.id}>
-//         <Comment
-//           author={comment.author}
-//           text={comment.text}
-//           postId={post.id}
-//           commentId={comment.id}
-//         />
-//       </li>
-//     );
-//   })}
-// </ul>

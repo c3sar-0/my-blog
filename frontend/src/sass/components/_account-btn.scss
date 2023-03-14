@@ -38,6 +38,7 @@
 
   &--red {
     background-image: linear-gradient(to right, $color-light-red, $color-dark-red);
+    box-shadow: 2px 2px 2px lighten($color-light-red, 10);
   }
 
   &:disabled::after {

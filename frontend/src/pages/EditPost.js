@@ -52,6 +52,14 @@ const EditPost = () => {
 
 export default EditPost;
 
+export async function loader({ request, params }) {
+  const postId = params.id;
+  const data = await apiRequest(
+    process.env.REACT_APP_API_URL + `blog/posts/${postId}`
+  );
+  return data;
+}
+
 export async function action({ request, params }) {
   // Action for editing post.
 
@@ -64,37 +72,9 @@ export async function action({ request, params }) {
     true,
     formData.get("image_url")
       ? formData
-      : JSON.stringify(Object.fromEntries(formData))
+      : JSON.stringify(Object.fromEntries(formData)),
+    !formData.get("image_url") && "application/json"
   );
 
-  // const response = await fetch(
-  //   `${process.env.REACT_APP_API_URL}blog/posts/${postId}/`,
-  //   {
-  //     method: "PUT",
-  //     headers: {
-  //       ...(!formData.get("image_url") && {
-  //         "Content-Type": "application/json",
-  //       }),
-  //       Authorization: "Bearer " + localStorage.access,
-  //     },
-  //     body: formData.get("image_url")
-  //       ? formData
-  //       : JSON.stringify(Object.fromEntries(formData)),
-  //     // body: JSON.stringify({
-  //     //   ...Object.fromEntries(formData),
-  //     //   tags: formData.get("tags").split(","),
-  //     // }),
-  //   }
-  // );
-
-  // if (!response.ok && response.status === 400) {
-  //   return response;
-  // }
-
-  // if (!response.ok) {
-  //   throw json({ message: response.statusText }, { status: response.status });
-  // }
-
   return redirect("/");
-  // return redirect("/posts/" + postId);
 }

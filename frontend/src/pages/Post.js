@@ -97,7 +97,6 @@ async function postCommentsLoader(postId) {
   const data = await apiRequest(
     process.env.REACT_APP_API_URL + `blog/posts/${postId}/comments`
   );
-  console.log(data);
   return data;
 }
 

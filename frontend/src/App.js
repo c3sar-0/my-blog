@@ -13,7 +13,10 @@ import PostPage, {
   action as deletePostAction,
 } from "./pages/Post";
 import NewPostPage, { action as newPostAction } from "./pages/NewPost";
-import EditPostPage, { action as editPostAction } from "./pages/EditPost";
+import EditPostPage, {
+  action as editPostAction,
+  loader as editPostLoader,
+} from "./pages/EditPost";
 import AuthPage from "./pages/Auth";
 import UserPage, { loader as userLoader } from "./pages/User";
 import EditUserPage, { action as editUserAction } from "./pages/EditUser";
@@ -46,7 +49,7 @@ const router = createBrowserRouter([
           {
             path: "posts/:id/edit",
             element: <EditPostPage />,
-            loader: postLoader,
+            loader: editPostLoader,
             action: editPostAction,
           },
           {

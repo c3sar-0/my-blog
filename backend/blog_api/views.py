@@ -12,8 +12,8 @@ from rest_framework.parsers import (
 from django.shortcuts import get_object_or_404
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Count
-
 from django.http import QueryDict
+from django.core.files.uploadhandler import TemporaryFileUploadHandler
 
 from .serializers import (
     PostSerializer,
@@ -176,6 +176,24 @@ class PostsViewSet(ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
+        methods=["POST"],
+        detail=False,
+        authentication_classes=[JWTAuthentication],
+        permission_classes=[permissions.AllowAny],
+    )
+    def file_upload(self, request):
+        print("###### FILES: ", request.FILES)
+        f = request.FILES["image"]
+        fs = FileSystemStorage()
+        filename = str(f).split(".")[0]
+        file = fs.save(filename, f)
+        file_url = fs.url(file)
+        return Response(
+            {"success": "1", "file": {"url": f"http://localhost:8000{file_url}"}},
+            status.HTTP_201_CREATED,
+        )
+
+    @action(
         methods=["POST", "DELETE"],
         detail=True,
         authentication_classes=[JWTAuthentication],
@@ -246,24 +264,6 @@ class PostsViewSet(ModelViewSet):
                     {"detail": "The post has not been bookmarked."},
                     status.HTTP_401_UNAUTHORIZED,
                 )
-
-    @action(
-        methods=["POST"],
-        detail=False,
-        authentication_classes=[JWTAuthentication],
-        permission_classes=[permissions.AllowAny],
-    )
-    def file_upload(self, request):
-        print("#################: ", request.body)
-        f = request.FILES["image"]
-        fs = FileSystemStorage()
-        filename = str(f).split(".")[0]
-        file = fs.save(filename, f)
-        file_url = fs.url(file)
-        return Response(
-            {"success": "1", "file": {"url": f"http://localhost:8000{file_url}"}},
-            status.HTTP_201_CREATED,
-        )
 
 
 class CommentsViewSet(ModelViewSet):
