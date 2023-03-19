@@ -7,7 +7,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
-import { apiRequest } from "../utils/apiRequest";
+import apiRequest from "../utils/apiRequest";
 
 const PostPreview = (props) => {
   const post = props.post;

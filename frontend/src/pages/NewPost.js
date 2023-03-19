@@ -1,6 +1,6 @@
-import { apiRequest } from "../utils/apiRequest";
+import apiRequest from "../utils/apiRequest";
 import React, { useState } from "react";
-import { json, useActionData, redirect, useSubmit } from "react-router-dom";
+import { useActionData, redirect, useSubmit } from "react-router-dom";
 import Editor from "../components/Editor";
 
 const NewPost = () => {

@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import EditUserForm from "../components/EditUserForm";
-import { json, useActionData } from "react-router-dom";
-import { apiRequest } from "../utils/apiRequest";
+import { useActionData } from "react-router-dom";
+import apiRequest from "../utils/apiRequest";
 
 const EditUser = () => {
   const { user } = useContext(AuthContext);
@@ -26,6 +26,8 @@ export async function action({ request, params }) {
     true,
     formData
   );
+
+  return data;
 
   // const response = await fetch(
   //   process.env.REACT_APP_API_URL + `user/users/${params.slug}/`,

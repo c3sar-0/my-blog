@@ -43,9 +43,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     created = models.DateField(auto_now_add=True)
     slug = models.SlugField(null=False, unique=True)
-    description = models.TextField(
-        max_length=1000, null=True, blank=True, default="No description provided..."
-    )
+    description = models.TextField(max_length=1000, null=True, blank=True)
 
     objects = UserManager()
 
@@ -113,6 +111,7 @@ class Like(models.Model):
 class Bookmark(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bookmarks")
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="bookmarks")
+    created = models.DateTimeField(auto_now_add=True, null=True)
 
 
 class Tag(models.Model):

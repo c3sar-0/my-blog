@@ -24,7 +24,9 @@ const UserDetail = ({ user }) => {
         Joined on {new Date(user.created).toDateString()}
       </p>
       <div className="user-detail__decription-container">
-        <h4 className="user-detail__description">{user.description}</h4>
+        <h4 className="user-detail__description">
+          {user.description || "No description provided..."}
+        </h4>
       </div>
       <div className="user-detail__info">
         <div className="user-detail__posts-info">

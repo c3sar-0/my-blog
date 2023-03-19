@@ -1,4 +1,4 @@
-import { apiRequest } from "../utils/apiRequest";
+import apiRequest from "../utils/apiRequest";
 import React, { useContext, useRef, useState } from "react";
 import AuthContext from "../context/AuthContext";
 import ProfilePicture from "./ProfilePicture";

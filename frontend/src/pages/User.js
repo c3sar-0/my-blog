@@ -4,7 +4,7 @@ import { useLoaderData, defer, Await, useParams } from "react-router-dom";
 import UserDetail from "../components/UserDetail";
 import PostsList from "../components/PostsList";
 import Wall from "../components/Wall";
-import { apiRequest } from "../utils/apiRequest";
+import apiRequest from "../utils/apiRequest";
 
 const User = () => {
   const { user, posts, wallComments } = useLoaderData();

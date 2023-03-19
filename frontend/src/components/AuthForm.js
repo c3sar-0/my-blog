@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import { Form, useSearchParams, useActionData } from "react-router-dom";
+import React, { useRef } from "react";
+import { useSearchParams, useActionData } from "react-router-dom";
 
 const AuthForm = (props) => {
   const emailRef = useRef();

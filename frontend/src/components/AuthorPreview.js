@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import ProfilePicture from "./ProfilePicture";
 
 const AuthorPreview = ({ author }) => {
-  let descriptionSlice = author.description.slice(0, 100);
+  let descriptionSlice = author.description
+    ? author.description.slice(0, 100)
+    : "No description provided...";
   if (descriptionSlice.length >= 30) {
     descriptionSlice += "...";
   }
@@ -18,13 +20,12 @@ const AuthorPreview = ({ author }) => {
       </div>
       <div className="author-preview__bottom">
         <p className="author-preview__joined">Joined on {author.created}.</p>
-        <p>{descriptionSlice}</p>
         {descriptionSlice.length >= 30 ? (
           <div className="author-preview__see-more">
             <Link to={`/user/${author.slug}`}>See more.</Link>
           </div>
         ) : (
-          ""
+          descriptionSlice
         )}
         <p> ADD MORE BY USER BELOW</p>
       </div>

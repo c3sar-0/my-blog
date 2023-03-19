@@ -1,8 +1,7 @@
-import { apiRequest } from "../utils/apiRequest";
+import apiRequest from "../utils/apiRequest";
 import React, { Suspense } from "react";
 import {
   defer,
-  json,
   NavLink,
   useLoaderData,
   Await,
@@ -26,7 +25,17 @@ const Home = () => {
       <div className="home__posts-list">
         <div>
           <nav>
-            <NavLink to="/?ordering=created">
+            <NavLink
+              to={`/?${
+                (searchParams.get("search") &&
+                  `search=${searchParams.get("search")}&`) ||
+                ""
+              }${
+                (searchParams.get("tag") &&
+                  `tag=${searchParams.get("tag")}&`) ||
+                ""
+              }ordering=created`}
+            >
               <p
                 className={`home__order ${
                   ordering === "created" || !ordering
@@ -37,7 +46,17 @@ const Home = () => {
                 🕒 Latest
               </p>
             </NavLink>
-            <NavLink to="/?ordering=likes">
+            <NavLink
+              to={`/?${
+                (searchParams.get("search") &&
+                  `search=${searchParams.get("search")}&`) ||
+                ""
+              }${
+                (searchParams.get("tag") &&
+                  `tag=${searchParams.get("tag")}&`) ||
+                ""
+              }ordering=likes`}
+            >
               <p
                 className={`home__order ${
                   ordering === "likes" ? "home__order--active" : ""
@@ -46,7 +65,17 @@ const Home = () => {
                 🔝 Top
               </p>
             </NavLink>
-            <NavLink to="/?ordering=comments">
+            <NavLink
+              to={`/?${
+                (searchParams.get("search") &&
+                  `search=${searchParams.get("search")}&`) ||
+                ""
+              }${
+                (searchParams.get("tag") &&
+                  `tag=${searchParams.get("tag")}&`) ||
+                ""
+              }ordering=comments`}
+            >
               <p
                 className={`home__order ${
                   ordering === "comments" ? "home__order--active" : ""
@@ -77,23 +106,26 @@ async function postsLoader(requestUrl) {
   const search = queryParams.get("search");
   const ordering = queryParams.get("ordering");
 
-  let url = process.env.REACT_APP_API_URL + "blog/posts";
+  let reqParams = [];
   if (tag) {
-    url += `?tags=${tag}`;
+    reqParams.push(`tags=${tag}`);
   }
   if (search) {
-    url += `?search=${search}`;
+    reqParams.push(`search=${search}`);
   }
   if (ordering) {
-    url += `?ordering=${ordering}`;
+    reqParams.push(`ordering=${ordering}`);
   }
+  const url = `${process.env.REACT_APP_API_URL}blog/posts?${reqParams.join(
+    "&"
+  )}`;
 
   const data = await apiRequest(url);
   return data;
 }
 
 async function tagsLoader() {
-  const data = apiRequest(process.env.REACT_APP_API_URL + "blog/tags");
+  const data = await apiRequest(process.env.REACT_APP_API_URL + "blog/tags");
   return data;
 }
 

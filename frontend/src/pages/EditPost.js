@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import AuthContext from "../context/AuthContext";
 import {
-  json,
   redirect,
   useActionData,
   useLoaderData,
@@ -9,7 +8,7 @@ import {
   useSubmit,
 } from "react-router-dom";
 import Editor from "../components/Editor";
-import { apiRequest } from "../utils/apiRequest";
+import apiRequest from "../utils/apiRequest";
 
 const EditPost = () => {
   const authCtx = useContext(AuthContext);

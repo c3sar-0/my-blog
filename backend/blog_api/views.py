@@ -23,7 +23,7 @@ from .serializers import (
     BookmarkSerializer,
 )
 
-from core.models import Post, Comment, User, Tag
+from core.models import Post, Comment, Tag, Bookmark
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -40,7 +40,9 @@ class get_bookmarks_view(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        posts = Post.objects.filter(bookmarks__user=request.user)
+        posts = Post.objects.filter(bookmarks__user=request.user).order_by(
+            "-bookmarks__created"
+        )
         serializer = PostSerializer(posts, many=True, context={"request": request})
         return Response(serializer.data, status.HTTP_200_OK)
 

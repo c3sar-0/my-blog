@@ -1,6 +1,6 @@
-import { json } from "react-router-dom";
+import { json, redirect } from "react-router-dom";
 
-export async function apiRequest(
+export default async function apiRequest(
   url,
   method = "GET",
   isAuth = true,
@@ -19,15 +19,22 @@ export async function apiRequest(
         }),
       ...(body && { body: body }),
     });
-    if (!response.ok) {
-      throw json({ message: response.message }, { status: response.status });
-    }
 
     let data;
     try {
       data = await response.json();
     } catch {
       data = {};
+    }
+
+    if (!response.ok) {
+      console.log(data);
+      if (data.code === "token_not_valid") {
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+        window.location = "/";
+      }
+      throw json({ message: response.message }, { status: response.status });
     }
 
     return data;

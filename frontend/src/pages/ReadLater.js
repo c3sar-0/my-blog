@@ -1,8 +1,8 @@
 import React, { Suspense } from "react";
-import { defer, json, Await, useLoaderData } from "react-router-dom";
+import { defer, Await, useLoaderData } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import PostsList from "../components/PostsList";
-import { apiRequest } from "../utils/apiRequest";
+import apiRequest from "../utils/apiRequest";
 
 const ReadLater = () => {
   const { tags, bookmarks } = useLoaderData();
@@ -19,7 +19,6 @@ const ReadLater = () => {
         <Suspense fallback={<p>Loading bookmarks...</p>}>
           <Await resolve={bookmarks}>
             {(posts) => {
-              console.log(posts);
               return <PostsList posts={posts} />;
             }}
           </Await>

@@ -1,4 +1,4 @@
-import { apiRequest } from "../utils/apiRequest";
+import apiRequest from "../utils/apiRequest";
 import React, { useState, Suspense } from "react";
 import {
   defer,

@@ -1,4 +1,4 @@
-import { apiRequest } from "../utils/apiRequest";
+import apiRequest from "../utils/apiRequest";
 import React, { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";

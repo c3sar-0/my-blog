@@ -21,6 +21,7 @@ import AuthPage from "./pages/Auth";
 import UserPage, { loader as userLoader } from "./pages/User";
 import EditUserPage, { action as editUserAction } from "./pages/EditUser";
 import ReadLaterPage, { loader as readLaterLoader } from "./pages/ReadLater";
+import ErrorPage from "./pages/Error";
 
 import PrivateRoute from "./utils/PrivateRoute";
 
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <RootLayout />,
+        errorElement: <ErrorPage />,
         children: [
           {
             index: true,

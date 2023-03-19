@@ -1,5 +1,5 @@
 import React from "react";
-import { apiRequest } from "../utils/apiRequest";
+import apiRequest from "../utils/apiRequest";
 import CommentForm from "./CommentForm";
 import CommentList from "./CommentList";
 

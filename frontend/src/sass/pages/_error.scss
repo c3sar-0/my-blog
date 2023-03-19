@@ -1,0 +1,12 @@
+.error-page {
+  text-align: center;
+
+  &__icon {
+    width: 5rem !important;
+    height: 5rem !important;
+  }
+  &__message {
+    font-size: 3rem;
+    margin: 0;
+  }
+}
