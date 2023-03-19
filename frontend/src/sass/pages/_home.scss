@@ -1,17 +1,20 @@
 .home {
   display: flex;
-  flex-direction: row;
   margin: 0 2rem 2rem 2rem;
 
   &__sidebar {
+    width: 30%;
+    @include respond(tab-port) {
+      display: none;
+    }
   }
 
   &__posts-list {
-    // & ul {
-    //   margin: 0;
-    //   padding: 0;
-    // }
-    width: 60vw;
+    width: 70%;
+    @include respond(tab-port) {
+      width: 90%;
+      margin: 0 auto;
+    }
 
     & nav {
       display: flex;

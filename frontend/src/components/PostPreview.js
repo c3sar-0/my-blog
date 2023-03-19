@@ -69,8 +69,14 @@ const PostPreview = (props) => {
   return (
     <article className="post-preview" ref={postPreviewRef}>
       {post.image_url && (
-        <div className="post-preview__img-container">
-          <img src={post.image_url} alt="Post" className="post-preview__img" />
+        <div className="post-preview__img-container-wrapper">
+          <div className="post-preview__img-container">
+            <img
+              src={post.image_url}
+              alt="Post"
+              className="post-preview__img"
+            />
+          </div>
         </div>
       )}
       <div

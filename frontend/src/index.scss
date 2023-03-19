@@ -1,8 +1,9 @@
 @import "./sass/abstract/variables";
+@import "./sass/abstract/mixins"; 
 
 @import "./sass/base/base";
-
 @import "./sass/base/utilities";
+@import "./sass/base/animations";
 
 @import "./sass/layout/header";
 
@@ -21,8 +22,6 @@
 @import "./sass/components/user-detail";
 @import "./sass/components/wall";
 @import "./sass/components/edit-user-form";
-
-@import "./sass/base/animations";
 
 @import "./sass/pages/home";
 @import "./sass/pages/post";

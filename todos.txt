@@ -21,6 +21,7 @@
 - Add error pages (error elements on App.js)
 
 - If request fails because of token, redirect to login
+- Responsive design
 
 - When editing or creating a post, if I leave without saving, the images uploaded to the server should be deleted. Same when editing user
 - APPLY REST PRACTICES
