@@ -2,6 +2,10 @@
   display: flex;
   margin: 0 2rem 2rem 2rem;
 
+  @include respond(phone) {
+    margin: 0 1rem 2rem 1rem;
+  }
+
   &__sidebar {
     width: 30%;
     @include respond(tab-port) {
@@ -10,10 +14,15 @@
   }
 
   &__posts-list {
-    width: 70%;
+    width: 65%;
+
     @include respond(tab-port) {
-      width: 90%;
+      width: 100%;
       margin: 0 auto;
+    }
+
+    @include respond(phone) {
+      width: 95%;
     }
 
     & nav {
