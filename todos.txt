@@ -22,7 +22,11 @@
 
 - If request fails because of token, redirect to login
 - Responsive design
+- The side bar should be toggleable everywhere on the site (CHECK DEV.TO)
+- Make images preserve ratio (CHECK DEV.TO)
+- Margin between post img, title and tags is not good on phones (post preview)
 
 - When editing or creating a post, if I leave without saving, the images uploaded to the server should be deleted. Same when editing user
 - APPLY REST PRACTICES
 - /api lists endpoints
+- Make code dry. Among much other stuff, the code for the profile picture image borders on the frontend is repeated various times.

@@ -5,8 +5,9 @@ import byteBustersLogo from "../assets/ByteBustersLogoTransparent.png";
 import UserMenu from "./UserMenu";
 
 import SearchIcon from "@mui/icons-material/Search";
+import MenuIcon from "@mui/icons-material/Menu";
 
-const RootHeader = () => {
+const RootHeader = ({ toggleSidebar }) => {
   const authCtx = useContext(AuthContext);
   const isLoggedIn = authCtx.isLoggedIn;
   const me = authCtx.user;
@@ -22,11 +23,14 @@ const RootHeader = () => {
 
   return (
     <header className="root-header">
+      <div className="root-header__sidebar-menu" onClick={toggleSidebar}>
+        <MenuIcon />
+      </div>
       <NavLink className="root-header__link" to="/">
         <img className="root-header__logo" src={byteBustersLogo} />
       </NavLink>
       <form className="root-header__search-form" onSubmit={searchHandler}>
-        <button className="root-header__btn" type="submit">
+        <button className="root-header__search-btn" type="submit">
           <SearchIcon className="root-header__search-icon" />
         </button>
         <input
@@ -55,81 +59,21 @@ const RootHeader = () => {
           </Link>
         </nav>
       )}
-      {isLoggedIn && me && (
-        <div className="root-header__user">
-          <Link to="/posts/new" className="account-btn">
+      <div className="root-header__user">
+        {isLoggedIn && me && (
+          <Link
+            to="/posts/new"
+            className="account-btn root-header__new-post-btn"
+          >
             New Post
           </Link>
-          {isLoggedIn && <UserMenu user={me} />}
+        )}
+        <div className="root-header__user-menu">
+          <UserMenu user={me} />
         </div>
-      )}
+      </div>
     </header>
   );
 };
 
-export default RootHeader; /*
-
-/*
-<header className="root-header">
-      <nav className="root-header__nav">
-        <div className="root-header__container">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              isActive ? "root-header__nav active" : ""
-            }
-          >
-            <h3>Home</h3>
-          </NavLink>
-          <NavLink
-            to="posts"
-            className={({ isActive }) =>
-              isActive ? "root-header__nav active" : ""
-            }
-            end
-          >
-            <h3>Posts</h3>
-          </NavLink>
-          <NavLink
-            to="posts/new"
-            className={({ isActive }) =>
-              isActive ? "root-header__nav active" : ""
-            }
-          >
-            <h3>New Post</h3>
-          </NavLink>
-          {/* <a>Hello, {authCtx.name}</a> */ /*
-          </div>
-          {!isLoggedIn && (
-            <div className="root-header__container">
-              <NavLink
-                to="/auth?mode=login"
-                className={({ isActive }) =>
-                  isActive ? "root-header__nav active" : ""
-                }
-              >
-                <h3>Login</h3>
-              </NavLink>
-            </div>
-          )}
-          {isLoggedIn && me && (
-            <div className="root-header__container">
-              <NavLink
-                to="/me"
-                className={({ isActive }) =>
-                  isActive ? "root-header__nav active" : ""
-                }
-              >
-                <h3>{me.name}</h3>
-              </NavLink>
-              <h3
-                className="root-header__container--logout"
-                onClick={logoutHandler}
-              >
-                Logout
-              </h3>
-            </div>
-          )}
-        </nav>
-      </header>
-*/
+export default RootHeader;

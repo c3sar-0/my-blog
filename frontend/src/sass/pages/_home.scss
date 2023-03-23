@@ -1,29 +1,47 @@
 .home {
   display: flex;
   margin: 0 2rem 2rem 2rem;
+  
+  @include respond(tab-land) {
+    margin: 0 1rem 1rem 1rem;
+  }
 
-  @include respond(phone) {
-    margin: 0 1rem 2rem 1rem;
+  &__overlay {
+    display: none;
+    z-index: 200;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0,0,0,.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    @include respond(phone) {
+      display: block;
+    }
   }
 
   &__sidebar {
     width: 30%;
-    @include respond(tab-port) {
-      display: none;
+    max-width: 25rem;
+    margin-right: 1.5rem;
+
+    @include respond(phone) {
+      z-index: 300;
+      width: 20rem;
+      position: fixed;
+      top: 4.5rem;
+      left: .5rem;
+    }
+
+    @include respond(tab-land) {
+      margin-right: .5rem;
     }
   }
 
   &__posts-list {
-    width: 65%;
-
-    @include respond(tab-port) {
-      width: 100%;
-      margin: 0 auto;
-    }
-
-    @include respond(phone) {
-      width: 95%;
-    }
+    width: 100%;
+    max-width: 900px;
 
     & nav {
       display: flex;
@@ -34,6 +52,10 @@
       padding: .6rem 0;
       border: $width-border solid $border-color;
       border-radius: $border-radius;
+
+      @include respond(tab-land) {
+        margin-bottom: .5rem;
+      }
 
       a:visited,
       a:link {

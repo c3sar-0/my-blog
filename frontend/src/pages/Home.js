@@ -6,6 +6,7 @@ import {
   useLoaderData,
   Await,
   useSearchParams,
+  useOutletContext,
 } from "react-router-dom";
 import PostsList from "../components/PostsList";
 import Sidebar from "../components/Sidebar";
@@ -14,85 +15,84 @@ const Home = () => {
   const { posts, tags } = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
   const ordering = searchParams.get("ordering");
+  const { showSidebar } = useOutletContext();
 
   return (
     <div className="home">
-      <div className="home__sidebar">
-        <Suspense fallback={<p>Loading sidebar...</p>}>
-          <Await resolve={tags}>{(tags) => <Sidebar tags={tags} />}</Await>
-        </Suspense>
-      </div>
+      {showSidebar && (
+        <>
+          <div className="home__overlay"></div>
+          <div className="home__sidebar">
+            <Suspense fallback={<p>Loading sidebar...</p>}>
+              <Await resolve={tags}>{(tags) => <Sidebar tags={tags} />}</Await>
+            </Suspense>
+          </div>
+        </>
+      )}
       <div className="home__posts-list">
-        <div>
-          <nav>
-            <NavLink
-              to={`/?${
-                (searchParams.get("search") &&
-                  `search=${searchParams.get("search")}&`) ||
-                ""
-              }${
-                (searchParams.get("tag") &&
-                  `tag=${searchParams.get("tag")}&`) ||
-                ""
-              }ordering=created`}
+        <nav>
+          <NavLink
+            to={`/?${
+              (searchParams.get("search") &&
+                `search=${searchParams.get("search")}&`) ||
+              ""
+            }${
+              (searchParams.get("tag") && `tag=${searchParams.get("tag")}&`) ||
+              ""
+            }ordering=created`}
+          >
+            <p
+              className={`home__order ${
+                ordering === "created" || !ordering ? "home__order--active" : ""
+              }`}
             >
-              <p
-                className={`home__order ${
-                  ordering === "created" || !ordering
-                    ? "home__order--active"
-                    : ""
-                }`}
-              >
-                🕒 Latest
-              </p>
-            </NavLink>
-            <NavLink
-              to={`/?${
-                (searchParams.get("search") &&
-                  `search=${searchParams.get("search")}&`) ||
-                ""
-              }${
-                (searchParams.get("tag") &&
-                  `tag=${searchParams.get("tag")}&`) ||
-                ""
-              }ordering=likes`}
+              🕒 Latest
+            </p>
+          </NavLink>
+          <NavLink
+            to={`/?${
+              (searchParams.get("search") &&
+                `search=${searchParams.get("search")}&`) ||
+              ""
+            }${
+              (searchParams.get("tag") && `tag=${searchParams.get("tag")}&`) ||
+              ""
+            }ordering=likes`}
+          >
+            <p
+              className={`home__order ${
+                ordering === "likes" ? "home__order--active" : ""
+              }`}
             >
-              <p
-                className={`home__order ${
-                  ordering === "likes" ? "home__order--active" : ""
-                }`}
-              >
-                🔝 Top
-              </p>
-            </NavLink>
-            <NavLink
-              to={`/?${
-                (searchParams.get("search") &&
-                  `search=${searchParams.get("search")}&`) ||
-                ""
-              }${
-                (searchParams.get("tag") &&
-                  `tag=${searchParams.get("tag")}&`) ||
-                ""
-              }ordering=comments`}
+              🔝 Top
+            </p>
+          </NavLink>
+          <NavLink
+            to={`/?${
+              (searchParams.get("search") &&
+                `search=${searchParams.get("search")}&`) ||
+              ""
+            }${
+              (searchParams.get("tag") && `tag=${searchParams.get("tag")}&`) ||
+              ""
+            }ordering=comments`}
+          >
+            <p
+              className={`home__order ${
+                ordering === "comments" ? "home__order--active" : ""
+              }`}
             >
-              <p
-                className={`home__order ${
-                  ordering === "comments" ? "home__order--active" : ""
-                }`}
-              >
-                🔥 Hot
-              </p>
-            </NavLink>
-          </nav>
-          <Suspense fallback={<p>Loading posts...</p>}>
-            <Await resolve={posts}>
-              {(posts) => {
-                return <PostsList posts={posts} />;
-              }}
-            </Await>
-          </Suspense>
-        </div>
+              🔥 Hot
+            </p>
+          </NavLink>
+        </nav>
+        <Suspense fallback={<p>Loading posts...</p>}>
+          <Await resolve={posts}>
+            {(posts) => {
+              return <PostsList posts={posts} />;
+            }}
+          </Await>
+        </Suspense>
       </div>
     </div>
   );

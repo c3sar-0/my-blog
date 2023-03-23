@@ -1,10 +1,4 @@
-import {
-  BrowserRouter,
-  createBrowserRouter,
-  Route,
-  RouterProvider,
-  Routes,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import HomePage, { loader as postsLoader } from "./pages/Home";
 import RootLayout from "./pages/Root";

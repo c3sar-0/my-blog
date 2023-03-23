@@ -18,22 +18,38 @@ const UserMenu = ({ user }) => {
         <div className="user-menu__img-container">
           <ProfilePicture
             onClick={toggleMenuHandler}
-            profile_picture_url={user.profile_picture_url}
+            profile_picture_url={user?.profile_picture_url}
           />
         </div>
         <div className="user-menu__menu user-menu__menu--hidden" ref={menuRef}>
-          <Link to={`/user/${authCtx.user.slug}`} className="user-menu__link">
-            {user.name}
-          </Link>
-          <Link to="/posts/new" className="user-menu__link">
-            Create post
-          </Link>
-          <Link to="/read-later" className="user-menu__link">
-            Read later
-          </Link>
-          <button className="user-menu__link" onClick={authCtx.logout}>
-            Sign out
-          </button>
+          {user ? (
+            <>
+              <Link
+                to={`/user/${authCtx.user.slug}`}
+                className="user-menu__link"
+              >
+                {user.name}
+              </Link>
+              <Link to="/posts/new" className="user-menu__link">
+                Create post
+              </Link>
+              <Link to="/read-later" className="user-menu__link">
+                Read later
+              </Link>
+              <button className="user-menu__link" onClick={authCtx.logout}>
+                Sign out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link className={"account-btn"} to="/auth?mode=login">
+                Log In
+              </Link>
+              <Link className={"account-btn"} to="/auth?mode=register">
+                Create Account
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </>
