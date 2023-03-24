@@ -42,7 +42,7 @@ const RootHeader = ({ toggleSidebar }) => {
       {!isLoggedIn && (
         <nav className="root-header__nav">
           <Link
-            className={`account-btn ${
+            className={`account-btn account-btn__login ${
               searchParams.get("mode") === "login" ? "active" : ""
             }`}
             to="/auth?mode=login"
@@ -50,7 +50,7 @@ const RootHeader = ({ toggleSidebar }) => {
             Log In
           </Link>
           <Link
-            className={`account-btn ${
+            className={`account-btn account-btn__create ${
               searchParams.get("mode") === "register" ? "active" : ""
             }`}
             to="/auth?mode=register"
@@ -61,16 +61,18 @@ const RootHeader = ({ toggleSidebar }) => {
       )}
       <div className="root-header__user">
         {isLoggedIn && me && (
-          <Link
-            to="/posts/new"
-            className="account-btn root-header__new-post-btn"
-          >
-            New Post
-          </Link>
+          <>
+            <Link
+              to="/posts/new"
+              className="account-btn root-header__new-post-btn"
+            >
+              New Post
+            </Link>
+            <div className="root-header__user-menu">
+              <UserMenu user={me} />
+            </div>
+          </>
         )}
-        <div className="root-header__user-menu">
-          <UserMenu user={me} />
-        </div>
       </div>
     </header>
   );

@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import ProfilePicture from "./ProfilePicture";
 
 const AuthorPreview = ({ author }) => {
+  //** Author preview used at the right of post details */
+
   let descriptionSlice = author.description
     ? author.description.slice(0, 100)
     : "No description provided...";
@@ -14,7 +16,11 @@ const AuthorPreview = ({ author }) => {
     <div className="author-preview">
       <div className="author-preview__top">
         <div className="author-preview__img">
-          <ProfilePicture profile_picture_url={author.profile_picture_url} />
+          <ProfilePicture
+            profile_picture_url={author.profile_picture_url}
+            border={true}
+            bg={true}
+          />
         </div>
         <p>{author.name}</p>
       </div>

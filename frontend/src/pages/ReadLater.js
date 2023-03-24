@@ -9,9 +9,11 @@ const ReadLater = () => {
 
   return (
     <div className="read-later">
-      <Suspense fallback={<p>Loading tags...</p>}>
-        <Await resolve={tags}>{(tags) => <Sidebar tags={tags} />}</Await>
-      </Suspense>
+      <div className="read-later__sidebar">
+        <Suspense fallback={<p>Loading tags...</p>}>
+          <Await resolve={tags}>{(tags) => <Sidebar tags={tags} />}</Await>
+        </Suspense>
+      </div>
       <div className="read-later__post-list">
         <div className="read-later__header">
           <p>Bookmarks</p>

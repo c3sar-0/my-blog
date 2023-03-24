@@ -7,6 +7,7 @@ import CommentForm from "./CommentForm";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import AuthorHeader from "./AuthorHeader";
 
 const Comment = ({ comment, postId, userSlug, updateCommentsHandler }) => {
   const authCtx = useContext(AuthContext);
@@ -84,19 +85,7 @@ const Comment = ({ comment, postId, userSlug, updateCommentsHandler }) => {
         </div>
         {!isEditing && (
           <>
-            <div className="comment__author">
-              <div className="post-preview__author-img-container">
-                <ProfilePicture
-                  profile_picture_url={comment.author.profile_picture_url}
-                />
-              </div>
-              <div>
-                <p className="comment__author-name">{comment.author.name}</p>
-                <p className="comment__date">
-                  {new Date(comment.created).toDateString()}
-                </p>
-              </div>
-            </div>
+            <AuthorHeader author={comment.author} date={comment.created} />
             <div className="comment__content">
               <p ref={textRef}>{comment.text}</p>
             </div>

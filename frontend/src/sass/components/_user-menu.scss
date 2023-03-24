@@ -7,21 +7,6 @@
   &__img-container {
     width: 100%;
     height: 100%;
-
-    &::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      transform: scale(1.1);
-      transform-origin: center;
-      background-image: $linear-gradient-blue;
-      z-index: -1;
-      border-radius: 50%;
-      outline: 2.5px solid $color-white;
-    }
   }
 
   &__menu {

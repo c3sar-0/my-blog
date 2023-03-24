@@ -4,6 +4,7 @@ import { useSubmit, Link } from "react-router-dom";
 
 import Output from "editorjs-react-renderer";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import AuthorHeader from "./AuthorHeader";
 
 const PostDetail = (props) => {
   const authCtx = useContext(AuthContext);
@@ -59,12 +60,13 @@ const PostDetail = (props) => {
         </div>
       )}
       <div className="post-detail__info">
-        <h1>{post.title}</h1>
+        <AuthorHeader author={post.author} date={post.created} />
+        <h1 className="post-detail__title">{post.title}</h1>
         <div className="post-detail__tags">
           {post.tags.map((tag) => (
-            <a href="#" key={tag.id}>
+            <Link to={`/?tag=${tag.text}`} key={tag.id}>
               {tag.text}
-            </a>
+            </Link>
           ))}
         </div>
       </div>

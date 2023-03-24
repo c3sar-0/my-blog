@@ -14,8 +14,13 @@
   position: relative;
   overflow: hidden;
   transition: transform .2s;
-
   box-shadow: 2px 2px 2px lighten($color-light-blue, 10);
+
+  &__create {
+    @include respond(phone) {
+      display: none;
+    }
+  }
 
   &::after {
     content: "";

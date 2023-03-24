@@ -100,15 +100,14 @@
         flex: 0 0 auto;
 
         @include respond(phone) {
-            display: none;
         }
 
         & a {
             &.active {
-				outline-style: solid;
-				outline-color: $color-light-blue;
-				outline-offset: 3px;
-				outline-width: 2px;
+				// outline-style: solid;
+				// outline-color: $color-light-blue;
+				// outline-offset: 3px;
+				// outline-width: 2px;
             }
         }
     }

@@ -12,7 +12,11 @@ const UserDetail = ({ user }) => {
   return (
     <div className="user-detail">
       <div className="user-detail__img-container">
-        <ProfilePicture profile_picture_url={user.profile_picture_url} />
+        <ProfilePicture
+          profile_picture_url={user.profile_picture_url}
+          bg={true}
+          border={true}
+        />
       </div>
       <h1>{user.name}</h1>
       {authCtx.user?.name === user.name && (

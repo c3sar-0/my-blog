@@ -8,6 +8,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import apiRequest from "../utils/apiRequest";
+import AuthorHeader from "./AuthorHeader";
 
 const PostPreview = (props) => {
   const post = props.post;
@@ -84,21 +85,7 @@ const PostPreview = (props) => {
           post.image_url ? "" : "post-preview__content--horizontal"
         }`}
       >
-        <Link to={`/user/${post.author.slug}`}>
-          <div className="post-preview__author">
-            <div className="post-preview__author-img-container">
-              <ProfilePicture
-                profile_picture_url={post.author.profile_picture_url}
-              />
-            </div>
-            <div>
-              <p className="post-preview__author-name">{post.author.name}</p>
-              <p className="post-preview__date">
-                {new Date(post.created).toDateString()}
-              </p>
-            </div>
-          </div>
-        </Link>
+        <AuthorHeader author={post.author} date={post.created} />
         <div className="post-preview__title-container">
           <Link to={`/posts/${post.id}`} className="post-preview__title">
             <p>{post.title.toUpperCase()}</p>

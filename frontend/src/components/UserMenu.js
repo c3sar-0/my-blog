@@ -19,6 +19,7 @@ const UserMenu = ({ user }) => {
           <ProfilePicture
             onClick={toggleMenuHandler}
             profile_picture_url={user?.profile_picture_url}
+            border={true}
           />
         </div>
         <div className="user-menu__menu user-menu__menu--hidden" ref={menuRef}>
