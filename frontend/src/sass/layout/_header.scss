@@ -41,9 +41,9 @@
     &__search-form {
         height: 4.2vh;
         flex: 0 1 50%;
+        margin: 0 auto;
 
         display: flex;
-		display: flex;
 		align-items: center;
         justify-content: center;
         
@@ -53,7 +53,6 @@
 
         &--bar {
             width: 90%;
-            // border-radius: 100px;
             border-radius: $border-radius;
             border-style: solid;
             padding-left: 5vh;
@@ -117,6 +116,7 @@
     &__user {
         display: flex;
         align-items: center;
+        margin-left: .5rem;
 
         .account-btn {
             margin-right: 1.5rem;
@@ -124,8 +124,6 @@
     }
 
     &__user-menu {
-        display: none;
-
         @include respond(phone) {
             display: block;
         }
@@ -133,7 +131,7 @@
 
     &__new-post-btn {
         @include respond(phone) {
-            display: none;
+            display: none !important;
         }
     }
 }

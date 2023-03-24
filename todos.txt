@@ -19,12 +19,16 @@
 - User description shouldn't have a default on the backend. If not description, put a default on the frontend.
 - Add filtering and ordering at the same time
 - Add error pages (error elements on App.js)
-
 - If request fails because of token, redirect to login
+
 - Responsive design
+- Margin between post img, title and tags is not good on phones (post preview)
+
+- Add like, save button, and small author under image/title to post detail
+
+- Add margin variables
 - The side bar should be toggleable everywhere on the site (CHECK DEV.TO)
 - Make images preserve ratio (CHECK DEV.TO)
-- Margin between post img, title and tags is not good on phones (post preview)
 
 - When editing or creating a post, if I leave without saving, the images uploaded to the server should be deleted. Same when editing user
 - APPLY REST PRACTICES

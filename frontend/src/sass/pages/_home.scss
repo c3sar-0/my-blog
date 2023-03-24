@@ -17,8 +17,11 @@
     left: 0;
 
     @include respond(phone) {
-      display: block;
+      &--visible {
+        display: block;
+      }
     }
+
   }
 
   &__sidebar {
@@ -37,11 +40,19 @@
     @include respond(tab-land) {
       margin-right: .5rem;
     }
+
+    &--hidden {
+      animation: slide-up .5s forwards;
+    }
+
+    &--visible {
+      animation: slide-down .5s forwards;
+    }
   }
 
   &__posts-list {
     width: 100%;
-    max-width: 900px;
+    max-width: 1100px;
 
     & nav {
       display: flex;

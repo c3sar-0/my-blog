@@ -19,16 +19,22 @@ const Home = () => {
 
   return (
     <div className="home">
-      {showSidebar && (
-        <>
-          <div className="home__overlay"></div>
-          <div className="home__sidebar">
-            <Suspense fallback={<p>Loading sidebar...</p>}>
-              <Await resolve={tags}>{(tags) => <Sidebar tags={tags} />}</Await>
-            </Suspense>
-          </div>
-        </>
-      )}
+      <>
+        <div
+          className={`home__overlay ${
+            showSidebar ? "home__overlay--visible" : "home__overlay--hidden"
+          }`}
+        ></div>
+        <div
+          className={`home__sidebar ${
+            showSidebar ? "home__sidebar--visible" : "home__sidebar--hidden"
+          }`}
+        >
+          <Suspense fallback={<p>Loading sidebar...</p>}>
+            <Await resolve={tags}>{(tags) => <Sidebar tags={tags} />}</Await>
+          </Suspense>
+        </div>
+      </>
       <div className="home__posts-list">
         <nav>
           <NavLink

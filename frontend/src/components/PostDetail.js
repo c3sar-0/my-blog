@@ -60,6 +60,13 @@ const PostDetail = (props) => {
       )}
       <div className="post-detail__info">
         <h1>{post.title}</h1>
+        <div className="post-detail__tags">
+          {post.tags.map((tag) => (
+            <a href="#" key={tag.id}>
+              {tag.text}
+            </a>
+          ))}
+        </div>
       </div>
       <div className="post-detail__text">
         <Output data={data} />

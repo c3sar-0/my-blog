@@ -2,8 +2,9 @@
     position: relative;
 
   &__image {
-    width: 100%;
-    height: 70vh;
+    // width: 100%;
+    // height: 70vh;
+    aspect-ratio: $image-aspect-ratio;
 
     & img {
       width: 100%;
