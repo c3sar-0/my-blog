@@ -24,10 +24,11 @@
 
 - Responsive design
 
-- Add like, save button, and small author under image/title to post detail
-
 - Add margin variables
+- Add like, save button, and small author under image/title to post detail
 - The side bar should be toggleable everywhere on the site (CHECK DEV.TO)
+THE OVERLAY SHOULD BE ON ROOT AND BE UNIQUE (it can be used by every component (maybe future modals))
+
 - Make images preserve ratio (CHECK DEV.TO)
 - When no search found or no posts saved, etc, put a fallback like "no posts found, try something different"
 - Add show more to wall comments? (only for phones)

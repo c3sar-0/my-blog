@@ -1,10 +1,12 @@
 import React, { Suspense, useState } from "react";
 import { useLoaderData, defer, Await, useParams } from "react-router-dom";
 
+import apiRequest from "../utils/apiRequest";
+
 import UserDetail from "../components/UserDetail";
 import PostsList from "../components/PostsList";
 import Wall from "../components/Wall";
-import apiRequest from "../utils/apiRequest";
+import Sidebar from "../components/Sidebar";
 
 const User = () => {
   const { user, posts, wallComments } = useLoaderData();
@@ -19,48 +21,53 @@ const User = () => {
   };
 
   return (
-    <Suspense fallback={<p>Loading user...</p>}>
-      <Await resolve={user}>
-        {(user) => {
-          return (
-            <div className="user-page">
-              <div className="user-page__left">
-                <section className="user-page__user-section">
-                  <UserDetail user={user} />
+    <div className="user-page">
+      <div className="user-page__sidebar">
+        <Sidebar />
+      </div>
+      <Suspense fallback={<p>Loading user...</p>}>
+        <Await resolve={user}>
+          {(user) => {
+            return (
+              <>
+                <div className="user-page__left">
+                  <section className="user-page__user-section">
+                    <UserDetail user={user} />
+                  </section>
+                  <section className="user-page__wall-section">
+                    <div className="user-page__wall-container">
+                      <Suspense fallback={<p>Loading user's wall...</p>}>
+                        <Await resolve={wallComments}>
+                          {(data) => {
+                            return (
+                              <Wall
+                                username={user.name}
+                                userSlug={user.slug}
+                                wallComments={comments || data}
+                                updateCommentsHandler={updateComments}
+                              />
+                            );
+                          }}
+                        </Await>
+                      </Suspense>
+                    </div>
+                  </section>
+                </div>
+                <section className="user-page__posts-section">
+                  <Suspense fallback={<p>Loading user's posts....</p>}>
+                    <Await resolve={posts}>
+                      {(loadedPosts) => {
+                        return <PostsList posts={loadedPosts} />;
+                      }}
+                    </Await>
+                  </Suspense>
                 </section>
-                <section className="user-page__wall-section">
-                  <div className="user-page__wall-container">
-                    <Suspense fallback={<p>Loading user's wall...</p>}>
-                      <Await resolve={wallComments}>
-                        {(data) => {
-                          return (
-                            <Wall
-                              username={user.name}
-                              userSlug={user.slug}
-                              wallComments={comments || data}
-                              updateCommentsHandler={updateComments}
-                            />
-                          );
-                        }}
-                      </Await>
-                    </Suspense>
-                  </div>
-                </section>
-              </div>
-              <section className="user-page__posts-section">
-                <Suspense fallback={<p>Loading user's posts....</p>}>
-                  <Await resolve={posts}>
-                    {(loadedPosts) => {
-                      return <PostsList posts={loadedPosts} />;
-                    }}
-                  </Await>
-                </Suspense>
-              </section>
-            </div>
-          );
-        }}
-      </Await>
-    </Suspense>
+              </>
+            );
+          }}
+        </Await>
+      </Suspense>
+    </div>
   );
 };
 

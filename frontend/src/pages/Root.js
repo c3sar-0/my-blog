@@ -12,8 +12,6 @@ const RootLayout = () => {
     setShowSidebar((prev) => !prev);
   };
 
-  console.log(showSidebar);
-
   return (
     <>
       <RootHeader toggleSidebar={toggleSidebarHandler} />

@@ -14,6 +14,17 @@
     gap: .5rem;
   }
 
+  &__sidebar {
+    flex: 1 0 30%;
+    max-width: 25rem;
+    display: none;
+
+    @include respond(phone) {
+      flex: auto;
+      display: block;
+    }
+  }
+
   &__left {
     // flex: 0 0 30%;
     max-width: 25rem;

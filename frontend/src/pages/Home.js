@@ -6,35 +6,24 @@ import {
   useLoaderData,
   Await,
   useSearchParams,
-  useOutletContext,
 } from "react-router-dom";
 import PostsList from "../components/PostsList";
 import Sidebar from "../components/Sidebar";
 
 const Home = () => {
-  const { posts, tags } = useLoaderData();
+  const { posts } = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
   const ordering = searchParams.get("ordering");
-  const { showSidebar } = useOutletContext();
 
   return (
     <div className="home">
-      <>
-        <div
-          className={`home__overlay ${
-            showSidebar ? "home__overlay--visible" : "home__overlay--hidden"
-          }`}
-        ></div>
-        <div
-          className={`home__sidebar ${
-            showSidebar ? "home__sidebar--visible" : "home__sidebar--hidden"
-          }`}
-        >
-          <Suspense fallback={<p>Loading sidebar...</p>}>
-            <Await resolve={tags}>{(tags) => <Sidebar tags={tags} />}</Await>
-          </Suspense>
-        </div>
-      </>
+      <div className="home__sidebar">
+        {/* <Suspense fallback={<p>Loading sidebar...</p>}> */}
+        {/* <Await resolve={tags}>{(tags) => */}
+        <Sidebar />
+        {/* }</Await> */}
+        {/* </Suspense> */}
+      </div>
       <div className="home__posts-list">
         <nav>
           <NavLink
@@ -130,14 +119,14 @@ async function postsLoader(requestUrl) {
   return data;
 }
 
-async function tagsLoader() {
-  const data = await apiRequest(process.env.REACT_APP_API_URL + "blog/tags");
-  return data;
-}
+// async function tagsLoader() {
+//   const data = await apiRequest(process.env.REACT_APP_API_URL + "blog/tags");
+//   return data;
+// }
 
 export async function loader({ request, params }) {
   return defer({
     posts: postsLoader(request.url),
-    tags: tagsLoader(),
+    // tags: tagsLoader(),
   });
 }

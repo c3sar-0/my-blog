@@ -1,5 +1,10 @@
 import React, { Suspense } from "react";
-import { defer, Await, useLoaderData } from "react-router-dom";
+import {
+  defer,
+  Await,
+  useLoaderData,
+  useOutletContext,
+} from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import PostsList from "../components/PostsList";
 import apiRequest from "../utils/apiRequest";
