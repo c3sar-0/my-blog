@@ -74,6 +74,10 @@
     p {
       font-size: 1.3rem;
       margin: 0;
+
+      @include respond(desktop) {
+        font-size: 1.6rem;
+      }
     }
   }
 

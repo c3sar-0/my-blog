@@ -1,7 +1,23 @@
 .new-post {
-  // width: 70rem;
-  width: 70vw;
-  margin: 0 auto;
+  margin: $margin-big;
+  margin-top: 0;
   border: solid 2px $border-color;
   border-radius: 5px;
+  max-width: 1200px;
+
+  @include respond(tab-land) {
+    margin: $margin-medium;
+  }
+
+  @include respond(desktop) {
+    margin: 0 auto;
+  }
+
+  &__sidebar {
+    display: none;
+
+    @include respond(phone) {
+      display: block;
+    }
+  }
 }

@@ -1,7 +1,11 @@
 .editor {
   background-color: $color-white;
   text-align: center;
-  padding: 1rem 2rem;
+  padding: $margin-medium $margin-big;
+
+  @include respond(tab-port) {
+    padding: $margin-medium $margin-medium;
+  }
 
   &__title {
     font-size: 2rem;
@@ -71,12 +75,16 @@
 
 .ce-block__content {
   margin: 0;
-  margin-left: 4rem;
-  // width: 100%;
+  margin-left: 3rem;
   max-width: none;
 }
 
 .ce-toolbar {
+  top: 0 !important;
+
+  &--opened {
+  }
+
   &__content {
     width: 100%;
     max-width: none;
@@ -84,8 +92,20 @@
   }
 
   &__actions {
+    flex-direction: column;
     padding: 0;
     left: 0;
+  }
+
+  &__plus {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  &__settings-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin: 0;
   }
 }
 

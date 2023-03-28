@@ -1,9 +1,14 @@
-import { Navigate, Outlet } from "react-router-dom";
-
 import React from "react";
+import { Navigate, Outlet, useOutletContext } from "react-router-dom";
 
 const PrivateRoute = () => {
-  return localStorage.access ? <Outlet /> : <Navigate to="/auth?mode=login" />;
+  const rootContext = useOutletContext();
+
+  return localStorage.access ? (
+    <Outlet context={rootContext} />
+  ) : (
+    <Navigate to="/auth?mode=login" />
+  );
 };
 
 export default PrivateRoute;

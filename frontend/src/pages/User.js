@@ -30,29 +30,29 @@ const User = () => {
           {(user) => {
             return (
               <>
-                <div className="user-page__left">
-                  <section className="user-page__user-section">
-                    <UserDetail user={user} />
-                  </section>
-                  <section className="user-page__wall-section">
-                    <div className="user-page__wall-container">
-                      <Suspense fallback={<p>Loading user's wall...</p>}>
-                        <Await resolve={wallComments}>
-                          {(data) => {
-                            return (
-                              <Wall
-                                username={user.name}
-                                userSlug={user.slug}
-                                wallComments={comments || data}
-                                updateCommentsHandler={updateComments}
-                              />
-                            );
-                          }}
-                        </Await>
-                      </Suspense>
-                    </div>
-                  </section>
-                </div>
+                {/* <div className="user-page__content"> */}
+                <section className="user-page__user-section">
+                  <UserDetail user={user} />
+                </section>
+                <section className="user-page__wall-section">
+                  <div className="user-page__wall-container">
+                    <Suspense fallback={<p>Loading user's wall...</p>}>
+                      <Await resolve={wallComments}>
+                        {(data) => {
+                          return (
+                            <Wall
+                              username={user.name}
+                              userSlug={user.slug}
+                              wallComments={comments || data}
+                              updateCommentsHandler={updateComments}
+                            />
+                          );
+                        }}
+                      </Await>
+                    </Suspense>
+                  </div>
+                </section>
+                {/* </div> */}
                 <section className="user-page__posts-section">
                   <Suspense fallback={<p>Loading user's posts....</p>}>
                     <Await resolve={posts}>

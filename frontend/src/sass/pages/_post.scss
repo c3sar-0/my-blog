@@ -23,6 +23,14 @@
   @include respond(phone) {
   }
 
+  &__sidebar {
+    display: none;
+
+    @include respond(phone) {
+      display: block;
+    }
+  }
+
   &__post-section, &__author-section, &__comment-section {
     border: $width-border solid $border-color;
     background-color: $color-white;

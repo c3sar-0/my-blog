@@ -11,6 +11,7 @@ import AuthorPreview from "../components/AuthorPreview";
 import CommentForm from "../components/CommentForm";
 import CommentList from "../components/CommentList";
 import PostDetail from "../components/PostDetail";
+import Sidebar from "../components/Sidebar";
 
 const Post = () => {
   const { post, comments: loaderComments } = useLoaderData();
@@ -39,6 +40,9 @@ const Post = () => {
 
   return (
     <>
+      <div className="post-page__sidebar">
+        <Sidebar />
+      </div>
       <div className="post-page">
         <section className="post-page__post-section">
           <Suspense fallback={<p>Loading post...</p>}>

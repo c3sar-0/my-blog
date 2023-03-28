@@ -14,6 +14,12 @@ const RootLayout = () => {
 
   return (
     <>
+      <div
+        className={`root__overlay ${
+          showSidebar ? "root__overlay--visible" : "root__overlay--hidden"
+        }`}
+        onClick={toggleSidebarHandler}
+      ></div>
       <RootHeader toggleSidebar={toggleSidebarHandler} />
       <Outlet context={{ showSidebar: showSidebar }} />
     </>

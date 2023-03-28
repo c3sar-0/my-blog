@@ -2,6 +2,7 @@ import apiRequest from "../utils/apiRequest";
 import React, { useState } from "react";
 import { useActionData, redirect, useSubmit } from "react-router-dom";
 import Editor from "../components/Editor";
+import Sidebar from "../components/Sidebar";
 
 const NewPost = () => {
   const errors = useActionData();
@@ -25,9 +26,14 @@ const NewPost = () => {
   };
 
   return (
-    <div className="new-post">
-      <Editor onSave={saveHandler} />
-    </div>
+    <>
+      <div className="new-post__sidebar">
+        <Sidebar />
+      </div>
+      <div className="new-post">
+        <Editor onSave={saveHandler} />
+      </div>
+    </>
   );
 };
 
@@ -44,23 +50,5 @@ export async function action({ request, params }) {
     true,
     formData
   );
-  // const response = await fetch(process.env.REACT_APP_API_URL + "blog/posts/", {
-  //   method: "POST",
-  //   headers: {
-  //     Authorization: "Bearer " + String(localStorage.access),
-  //   },
-  //   body: formData,
-  // });
-
-  // if (!response.ok && response.status === 400) {
-  //   return response;
-  // }
-
-  // if (!response.ok) {
-  //   throw json({ message: response.statusText }, { status: response.status });
-  // }
-
-  // const data = await response.json();
-
   return redirect(`/posts/${data.id}`);
 }
