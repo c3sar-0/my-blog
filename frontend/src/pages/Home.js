@@ -18,11 +18,7 @@ const Home = () => {
   return (
     <div className="home">
       <div className="home__sidebar">
-        {/* <Suspense fallback={<p>Loading sidebar...</p>}> */}
-        {/* <Await resolve={tags}>{(tags) => */}
         <Sidebar />
-        {/* }</Await> */}
-        {/* </Suspense> */}
       </div>
       <div className="home__posts-list">
         <nav>

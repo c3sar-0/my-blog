@@ -20,22 +20,20 @@
 - Add filtering and ordering at the same time
 - Add error pages (error elements on App.js)
 - If request fails because of token, redirect to login
-- Margin between post img, title and tags is not good on phones (post preview)
 
 - Responsive design
-
-- Add margin variables
-- Add like, save button, and small author under image/title to post detail
+- Margin between post img, title and tags is not good on phones (post preview)
 - The side bar should be toggleable everywhere on the site (CHECK DEV.TO)
-THE OVERLAY SHOULD BE ON ROOT AND BE UNIQUE (it can be used by every component (maybe future modals))
-
 - Make images preserve ratio (CHECK DEV.TO)
-- When no search found or no posts saved, etc, put a fallback like "no posts found, try something different"
-- Add show more to wall comments? (only for phones)
+- Add margin variables
 - Solve Read Later page margins. Add the margin variables.
 
-- Pagination
+- Add like, save button, and small author under image/title to post detail
 
+- When no search found or no posts saved, etc, put a fallback like "no posts found, try something different"
+- Add show more to wall comments? (only for phones)
+
+- Pagination
 - When editing or creating a post, if I leave without saving, the images uploaded to the server should be deleted. Same when editing user
 - APPLY REST PRACTICES
 - /api lists endpoints

@@ -1,6 +1,28 @@
 .edit-post {
-  width: 70rem;
-  margin: 0 auto;
+  // width: 70rem;
+  // margin: 0 auto;
+  // border: solid 2px $border-color;
+  // border-radius: 5px;
+
+  margin: $margin-big;
+  margin-top: 0;
   border: solid 2px $border-color;
   border-radius: 5px;
+  max-width: 1200px;
+
+  @include respond(tab-land) {
+    margin: $margin-medium;
+  }
+
+  @include respond(desktop) {
+    margin: 0 auto;
+  }
+
+  &__sidebar {
+    display: none;
+
+    @include respond(phone) {
+      display: block;
+    }
+  }
 }

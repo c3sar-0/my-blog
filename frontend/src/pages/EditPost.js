@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import Editor from "../components/Editor";
 import apiRequest from "../utils/apiRequest";
+import Sidebar from "../components/Sidebar";
 
 const EditPost = () => {
   const authCtx = useContext(AuthContext);
@@ -44,6 +45,9 @@ const EditPost = () => {
 
   return (
     <div className="edit-post">
+      <div className="edit-post__sidebar">
+        <Sidebar />
+      </div>
       <Editor onSave={saveHandler} data={post} />
     </div>
   );
