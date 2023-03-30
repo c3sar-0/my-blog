@@ -178,12 +178,13 @@ class PostsViewSet(ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
-        methods=["POST"],
+        methods=["POST", "DELETE"],
         detail=False,
         authentication_classes=[JWTAuthentication],
         permission_classes=[permissions.AllowAny],
     )
     def file_upload(self, request):
+        """Post and delete images for the blog posts"""
         print("###### FILES: ", request.FILES)
         f = request.FILES["image"]
         fs = FileSystemStorage()

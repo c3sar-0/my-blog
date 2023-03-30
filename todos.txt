@@ -21,6 +21,12 @@
 - Add error pages (error elements on App.js)
 - If request fails because of token, redirect to login
 
+- When editing or creating a post, if I leave without saving, the images uploaded to the server should be deleted. Same when editing user
+  I've dumped the idea of temporary files. I'll just handle all that on the frontend. I just need to be able to send DELETE requests to the backend for deleting the images.
+  I think:
+    The images need to have an owner (request.user). Only the owner can delete the image.
+    I forgot that I already added the functionality to delete unused images when updating a post on the backend. I just need to do the same for creating a post. And then also add the useCallbackPrompt thing to delete the images uploaded when leaving without saving.
+
 - Responsive design
 - Margin between post img, title and tags is not good on phones (post preview)
 - The side bar should be toggleable everywhere on the site (CHECK DEV.TO)
@@ -34,7 +40,6 @@
 - Add show more to wall comments? (only for phones)
 
 - Pagination
-- When editing or creating a post, if I leave without saving, the images uploaded to the server should be deleted. Same when editing user
 - APPLY REST PRACTICES
 - /api lists endpoints
 - Make code dry. Among much other stuff, the code for the profile picture image borders on the frontend is repeated various times.

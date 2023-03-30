@@ -9,6 +9,9 @@ const Editor = ({ onSave, data }) => {
   const titleRef = useRef();
   const tagsRef = useRef();
   const coverImageUrl = data?.image_url;
+
+  const [uploadedImages, setUploadedImages] = useState([]);
+
   const configuration = {
     holder: "editorjs",
     autofocus: true,
@@ -23,29 +26,6 @@ const Editor = ({ onSave, data }) => {
           endpoints: {
             byFile: "localhost:8000/api/blog/posts/file_upload/",
           },
-
-          // uploader: {
-          //   async uploadByFile(file) {
-          //     try {
-          //       const formData = new FormData();
-          //       formData.append("image", file);
-          //       console.log("FORMDATA: ", formData);
-          //       const response = await fetch(
-          //         process.env.REACT_APP_API_URL + `blog/posts/file_upload/`,
-          //         {
-          //           method: "POST",
-          //           body: formData,
-          //         }
-          //       );
-          //       const resData = await response.json();
-          //       console.log("RESDATA: ", resData);
-          //       return resData;
-          //     } catch (err) {
-          //       console.log("ERROR: ", err.message);
-          //     }
-          //   },
-          // },
-
           uploader: {
             async uploadByFile(file) {
               try {
@@ -58,7 +38,8 @@ const Editor = ({ onSave, data }) => {
                   true,
                   formData
                 );
-                console.log("RESDATA: ", resData);
+                // Add uploaded image to uploadedImages array so it can be deleted in case it's removed in the editor
+                setUploadedImages((x) => [...x, resData.file.url]);
                 return resData;
               } catch (err) {
                 console.log("ERROR: ", err.message);
@@ -69,6 +50,19 @@ const Editor = ({ onSave, data }) => {
       },
     },
     ...(data && { data: JSON.parse(data.text) }),
+    onChange: (api, event) => {
+      const currentImages = [];
+      document
+        .querySelectorAll(".image-tool__image-picture")
+        .forEach((img) => currentImages.push(img.src));
+      if (uploadedImages.length > currentImages.length) {
+        uploadedImages.forEach(async (img) => {
+          if (!currentImages.includes(uploadedImages)) {
+            const data = await apiRequest();
+          }
+        });
+      }
+    },
   };
 
   const editor = useRef();
