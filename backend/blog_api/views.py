@@ -21,6 +21,7 @@ from .serializers import (
     CommentSerializer,
     LikeSerializer,
     BookmarkSerializer,
+    PostContentImageSerializer,
 )
 
 from core.models import Post, Comment, Tag, Bookmark
@@ -156,6 +157,7 @@ class PostsViewSet(ModelViewSet):
         new_image_urls = self.get_image_urls(serializer.validated_data["text"])
 
         fs = FileSystemStorage()
+        # Delete images that were deleted from the post
         for image in old_image_urls:
             if image not in new_image_urls:
                 image_name = image.split("/")[-1]
@@ -184,13 +186,20 @@ class PostsViewSet(ModelViewSet):
         permission_classes=[permissions.AllowAny],
     )
     def file_upload(self, request):
-        """Post and delete images for the blog posts"""
-        print("###### FILES: ", request.FILES)
+        """Upload post content images. When an image is uploaded, besides storing it to file system storage,
+        a PostContentImage model instance is created which contains the url of the image and the user that uploaded it.
+        The post field is temporarily set to null. This instance is used for deleting unused images."""
         f = request.FILES["image"]
         fs = FileSystemStorage()
         filename = str(f).split(".")[0]
         file = fs.save(filename, f)
         file_url = fs.url(file)
+
+        serializer = PostContentImageSerializer(
+            data={"url": file_url}, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(
             {"success": "1", "file": {"url": f"http://localhost:8000{file_url}"}},
             status.HTTP_201_CREATED,

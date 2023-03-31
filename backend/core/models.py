@@ -81,6 +81,16 @@ class Post(models.Model):
     tags = models.ManyToManyField("Tag", blank=True, null=True)
 
 
+class PostContentImage(models.Model):
+    """Model for the posts' content images, NOT the cover image."""
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="images")
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name="images", null=True
+    )
+    url = models.CharField(max_length=255, null=False, blank=False)
+
+
 class Comment(models.Model):
     """Comment model. It can be a post comment OR a user's wall comment."""
 

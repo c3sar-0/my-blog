@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from core.models import Post, Comment, Like, Bookmark, Tag
+from core.models import Post, Comment, Like, Bookmark, Tag, PostContentImage
 from user_api.serializers import UserSerializer
 from django_editorjs.fields import EditorJsField
 
@@ -94,7 +94,6 @@ class PostDetailSerializer(PostSerializer):
         read_only_fields = ["author", "id", "created", "updated"]
 
     def create(self, validated_data):
-        print("####### SERIALIZER DATA: ", validated_data)
         tags = validated_data.pop("tags", None)
         post = Post.objects.create(**validated_data)
         if tags:
@@ -117,6 +116,19 @@ class PostDetailSerializer(PostSerializer):
             instance.save()
 
         return instance
+
+
+class PostContentImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostContentImage
+        fields = "__all__"
+        read_only_fields = ["user"]
+
+    def create(self, validated_data):
+        content_image = PostContentImage.objects.create(
+            **validated_data, user=self.context["request"].user
+        )
+        return content_image
 
 
 class BookmarkSerializer(serializers.ModelSerializer):

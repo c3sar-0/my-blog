@@ -10,7 +10,7 @@ const Editor = ({ onSave, data }) => {
   const tagsRef = useRef();
   const coverImageUrl = data?.image_url;
 
-  const [uploadedImages, setUploadedImages] = useState([]);
+  // const [uploadedImages, setUploadedImages] = useState([]);
 
   const configuration = {
     holder: "editorjs",
@@ -39,7 +39,7 @@ const Editor = ({ onSave, data }) => {
                   formData
                 );
                 // Add uploaded image to uploadedImages array so it can be deleted in case it's removed in the editor
-                setUploadedImages((x) => [...x, resData.file.url]);
+                // setUploadedImages((x) => [...x, resData.file.url]);
                 return resData;
               } catch (err) {
                 console.log("ERROR: ", err.message);
@@ -50,19 +50,19 @@ const Editor = ({ onSave, data }) => {
       },
     },
     ...(data && { data: JSON.parse(data.text) }),
-    onChange: (api, event) => {
-      const currentImages = [];
-      document
-        .querySelectorAll(".image-tool__image-picture")
-        .forEach((img) => currentImages.push(img.src));
-      if (uploadedImages.length > currentImages.length) {
-        uploadedImages.forEach(async (img) => {
-          if (!currentImages.includes(uploadedImages)) {
-            const data = await apiRequest();
-          }
-        });
-      }
-    },
+    // onChange: (api, event) => {
+    //   const currentImages = [];
+    //   document
+    //     .querySelectorAll(".image-tool__image-picture")
+    //     .forEach((img) => currentImages.push(img.src));
+    //   if (uploadedImages.length > currentImages.length) {
+    //     uploadedImages.forEach(async (img) => {
+    //       if (!currentImages.includes(uploadedImages)) {
+    //         const data = await apiRequest();
+    //       }
+    //     });
+    //   }
+    // },
   };
 
   const editor = useRef();

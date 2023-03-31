@@ -22,10 +22,19 @@
 - If request fails because of token, redirect to login
 
 - When editing or creating a post, if I leave without saving, the images uploaded to the server should be deleted. Same when editing user
-  I've dumped the idea of temporary files. I'll just handle all that on the frontend. I just need to be able to send DELETE requests to the backend for deleting the images.
+  I've discarded the idea of temporary files. I'll just handle all that on the frontend. I just need to be able to send DELETE requests to the backend for deleting the images.
   I think:
-    The images need to have an owner (request.user). Only the owner can delete the image.
-    I forgot that I already added the functionality to delete unused images when updating a post on the backend. I just need to do the same for creating a post. And then also add the useCallbackPrompt thing to delete the images uploaded when leaving without saving.
+    · Uploading images:
+      - Besides saving the image to storage, create a PostContentImage instance with the url of the image and the user being request.user. Leave the post null.
+    · Creating posts:
+      - Create the post.
+      # This is what was missing before:
+      - Check for all the user's uploaded content images. If any of them are not related to any post, delete it.
+    · Updating posts:
+      - Besides deleting the image from storage, delete the model instance.
+
+    I MAY HAVE THE SAME PROBLEM WITH THE COVER IMAGE; is it deleted if replaced or deleted from the post?
+    PERO ESTO IGUAL NO SIRVE EN EL CASO DE QUE SUBA UNA IMAGEN Y ME VAYA SIN GUARDAR (PARA ESO EL HOOK)
 
 - Responsive design
 - Margin between post img, title and tags is not good on phones (post preview)
