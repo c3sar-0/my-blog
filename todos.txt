@@ -28,6 +28,7 @@
       - Besides saving the image to storage, create a PostContentImage instance with the url of the image and the user being request.user. Leave the post null.
     · Creating posts:
       - Create the post.
+      - Look for the request user's images whose url matches the post content (text) image urls. Assing the new post to those.
       # This is what was missing before:
       - Check for all the user's uploaded content images. If any of them are not related to any post, delete it.
     · Updating posts:
@@ -35,6 +36,8 @@
 
     I MAY HAVE THE SAME PROBLEM WITH THE COVER IMAGE; is it deleted if replaced or deleted from the post?
     PERO ESTO IGUAL NO SIRVE EN EL CASO DE QUE SUBA UNA IMAGEN Y ME VAYA SIN GUARDAR (PARA ESO EL HOOK)
+
+    I think all of that is not necesary if I just delete the images uploaded for a post that is not saved (leaving without saving). The previous approach of comparing new and old was good.
 
 - Responsive design
 - Margin between post img, title and tags is not good on phones (post preview)
@@ -44,6 +47,7 @@
 - Solve Read Later page margins. Add the margin variables.
 
 - Add like, save button, and small author under image/title to post detail
+- Add ability to remove cover image
 
 - When no search found or no posts saved, etc, put a fallback like "no posts found, try something different"
 - Add show more to wall comments? (only for phones)
@@ -52,3 +56,4 @@
 - APPLY REST PRACTICES
 - /api lists endpoints
 - Make code dry. Among much other stuff, the code for the profile picture image borders on the frontend is repeated various times.
+- There is some functionality in the views that maybe should be on the serializers. Maybe.

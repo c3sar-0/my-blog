@@ -10,7 +10,10 @@ const Editor = ({ onSave, data }) => {
   const tagsRef = useRef();
   const coverImageUrl = data?.image_url;
 
-  // const [uploadedImages, setUploadedImages] = useState([]);
+  const [file, setFile] = useState();
+  const [formState, setFormState] = useState("unchanged");
+
+  // i need to compare the initial data and the new data from the editor
 
   const configuration = {
     holder: "editorjs",
@@ -38,8 +41,6 @@ const Editor = ({ onSave, data }) => {
                   true,
                   formData
                 );
-                // Add uploaded image to uploadedImages array so it can be deleted in case it's removed in the editor
-                // setUploadedImages((x) => [...x, resData.file.url]);
                 return resData;
               } catch (err) {
                 console.log("ERROR: ", err.message);
@@ -73,7 +74,6 @@ const Editor = ({ onSave, data }) => {
     }
   }, []);
 
-  const [file, setFile] = useState();
   const fileChangeHandler = (e) => {
     setFile(Array.from(e.target.files));
   };

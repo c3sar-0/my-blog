@@ -13,7 +13,6 @@ from django.shortcuts import get_object_or_404
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Count
 from django.http import QueryDict
-from django.core.files.uploadhandler import TemporaryFileUploadHandler
 
 from .serializers import (
     PostSerializer,
@@ -24,7 +23,7 @@ from .serializers import (
     PostContentImageSerializer,
 )
 
-from core.models import Post, Comment, Tag, Bookmark
+from core.models import Post, Comment, Tag, Bookmark, PostContentImage
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -116,6 +115,7 @@ class PostsViewSet(ModelViewSet):
         return list(image_urls)
 
     def create(self, request, *args, **kwargs):
+        """Create method. When the user creates a post, I look for all the request user's images that don't have a post assigned and then filter by those whose url matches any of the image urls of the post content sent by the user. Then I assigned the created post to those images."""
         data = QueryDict.copy(request.data)  ### Shallow copy ###
         data = data.dict()
 
@@ -128,8 +128,23 @@ class PostsViewSet(ModelViewSet):
 
         serializer = self.get_serializer(context={"request": request}, data=data)
         serializer.is_valid(raise_exception=True)
+        post = self.perform_create(serializer)
 
-        self.perform_create(serializer)
+        request_images = self.get_image_urls(
+            serializer.validated_data["text"]
+        )  # these are just urls
+        null_post_user_images = request.user.images.filter(post__isnull=True)
+        current_post_images = null_post_user_images.filter(url__in=request_images)
+        for img in current_post_images:
+            img.post = post
+
+        # Delete images that don't have a post assigned
+        # null_post_user_images_refreshed = request.user.images.filter(
+        #     post__isnull=True
+        # ).delete()
+        for img in null_post_user_images.all():
+            img.delete()
+
         headers = self.get_success_headers(serializer.data)
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
