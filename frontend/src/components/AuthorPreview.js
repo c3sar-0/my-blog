@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import ProfilePicture from "./ProfilePicture";
 
 const AuthorPreview = ({ author }) => {
-  //** Author preview used at the right of post details */
+  //** Author preview used at the right side of post details */
 
   let descriptionSlice = author.description
     ? author.description.slice(0, 100)

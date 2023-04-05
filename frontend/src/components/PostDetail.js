@@ -6,6 +6,8 @@ import Output from "editorjs-react-renderer";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AuthorHeader from "./AuthorHeader";
 
+import PostActions from "./PostActions";
+
 const PostDetail = (props) => {
   const authCtx = useContext(AuthContext);
   const post = props.post;
@@ -72,6 +74,9 @@ const PostDetail = (props) => {
       </div>
       <div className="post-detail__text">
         <Output data={data} />
+      </div>
+      <div className="post-detail__actions">
+        <PostActions post={post} />
       </div>
     </div>
   );

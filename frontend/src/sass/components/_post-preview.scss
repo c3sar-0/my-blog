@@ -85,26 +85,6 @@
     flex: 0 1 auto;
   }
 
-  &__actions {
-    display: flex;
-    align-items: center;
-
-    & > div {
-      cursor: pointer;
-      margin-top: 0;
-      margin-bottom: 0;
-
-      display: flex;
-      align-items: center;
-      margin-right: .5rem;
-
-      p {
-        margin: 0;
-        font-size: .9rem;
-      }
-    }
-  }
-
   &__tags {
     list-style: none;
     margin-bottom: 1rem;
@@ -127,18 +107,6 @@
           text-decoration: underline;
         }
       }
-    }
-  }
-
-  &__comments {
-  }
-
-  &__likes {
-  }
-
-  &__favourite-btn {
-    &--active {
-      color: $color-red;
     }
   }
 }

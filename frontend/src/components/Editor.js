@@ -3,15 +3,40 @@ import React, { useEffect, useRef, useState } from "react";
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import ImageTool from "@editorjs/image";
+import { useLocation } from "react-router-dom";
 
 const Editor = ({ onSave, data }) => {
-  const imageRef = useRef();
+  const coverImageRef = useRef();
   const titleRef = useRef();
   const tagsRef = useRef();
+  const editor = useRef();
   const coverImageUrl = data?.image_url;
 
-  const [file, setFile] = useState();
-  const [formState, setFormState] = useState("unchanged");
+  const [coverImage, setCoverImage] = useState(); // this was file, setFile before
+  // const [formState, setFormState] = useState("unchanged");
+
+  // The effect where we show an exit prompt, but only if the formState is NOT
+  // unchanged. When the form is being saved, or is already modified by the user,
+  // sudden page exit could be a destructive action. Our goal is to prevent that.
+  /*   useEffect(() => {
+    // the handler for actually showing the prompt
+    // https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload
+    const handler = (event) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    // if the form is NOT unchanged, then set the onbeforeunload
+    if (formState !== "unchanged") {
+      window.addEventListener("beforeunload", handler);
+      // clean it up, if the dirty state changes
+      return () => {
+        window.removeEventListener("beforeunload", handler);
+      };
+    }
+    // since this is not dirty, don't do anything
+    return () => {};
+  }, [formState]); */
 
   // i need to compare the initial data and the new data from the editor
 
@@ -51,22 +76,11 @@ const Editor = ({ onSave, data }) => {
       },
     },
     ...(data && { data: JSON.parse(data.text) }),
-    // onChange: (api, event) => {
-    //   const currentImages = [];
-    //   document
-    //     .querySelectorAll(".image-tool__image-picture")
-    //     .forEach((img) => currentImages.push(img.src));
-    //   if (uploadedImages.length > currentImages.length) {
-    //     uploadedImages.forEach(async (img) => {
-    //       if (!currentImages.includes(uploadedImages)) {
-    //         const data = await apiRequest();
-    //       }
-    //     });
-    //   }
+    // onChange: async (api, event) => {
+    //   const content = await editor.current.save();
+    //   setFormState("changed");
     // },
   };
-
-  const editor = useRef();
 
   useEffect(() => {
     if (!editor.current) {
@@ -74,8 +88,12 @@ const Editor = ({ onSave, data }) => {
     }
   }, []);
 
-  const fileChangeHandler = (e) => {
-    setFile(Array.from(e.target.files));
+  const coverImgChangeHandler = (e) => {
+    setCoverImage(Array.from(e.target.files));
+  };
+
+  const removeCoverImgHandler = () => {
+    setCoverImage(null);
   };
 
   const saveHandler = async () => {
@@ -88,7 +106,7 @@ const Editor = ({ onSave, data }) => {
       tags = [];
     }
     onSave({
-      image_url: file?.[0],
+      image_url: coverImage?.[0],
       title: titleRef.current.value,
       tags,
       text,
@@ -96,10 +114,10 @@ const Editor = ({ onSave, data }) => {
   };
 
   let coverImageLabel;
-  if (!file?.[0].name && !coverImageUrl) {
+  if (!coverImage?.[0].name && !coverImageUrl) {
     coverImageLabel = "Add cover image";
-  } else if (file?.[0].name) {
-    coverImageLabel = file?.[0].name;
+  } else if (coverImage?.[0].name) {
+    coverImageLabel = coverImage?.[0].name;
   } else if (coverImageUrl) {
     coverImageLabel = "Change cover image";
   }
@@ -127,12 +145,18 @@ const Editor = ({ onSave, data }) => {
           type="file"
           id="cover_img"
           required
-          ref={imageRef}
-          onChange={fileChangeHandler}
+          ref={coverImageRef}
+          onChange={coverImgChangeHandler}
         />
         <label className="editor__img-label" htmlFor="cover_img">
           {coverImageLabel}
         </label>
+        <button
+          className="editor__remove-img-btn"
+          onClick={removeCoverImgHandler}
+        >
+          Remove cover image
+        </button>
         <input
           className="editor__title-input"
           type="text"

@@ -2,6 +2,11 @@
     position: relative;
     padding: 1rem 2.5rem;
 
+  &__actions {
+    display: flex;
+    justify-content: center;
+  }
+
   &__image {
     aspect-ratio: $image-aspect-ratio;
     margin-bottom: .5rem;

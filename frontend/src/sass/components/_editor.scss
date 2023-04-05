@@ -43,10 +43,10 @@
   }
 
   &__img-input {
-    visibility: hidden;
+    display: none;
   }
 
-  &__img-label {
+  &__img-label, &__remove-img-btn {
     align-self: flex-start;
     border: solid 3px $border-color;
     border-radius: 3px;
@@ -54,6 +54,12 @@
     font-size: 1rem;
     cursor: pointer;
     color: inherit;
+    background-color: $color-white;
+    font: inherit;
+    margin-top: .5rem;
+  }
+
+  &__remove-img-btn {
     margin-bottom: 1rem;
   }
 

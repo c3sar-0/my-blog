@@ -39,9 +39,9 @@
     border: solid $border-color $width-border;
     border-radius: $border-radius;
     overflow: hidden;
-    margin-bottom: .5rem;
     justify-self: end;
     grid-row: 1;
+    width: 100%;
 
     @include respond(phone) {
       max-width: none;

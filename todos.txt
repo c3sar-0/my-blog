@@ -20,6 +20,27 @@
 - Add filtering and ordering at the same time
 - Add error pages (error elements on App.js)
 - If request fails because of token, redirect to login
+- Responsive design
+- Margin between post img, title and tags is not good on phones (post preview)
+- The side bar should be toggleable everywhere on the site (CHECK DEV.TO)
+- Make images preserve ratio (CHECK DEV.TO)
+- Add margin variables
+- Solve Read Later page margins. Add the margin variables.
+- Add like, save button, and small author under image/title to post detail
+
+- Add ability to remove cover image
+- WHEN I EDIT A POST CHANGING (REMOVING, CHANGING OR ADDING) THE COVER IMAGE, I GET AN ERROR ON THE BACKEND (tag list has no split method).
+  The tags sent by the frontend are a string, as they should be.
+  Try looking at the request data in the update method of the view. Compare it with the copy made with QueryDict in the create method.
+
+- When no search found or no posts saved, etc, put a fallback like "no posts found, try something different"
+- Add show more to wall comments? (only for phones)
+
+- Pagination
+- APPLY REST PRACTICES
+- /api lists endpoints
+- Make code dry. Among much other stuff, the code for the profile picture image borders on the frontend is repeated various times.
+- There is some functionality in the views that maybe should be on the serializers. Maybe.
 
 - When editing or creating a post, if I leave without saving, the images uploaded to the server should be deleted. Same when editing user
   I've discarded the idea of temporary files. I'll just handle all that on the frontend. I just need to be able to send DELETE requests to the backend for deleting the images.
@@ -38,22 +59,3 @@
     PERO ESTO IGUAL NO SIRVE EN EL CASO DE QUE SUBA UNA IMAGEN Y ME VAYA SIN GUARDAR (PARA ESO EL HOOK)
 
     I think all of that is not necesary if I just delete the images uploaded for a post that is not saved (leaving without saving). The previous approach of comparing new and old was good.
-
-- Responsive design
-- Margin between post img, title and tags is not good on phones (post preview)
-- The side bar should be toggleable everywhere on the site (CHECK DEV.TO)
-- Make images preserve ratio (CHECK DEV.TO)
-- Add margin variables
-- Solve Read Later page margins. Add the margin variables.
-
-- Add like, save button, and small author under image/title to post detail
-- Add ability to remove cover image
-
-- When no search found or no posts saved, etc, put a fallback like "no posts found, try something different"
-- Add show more to wall comments? (only for phones)
-
-- Pagination
-- APPLY REST PRACTICES
-- /api lists endpoints
-- Make code dry. Among much other stuff, the code for the profile picture image borders on the frontend is repeated various times.
-- There is some functionality in the views that maybe should be on the serializers. Maybe.
