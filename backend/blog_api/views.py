@@ -29,6 +29,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 import json
 
+from commons.get_image_urls import get_image_urls
+
 
 class tags_view(APIView):
     def get(self, request):
@@ -106,13 +108,13 @@ class PostsViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-    def get_image_urls(self, post_content):
-        """Get all the image urls from the post content."""
-        r = json.loads(post_content)
-        blocks = r["blocks"]
-        images = filter(lambda block: block["type"] == "image", blocks)
-        image_urls = map(lambda image: image["data"]["file"]["url"], images)
-        return list(image_urls)
+    # def get_image_urls(self, post_content):
+    #     """Get all the image urls from the post content."""
+    #     r = json.loads(post_content)
+    #     blocks = r["blocks"]
+    #     images = filter(lambda block: block["type"] == "image", blocks)
+    #     image_urls = map(lambda image: image["data"]["file"]["url"], images)
+    #     return list(image_urls)
 
     def create(self, request, *args, **kwargs):
         """Create method. When the user creates a post, I look for all the request user's images that don't have a post assigned and then filter by those whose url matches any of the image urls of the post content sent by the user. Then I assigned the created post to those images."""
@@ -130,7 +132,7 @@ class PostsViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         post = self.perform_create(serializer)
 
-        request_images = self.get_image_urls(
+        request_images = get_image_urls(
             serializer.validated_data["text"]
         )  # these are just urls
         null_post_user_images = request.user.images.filter(post__isnull=True)
@@ -157,19 +159,25 @@ class PostsViewSet(ModelViewSet):
         updated post, it has to be deleted from te filesystem storage.
         """
         instance = self.get_object()
-
-        r_tags = request.data.pop("tags").split(",")
+        data = {}
+        # For some reason, when the content type of the request is multiparse/form-data, I can't use the request data as it is because it does something weird and turns everything into arrays, including the tags, which should be a single string, and then it crashes when I do data.pop("tags").split(",") (because it's an array). But it doesn't do that when it's application/json and then for some reason I can't use QueryDict on that, but I can just use request.data.
+        try:
+            data = QueryDict.copy(request.data)  ### Shallow copy ###
+            data = data.dict()
+        except:
+            data = request.data
+        r_tags = data.pop("tags").split(",")
         if r_tags != [""]:
             tags = []
             for tag in r_tags:
                 tags.append({"text": tag})
-            request.data["tags"] = tags  # this was inside the for loop before
+            data["tags"] = tags
 
-        serializer = self.get_serializer(instance, data=request.data)
+        serializer = self.get_serializer(instance, data=data)
         serializer.is_valid(raise_exception=True)
 
-        old_image_urls = self.get_image_urls(instance.text)
-        new_image_urls = self.get_image_urls(serializer.validated_data["text"])
+        old_image_urls = get_image_urls(instance.text)
+        new_image_urls = get_image_urls(serializer.validated_data["text"])
 
         fs = FileSystemStorage()
         # Delete images that were deleted from the post
@@ -185,7 +193,7 @@ class PostsViewSet(ModelViewSet):
         """When deleting a post, the images that it's content contained also have to be deleted."""
         instance = self.get_object()
 
-        image_urls = self.get_image_urls(instance.text)
+        image_urls = get_image_urls(instance.text)
         fs = FileSystemStorage()
         for image in image_urls:
             image_name = image.split("/")[-1]

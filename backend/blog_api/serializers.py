@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.core.files.storage import FileSystemStorage
 from core.models import Post, Comment, Like, Bookmark, Tag, PostContentImage
 from user_api.serializers import UserSerializer
 from django_editorjs.fields import EditorJsField
@@ -11,13 +12,6 @@ class LikeSerializer(serializers.ModelSerializer):
         model = Like
         fields = "__all__"
 
-    # def get_is_liked_by_user(self, obj):
-    #     post = Post.objects.get(id=obj.id)
-    #     return post.likes.filter(author=self.context["request"].user.id).exists()
-
-    # def get_likes(self, obj):
-    #     return str(obj.likes.count())
-
 
 class CommentSerializer(serializers.ModelSerializer):
     """Serialzier for comments."""
@@ -25,7 +19,6 @@ class CommentSerializer(serializers.ModelSerializer):
     author = UserSerializer(many=False, required=False)
     likes = serializers.SerializerMethodField()
     is_liked_by_user = serializers.SerializerMethodField()
-    # image_url = serializers.ImageField(required=False) ?? why did I put this here
 
     class Meta:
         model = Comment
@@ -53,7 +46,9 @@ class PostSerializer(serializers.ModelSerializer):
     """Serializer for posts."""
 
     author = UserSerializer(many=False, required=False)
-    image_url = serializers.ImageField(required=False)
+    image_url = serializers.ImageField(
+        required=False, allow_empty_file=True, allow_null=True
+    )
     likes = serializers.SerializerMethodField()
     is_liked_by_user = serializers.SerializerMethodField()
     is_bookmarked_by_user = serializers.SerializerMethodField()
@@ -110,6 +105,19 @@ class PostDetailSerializer(PostSerializer):
             for tag in tags:
                 obj, created = Tag.objects.get_or_create(text=tag["text"])
                 instance.tags.add(obj)
+        else:
+            instance.tags.clear()
+
+        fs = FileSystemStorage()
+        if "image_url" not in validated_data.keys() and instance.image_url:
+            fs.delete(instance.image_url.name)
+            instance.image_url.delete()
+        elif (
+            "image_url" in validated_data.keys()
+            and instance.image_url
+            and instance.image_url.url != validated_data["image_url"]
+        ):
+            fs.delete(instance.image_url.name)
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)

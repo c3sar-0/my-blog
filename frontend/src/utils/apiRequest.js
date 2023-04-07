@@ -39,7 +39,7 @@ export default async function apiRequest(
 
     return data;
   } catch (error) {
-    console.log("ERROR: ", error.message);
+    console.log("ERROR: ", error);
     throw json({ message: error.message });
   }
 }

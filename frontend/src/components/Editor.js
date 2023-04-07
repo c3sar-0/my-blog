@@ -12,7 +12,7 @@ const Editor = ({ onSave, data }) => {
   const editor = useRef();
   const coverImageUrl = data?.image_url;
 
-  const [coverImage, setCoverImage] = useState(); // this was file, setFile before
+  const [coverImage, setCoverImage] = useState("unchanged"); // this was file, setFile before
   // const [formState, setFormState] = useState("unchanged");
 
   // The effect where we show an exit prompt, but only if the formState is NOT
@@ -97,16 +97,19 @@ const Editor = ({ onSave, data }) => {
   };
 
   const saveHandler = async () => {
+    console.log(tagsRef.current.value);
     const outputData = await editor.current.save();
     const text = JSON.stringify(outputData);
     let tags;
     if (tagsRef.current.value) {
-      tags = tagsRef.current.value.split(",");
+      // tags = tagsRef.current.value.split(",");
+      tags = tagsRef.current.value;
     } else {
-      tags = [];
+      // tags = [];
+      tags = "";
     }
     onSave({
-      image_url: coverImage?.[0],
+      ...(coverImage != "unchanged" && { image_url: coverImage?.[0] }),
       title: titleRef.current.value,
       tags,
       text,
@@ -133,7 +136,7 @@ const Editor = ({ onSave, data }) => {
         Save
       </button>
       <div className="editor__top">
-        {coverImageUrl && (
+        {coverImageUrl && coverImage && (
           <img
             src={coverImageUrl}
             alt="Cover image"
@@ -172,6 +175,7 @@ const Editor = ({ onSave, data }) => {
           placeholder="add,your,tags,like,this"
           name="tags"
           ref={tagsRef}
+          defaultValue={data?.tags.map((tag) => tag.text).join(",")}
         />
       </div>
       <div id="editorjs" className="editor__editor" />

@@ -27,21 +27,22 @@
 - Add margin variables
 - Solve Read Later page margins. Add the margin variables.
 - Add like, save button, and small author under image/title to post detail
-
 - Add ability to remove cover image
-- WHEN I EDIT A POST CHANGING (REMOVING, CHANGING OR ADDING) THE COVER IMAGE, I GET AN ERROR ON THE BACKEND (tag list has no split method).
-  The tags sent by the frontend are a string, as they should be.
-  Try looking at the request data in the update method of the view. Compare it with the copy made with QueryDict in the create method.
-
-- When no search found or no posts saved, etc, put a fallback like "no posts found, try something different"
-- Add show more to wall comments? (only for phones)
+- THE COVER IMAGES ARE NOT DELETED WHEN UPDATED OR WHEN THE POST IS DELETED
 
 - Pagination
+
+- Add show more to wall comments? (only for phones)
+- When no search found or no posts saved, etc, put a fallback like "no posts found, try something different"
+- Cool css background?
+- Periodic unused files cleaning
+- Change "image_url" to "cover_img"
 - APPLY REST PRACTICES
 - /api lists endpoints
 - Make code dry. Among much other stuff, the code for the profile picture image borders on the frontend is repeated various times.
 - There is some functionality in the views that maybe should be on the serializers. Maybe.
 
+- Use the model I created. Look for images without post and delete them.
 - When editing or creating a post, if I leave without saving, the images uploaded to the server should be deleted. Same when editing user
   I've discarded the idea of temporary files. I'll just handle all that on the frontend. I just need to be able to send DELETE requests to the backend for deleting the images.
   I think:

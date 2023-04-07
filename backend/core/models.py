@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -6,6 +7,8 @@ from django.contrib.auth.models import (
 )
 from django_editorjs import EditorJsField
 from django.utils.text import slugify
+
+from commons.get_image_urls import get_image_urls
 
 
 class UserManager(BaseUserManager):
@@ -77,8 +80,21 @@ class Post(models.Model):
             }
         }
     )
-    image_url = models.ImageField(upload_to="posts", null=True, blank=True)
+    image_url = models.ImageField(
+        upload_to="posts", null=True, blank=True
+    )  # This should be called cover_image
     tags = models.ManyToManyField("Tag", blank=True, null=True)
+
+    def delete(self, *args, **kwargs):
+        fs = FileSystemStorage()
+        if self.image_url:
+            fs.delete(self.image_url.name)
+
+        content_img_urls = get_image_urls(self.text)
+        for img in content_img_urls:
+            image_name = img.split("/")[-1]
+            fs.delete(image_name)
+        return super().delete(*args, **kwargs)
 
 
 class PostContentImage(models.Model):

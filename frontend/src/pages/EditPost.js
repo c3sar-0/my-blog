@@ -68,7 +68,6 @@ export async function action({ request, params }) {
 
   const postId = params.id;
   const formData = await request.formData();
-  console.log(formData.get("tags"));
 
   await apiRequest(
     `${process.env.REACT_APP_API_URL}blog/posts/${postId}/`,
