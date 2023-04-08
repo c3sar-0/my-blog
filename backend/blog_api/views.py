@@ -8,6 +8,7 @@ from rest_framework.parsers import (
     FormParser,
     JSONParser,
 )
+from rest_framework.pagination import PageNumberPagination
 
 from django.shortcuts import get_object_or_404
 from django.core.files.storage import FileSystemStorage
@@ -108,14 +109,6 @@ class PostsViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-    # def get_image_urls(self, post_content):
-    #     """Get all the image urls from the post content."""
-    #     r = json.loads(post_content)
-    #     blocks = r["blocks"]
-    #     images = filter(lambda block: block["type"] == "image", blocks)
-    #     image_urls = map(lambda image: image["data"]["file"]["url"], images)
-    #     return list(image_urls)
-
     def create(self, request, *args, **kwargs):
         """Create method. When the user creates a post, I look for all the request user's images that don't have a post assigned and then filter by those whose url matches any of the image urls of the post content sent by the user. Then I assigned the created post to those images."""
         data = QueryDict.copy(request.data)  ### Shallow copy ###
@@ -211,7 +204,8 @@ class PostsViewSet(ModelViewSet):
     def file_upload(self, request):
         """Upload post content images. When an image is uploaded, besides storing it to file system storage,
         a PostContentImage model instance is created which contains the url of the image and the user that uploaded it.
-        The post field is temporarily set to null. This instance is used for deleting unused images."""
+        The post field is temporarily set to null. This instance is used for deleting unused images.
+        """
         f = request.FILES["image"]
         fs = FileSystemStorage()
         filename = str(f).split(".")[0]

@@ -1,5 +1,5 @@
 import apiRequest from "../utils/apiRequest";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState, useRef } from "react";
 import {
   defer,
   NavLink,
@@ -12,55 +12,66 @@ import PostsList from "../components/PostsList";
 import Sidebar from "../components/Sidebar";
 
 const Home = () => {
-  // const { posts } = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
   const ordering = searchParams.get("ordering");
 
   const fetcher = useFetcher();
-  const posts = useLoaderData();
-  // const posts = fetcher.data;
-  const [hasMore, setHasMore] = useState(true);
-  const [offset, setOffset] = useState(0);
-  const limit = 2;
+  const postsListRef = useRef();
 
   const [page, setPage] = useState(1);
-  console.log(page);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const [posts, setPosts] = useState([]);
+  const [hasMounted, setHasMounted] = useState(false);
+
+  const fetchPosts = async () => {
+    setLoading(true);
+
+    const data = await apiRequest(
+      process.env.REACT_APP_API_URL + `blog/posts/?page=${page}`
+    );
+    console.log(data);
+    setPosts((prev) => (prev ? [...prev, ...data.results] : data.results));
+    const dataHasMore = data.next === null ? false : true;
+    // if (dataHasMore) {
+    //   setPage((prev) => prev + 1);
+    // }
+    setHasMore(dataHasMore);
+    setLoading(false);
+  };
 
   useEffect(() => {
-    if (fetcher.state === "idle" && !fetcher.data) {
-      fetcher.load("/?index");
+    if (hasMounted) {
+      fetchPosts();
+    } else {
+      setHasMounted(true);
     }
+  }, [hasMounted, page]);
 
-    // scrollTop / clientHeight > page => setPage page++
-    const scrollListener = () => {
-      if (
-        document.documentElement.scrollTop /
-          document.documentElement.clientHeight >=
-        page / 2
-      ) {
-        setPage((prev) => prev++);
-      }
-    };
+  const handleScroll = () => {
+    if (!hasMore) return;
 
-    window.addEventListener("scroll", scrollListener);
+    if (
+      postsListRef.current &&
+      document.documentElement.clientHeight +
+        document.documentElement.scrollTop >=
+        postsListRef.current.offsetHeight
+    ) {
+      // fetchPosts();
+      setPage((prev) => prev + 1);
+    }
+  };
 
-    // cleanup
+  useEffect(() => {
+    if (!hasMore) return;
+
+    window.addEventListener("scroll", handleScroll);
+
     return () => {
-      window.removeEventListener("scroll", scrollListener);
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, [fetcher]);
-
-  // window.onscroll = () => {
-  //   if (!hasMore || !fetcher.state === "idle") return;
-  //   if (
-  //     document.documentElement.scrollHeight -
-  //       document.documentElement.scrollTop ===
-  //     document.documentElement.clientHeight
-  //   ) {
-  //     console.log("a");
-  //     loadPosts();
-  //   }
-  // };
+  }, [posts, hasMore]);
 
   return (
     <div className="home">
@@ -124,14 +135,13 @@ const Home = () => {
             </p>
           </NavLink>
         </nav>
-        {/* <Suspense fallback={<p>Loading posts...</p>}>
-          <Await resolve={posts}>
-            {(posts) => {
-              return <PostsList posts={posts} />;
-            }}
-          </Await>
-        </Suspense> */}
-        {fetcher.data ? <PostsList posts={posts} /> : <p>LOADING...</p>}
+
+        {posts ? (
+          <PostsList posts={posts} ref={postsListRef} />
+        ) : (
+          <p>LOADING...</p>
+        )}
+        {loading && <p>Loading more...</p>}
       </div>
     </div>
   );
@@ -139,35 +149,12 @@ const Home = () => {
 
 export default Home;
 
-async function postsLoader(requestUrl) {
-  const queryParams = new URL(requestUrl).searchParams;
-  const tag = queryParams.get("tag");
-  const search = queryParams.get("search");
-  const ordering = queryParams.get("ordering");
-
-  let reqParams = [];
-  if (tag) {
-    reqParams.push(`tags=${tag}`);
-  }
-  if (search) {
-    reqParams.push(`search=${search}`);
-  }
-  if (ordering) {
-    reqParams.push(`ordering=${ordering}`);
-  }
-  const url = `${process.env.REACT_APP_API_URL}blog/posts?${reqParams.join(
-    "&"
-  )}`;
-
-  const data = await apiRequest(url);
-  return data;
-}
-
 export async function loader({ request, params }) {
   const queryParams = new URL(request.url).searchParams;
   const tag = queryParams.get("tag");
   const search = queryParams.get("search");
   const ordering = queryParams.get("ordering");
+  const page = queryParams.get("page");
 
   let reqParams = [];
   if (tag) {
@@ -178,6 +165,9 @@ export async function loader({ request, params }) {
   }
   if (ordering) {
     reqParams.push(`ordering=${ordering}`);
+  }
+  if (page) {
+    reqParams.push(`page=${page}`);
   }
   const url = `${process.env.REACT_APP_API_URL}blog/posts?${reqParams.join(
     "&"
