@@ -17,53 +17,20 @@ import {
 import PostsList from "../components/PostsList";
 import Sidebar from "../components/Sidebar";
 
-import { useInfiniteQuery } from "@tanstack/react-query";
-
-const fetchPosts = async ({ pageParam = 1 }) => {
-  const data = await apiRequest(
-    `http://localhost:8000/api/blog/posts/?page=${pageParam}`
-  );
-  return data;
-};
+import useInfinitePostScroll from "../hooks/useInfinitePostScroll";
 
 const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const ordering = searchParams.get("ordering");
+  const tag = searchParams.get("tag");
+  const search = searchParams.get("search");
+  let url = `${process.env.REACT_APP_API_URL}blog/posts/?`;
+  if (ordering) url = url.concat(`&ordering=${ordering}`);
+  if (search) url = url.concat(`&search=${search}`);
+  if (tag) url = url.concat(`&tag=${tag}`);
 
-  const {
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    data,
-    status,
-    error,
-  } = useInfiniteQuery({
-    queryKey: ["/posts"],
-    queryFn: fetchPosts,
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.results.length === 5 ? allPages.length + 1 : undefined;
-    },
-  });
-
-  // the intObserver is a ref just because it is a good way to do it (more safe)
-  const intObserver = useRef();
-
-  // if you pass a callback as a ref, it'll be executed when the target mounts/unmounts
-  const lastPostRef = useCallback(
-    (post) => {
-      if (isFetchingNextPage) return;
-      if (intObserver.current) intObserver.current.disconnect();
-
-      intObserver.current = new IntersectionObserver((posts) => {
-        if (posts[0].isIntersecting && hasNextPage) {
-          fetchNextPage();
-        }
-      });
-
-      if (post) intObserver.current.observe(post);
-    },
-    [isFetchingNextPage, fetchNextPage, hasNextPage]
-  );
+  const [lastPostRef, isFetchingNextPage, data, status, error] =
+    useInfinitePostScroll(url);
 
   if (status === "error")
     return <p className="center">Error: {error.message}</p>;
