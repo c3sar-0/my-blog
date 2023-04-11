@@ -1,5 +1,11 @@
 import apiRequest from "../utils/apiRequest";
-import React, { Suspense, useEffect, useState, useRef } from "react";
+import React, {
+  Suspense,
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+} from "react";
 import {
   defer,
   NavLink,
@@ -11,67 +17,56 @@ import {
 import PostsList from "../components/PostsList";
 import Sidebar from "../components/Sidebar";
 
+import { useInfiniteQuery } from "@tanstack/react-query";
+
+const fetchPosts = async ({ pageParam = 1 }) => {
+  const data = await apiRequest(
+    `http://localhost:8000/api/blog/posts/?page=${pageParam}`
+  );
+  return data;
+};
+
 const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const ordering = searchParams.get("ordering");
 
-  const fetcher = useFetcher();
-  const postsListRef = useRef();
+  const {
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    data,
+    status,
+    error,
+  } = useInfiniteQuery({
+    queryKey: ["/posts"],
+    queryFn: fetchPosts,
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.results.length === 5 ? allPages.length + 1 : undefined;
+    },
+  });
 
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [loading, setLoading] = useState(false);
+  // the intObserver is a ref just because it is a good way to do it (more safe)
+  const intObserver = useRef();
 
-  const [posts, setPosts] = useState([]);
-  const [hasMounted, setHasMounted] = useState(false);
+  // if you pass a callback as a ref, it'll be executed when the target mounts/unmounts
+  const lastPostRef = useCallback(
+    (post) => {
+      if (isFetchingNextPage) return;
+      if (intObserver.current) intObserver.current.disconnect();
 
-  const fetchPosts = async () => {
-    setLoading(true);
+      intObserver.current = new IntersectionObserver((posts) => {
+        if (posts[0].isIntersecting && hasNextPage) {
+          fetchNextPage();
+        }
+      });
 
-    const data = await apiRequest(
-      process.env.REACT_APP_API_URL + `blog/posts/?page=${page}`
-    );
-    console.log(data);
-    setPosts((prev) => (prev ? [...prev, ...data.results] : data.results));
-    const dataHasMore = data.next === null ? false : true;
-    // if (dataHasMore) {
-    //   setPage((prev) => prev + 1);
-    // }
-    setHasMore(dataHasMore);
-    setLoading(false);
-  };
+      if (post) intObserver.current.observe(post);
+    },
+    [isFetchingNextPage, fetchNextPage, hasNextPage]
+  );
 
-  useEffect(() => {
-    if (hasMounted) {
-      fetchPosts();
-    } else {
-      setHasMounted(true);
-    }
-  }, [hasMounted, page]);
-
-  const handleScroll = () => {
-    if (!hasMore) return;
-
-    if (
-      postsListRef.current &&
-      document.documentElement.clientHeight +
-        document.documentElement.scrollTop >=
-        postsListRef.current.offsetHeight
-    ) {
-      // fetchPosts();
-      setPage((prev) => prev + 1);
-    }
-  };
-
-  useEffect(() => {
-    if (!hasMore) return;
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [posts, hasMore]);
+  if (status === "error")
+    return <p className="center">Error: {error.message}</p>;
 
   return (
     <div className="home">
@@ -136,12 +131,12 @@ const Home = () => {
           </NavLink>
         </nav>
 
-        {posts ? (
-          <PostsList posts={posts} ref={postsListRef} />
+        {data ? (
+          <PostsList pages={data.pages} ref={lastPostRef} />
         ) : (
           <p>LOADING...</p>
         )}
-        {loading && <p>Loading more...</p>}
+        {isFetchingNextPage && <p>Loading more...</p>}
       </div>
     </div>
   );

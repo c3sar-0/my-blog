@@ -21,6 +21,8 @@ import PrivateRoute from "./utils/PrivateRoute";
 
 import AuthContext, { AuthProvider } from "./context/AuthContext";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -83,8 +85,17 @@ const router = createBrowserRouter([
   },
 ]);
 
+const client = new QueryClient();
+
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={client}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+    // <RouterProvider router={router}>
+    //   <QueryClientProvider client={client} />
+    // </RouterProvider>
+  );
 }
 
 export default App;

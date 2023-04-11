@@ -1,22 +1,22 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, forwardRef } from "react";
 import { Link } from "react-router-dom";
 
 import AuthorHeader from "./AuthorHeader";
 import PostActions from "./PostActions";
 
-const PostPreview = (props) => {
-  const post = props.post;
+const PostPreview = forwardRef(({ post }, ref) => {
+  // const post = props.post;
 
-  const postPreviewRef = useRef();
+  // const postPreviewRef = useRef();
 
-  useEffect(() => {
-    if (!post.image_url) {
-      postPreviewRef.current.style["min-height"] = "0";
-    }
-  });
+  // useEffect(() => {
+  //   if (!post.image_url) {
+  //     postPreviewRef.current.style["min-height"] = "0";
+  //   }
+  // }, []);
 
   return (
-    <article className="post-preview" ref={postPreviewRef}>
+    <article className="post-preview" ref={ref}>
       {post.image_url && (
         <div className="post-preview__img-container-wrapper">
           <div className="post-preview__img-container">
@@ -52,6 +52,6 @@ const PostPreview = (props) => {
       </div>
     </article>
   );
-};
+});
 
 export default PostPreview;
