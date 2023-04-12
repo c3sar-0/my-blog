@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import HomePage, { loader as postsLoader } from "./pages/Home";
+import HomePage from "./pages/Home";
 import RootLayout from "./pages/Root";
 import PostPage, {
   loader as postLoader,
@@ -14,7 +14,7 @@ import EditPostPage, {
 import AuthPage from "./pages/Auth";
 import UserPage, { loader as userLoader } from "./pages/User";
 import EditUserPage, { action as editUserAction } from "./pages/EditUser";
-import ReadLaterPage, { loader as readLaterLoader } from "./pages/ReadLater";
+import ReadLaterPage from "./pages/ReadLater";
 import ErrorPage from "./pages/Error";
 
 import PrivateRoute from "./utils/PrivateRoute";
@@ -36,7 +36,6 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <HomePage />,
-            loader: postsLoader,
           },
           {
             path: "posts/:id",
@@ -63,7 +62,6 @@ const router = createBrowserRouter([
           {
             path: "read-later",
             element: <ReadLaterPage />,
-            loader: readLaterLoader,
           },
           {
             element: <PrivateRoute />,
@@ -89,9 +87,12 @@ const client = new QueryClient();
 
 function App() {
   return (
-    <QueryClientProvider client={client}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+    <div>
+      <div className="background"></div>
+      <QueryClientProvider client={client}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </div>
     // <RouterProvider router={router}>
     //   <QueryClientProvider client={client} />
     // </RouterProvider>

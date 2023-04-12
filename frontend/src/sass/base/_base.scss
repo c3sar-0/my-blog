@@ -18,13 +18,24 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: $color-medium-gray;
+  background-color: $color-dark-blue-2;
   // background-image: url(../../assets/vectorBackground1.jpg);
   // background-image: url(../../assets/maxresdefault.jpg);
-  // background-image: linear-gradient(to top, $color-dark-blue, $color-light-blue);
   color: rgb(22, 22, 22);
 }
 
 a {
   text-decoration: none;
   color: inherit;
+}
+
+.background {
+  background-image: url("../../assets/layered-steps-haikei.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  width: 100%;
+  aspect-ratio: 960/300;
+  position: fixed;
+  bottom: 0;
 }

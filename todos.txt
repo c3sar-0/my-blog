@@ -31,6 +31,9 @@
 - THE COVER IMAGES ARE NOT DELETED WHEN UPDATED OR WHEN THE POST IS DELETED
 - Pagination
 
+- Dark theme
+- Finish author preview
+
 - Make the images responsive (I mean the size). E.g.: the profile images are tiny on the profile previews but they are full size. (see the network tab, they take up too much bandwith)
 - Add show more to wall comments? (only for phones)
 - When no search found or no posts saved, etc, put a fallback like "no posts found, try something different"

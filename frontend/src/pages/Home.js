@@ -1,19 +1,6 @@
 import apiRequest from "../utils/apiRequest";
-import React, {
-  Suspense,
-  useEffect,
-  useState,
-  useRef,
-  useCallback,
-} from "react";
-import {
-  defer,
-  NavLink,
-  useLoaderData,
-  Await,
-  useSearchParams,
-  useFetcher,
-} from "react-router-dom";
+import React from "react";
+import { NavLink, useSearchParams } from "react-router-dom";
 import PostsList from "../components/PostsList";
 import Sidebar from "../components/Sidebar";
 
@@ -110,31 +97,3 @@ const Home = () => {
 };
 
 export default Home;
-
-export async function loader({ request, params }) {
-  const queryParams = new URL(request.url).searchParams;
-  const tag = queryParams.get("tag");
-  const search = queryParams.get("search");
-  const ordering = queryParams.get("ordering");
-  const page = queryParams.get("page");
-
-  let reqParams = [];
-  if (tag) {
-    reqParams.push(`tags=${tag}`);
-  }
-  if (search) {
-    reqParams.push(`search=${search}`);
-  }
-  if (ordering) {
-    reqParams.push(`ordering=${ordering}`);
-  }
-  if (page) {
-    reqParams.push(`page=${page}`);
-  }
-  const url = `${process.env.REACT_APP_API_URL}blog/posts?${reqParams.join(
-    "&"
-  )}`;
-
-  const data = await apiRequest(url);
-  return data;
-}

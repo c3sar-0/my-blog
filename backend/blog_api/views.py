@@ -69,15 +69,15 @@ class PostsViewSet(ModelViewSet):
         user_filter = self.request.query_params.get("user")
         # bookmarks_filter = self.request.query_params.get("bookmarks")
         ordering = self.request.query_params.get("ordering")
-        tags = self.request.query_params.get("tags")
-        if tags:
-            tags = tags.split(",")
+        tag = self.request.query_params.get("tag")
+        if tag:
+            tag = tag.split(",")
 
         queryset = super().get_queryset()
         if user_filter:
             queryset = queryset.filter(author__slug=user_filter)
-        if tags:
-            queryset = queryset.filter(tags__text__in=tags)
+        if tag:
+            queryset = queryset.filter(tags__text__in=tag)
         if ordering:
             if "comments" in ordering:
                 queryset = queryset.annotate(num_comments=Count("comments")).order_by(

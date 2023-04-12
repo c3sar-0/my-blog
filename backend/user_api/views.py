@@ -91,7 +91,7 @@ class CommentsViewSet(ModelViewSet):
         """For delete and put, the queryset is only the user's comments."""
         actions = ["destroy", "update", "partial_update"]
         wall_user = User.objects.get(slug=self.kwargs["user_pk"])
-        queryset = wall_user.wall_comments
+        queryset = wall_user.wall_comments.all()
         if self.action in actions:
             queryset.filter(author=self.request.user)
         return queryset

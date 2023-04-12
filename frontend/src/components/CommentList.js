@@ -4,7 +4,7 @@ import Comment from "./Comment";
 const CommentList = ({ comments, postId, userSlug, updateCommentsHandler }) => {
   return (
     <>
-      {comments.map((comment) => {
+      {comments.results.map((comment) => {
         return (
           <Comment
             key={comment.id}

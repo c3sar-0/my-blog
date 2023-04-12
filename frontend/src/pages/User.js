@@ -8,10 +8,19 @@ import PostsList from "../components/PostsList";
 import Wall from "../components/Wall";
 import Sidebar from "../components/Sidebar";
 
+import useInifinitePostScroll from "../hooks/useInfinitePostScroll";
+
 const User = () => {
-  const { user, posts, wallComments } = useLoaderData();
+  const { user, wallComments } = useLoaderData();
   const { slug: userSlug } = useParams();
   const [comments, setComments] = useState(null);
+
+  console.log(user);
+
+  const [lastPostRef, isFetchingNextPage, data, status, error] =
+    useInifinitePostScroll(
+      `${process.env.REACT_APP_API_URL}blog/posts/?user=${userSlug}`
+    );
 
   const updateComments = async () => {
     const updated_comments = await apiRequest(
@@ -22,84 +31,48 @@ const User = () => {
 
   return (
     <div className="user-page">
-      <div className="user-page__sidebar">
-        <Sidebar />
+      <div className="user-page__left">
+        <div className="user-page__sidebar">
+          <Sidebar />
+        </div>
+        <section className="user-page__user-section">
+          <UserDetail user={user} />
+        </section>
+        <section className="user-page__wall-section">
+          <div className="user-page__wall-container">
+            <Wall
+              username={user.name}
+              userSlug={user.slug}
+              wallComments={comments || wallComments}
+              updateCommentsHandler={updateComments}
+            />
+          </div>
+        </section>
       </div>
-      <Suspense fallback={<p>Loading user...</p>}>
-        <Await resolve={user}>
-          {(user) => {
-            return (
-              <>
-                {/* <div className="user-page__content"> */}
-                <section className="user-page__user-section">
-                  <UserDetail user={user} />
-                </section>
-                <section className="user-page__wall-section">
-                  <div className="user-page__wall-container">
-                    <Suspense fallback={<p>Loading user's wall...</p>}>
-                      <Await resolve={wallComments}>
-                        {(data) => {
-                          return (
-                            <Wall
-                              username={user.name}
-                              userSlug={user.slug}
-                              wallComments={comments || data}
-                              updateCommentsHandler={updateComments}
-                            />
-                          );
-                        }}
-                      </Await>
-                    </Suspense>
-                  </div>
-                </section>
-                {/* </div> */}
-                <section className="user-page__posts-section">
-                  <Suspense fallback={<p>Loading user's posts....</p>}>
-                    <Await resolve={posts}>
-                      {(loadedPosts) => {
-                        return <PostsList posts={loadedPosts} />;
-                      }}
-                    </Await>
-                  </Suspense>
-                </section>
-              </>
-            );
-          }}
-        </Await>
-      </Suspense>
+      <section className="user-page__posts-section">
+        {data ? (
+          <PostsList pages={data.pages} ref={lastPostRef} />
+        ) : (
+          <p>Loading...</p>
+        )}
+        {isFetchingNextPage && <p>Loading posts...</p>}
+      </section>
     </div>
   );
 };
 
 export default User;
 
-async function loadUser(userSlug) {
-  const data = apiRequest(
-    process.env.REACT_APP_API_URL + `user/users/${userSlug}/`,
+export async function loader({ request, params }) {
+  const wallData = await apiRequest(
+    process.env.REACT_APP_API_URL + `user/users/${params.slug}/comments`
+  );
+
+  const userData = await apiRequest(
+    process.env.REACT_APP_API_URL + `user/users/${params.slug}/`,
     "GET",
     false
   );
-  return data;
-}
 
-async function loadPosts(userSlug) {
-  const data = apiRequest(
-    process.env.REACT_APP_API_URL + `blog/posts?user=${userSlug}`
-  );
-  return data;
-}
-
-async function loadWall(userSlug) {
-  const data = apiRequest(
-    process.env.REACT_APP_API_URL + `user/users/${userSlug}/comments`
-  );
-  return data;
-}
-
-export async function loader({ request, params }) {
-  return defer({
-    user: loadUser(params.slug),
-    posts: loadPosts(params.slug),
-    wallComments: loadWall(params.slug),
-  });
+  return { user: userData, wallComments: wallData };
 }

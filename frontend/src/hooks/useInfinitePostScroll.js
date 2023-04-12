@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { QueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import apiRequest from "../utils/apiRequest";
 import { useLocation } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 const fetchPosts = async ({ pageParam = 1, meta }) => {
+  console.log("Fetching posts");
   const data = await apiRequest(
     // `http://localhost:8000/api/blog/posts/?page=${pageParam}`
     meta.url.concat(`&page=${pageParam}`)
@@ -14,6 +16,8 @@ const fetchPosts = async ({ pageParam = 1, meta }) => {
 // NOW I NEED THIS TO WORK WHEN CHANGING URL. ALSO USE THIS HOOK ON USER, BOOKMARKS, ETC...
 
 const useInfinitePostScroll = (url) => {
+  const queryClient = useQueryClient();
+
   const location = useLocation();
   const [hasMounted, setHasMounted] = useState(false);
 
@@ -28,6 +32,7 @@ const useInfinitePostScroll = (url) => {
     queryKey: ["posts"],
     queryFn: fetchPosts,
     meta: { url: url },
+    refetchOnWindowFocus: false,
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.next === null ? undefined : allPages.length + 1;
     },
@@ -56,14 +61,15 @@ const useInfinitePostScroll = (url) => {
     [isFetchingNextPage, fetchNextPage, hasNextPage]
   );
 
-  // useEffect(() => {
-  //   if (!hasMounted) {
-  //     setHasMounted(true);
-  //     return;
-  //   }
-  //   console.log("changed location");
-  //   fetchNextPage({ pageParam: 1 });
-  // }, [location]);
+  useEffect(() => {
+    if (!hasMounted) {
+      setHasMounted(true);
+      return;
+    }
+    console.log("changed location");
+    queryClient.clear();
+    fetchNextPage({ pageParam: 1 });
+  }, [location]);
 
   return [lastPostRef, isFetchingNextPage, data, status, error];
 };
