@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-import environ
 from datetime import timedelta
 import os
 
@@ -19,24 +18,17 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-environ.Env.read_env(BASE_DIR / ".env")
-env = environ.Env(
-    DEBUG=(bool, False),
-)
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", "changeme")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG")
+DEBUG = bool(int(os.environ.get("DEBUG", 0)))
 
 ALLOWED_HOSTS = []
-
-env = environ.Env()
-environ.Env.read_env()
+ALLOWED_HOSTS.extend(filter(None, os.environ.get("ALLOWED_HOSTS", "").split(",")))
 
 # Application definition
 
@@ -55,7 +47,6 @@ INSTALLED_APPS = [
     "user_api",
     "core",
     "django_editorjs",
-    "whitenoise.runserver_nostatic",
 ]
 
 MIDDLEWARE = [
@@ -63,7 +54,6 @@ MIDDLEWARE = [
     #
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -98,9 +88,9 @@ WSGI_APPLICATION = "backend.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("DB_NAME"),
-        "USER": env("DB_USER"),
-        "PASSWORD": env("DB_PASS"),
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASS"),
         "HOST": "db",  # set in docker-compose.yml
         "PORT": "5432",  # default postgres port
     }
@@ -150,7 +140,7 @@ CORS_ORIGIN_WHITELIST = (
     "http://localhost:3000",
 )
 
-CSRF_TRUSTED_ORIGINS = ["https://*.fly.dev"]
+# CSRF_TRUSTED_ORIGINS = ["https://*.fly.dev"]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (

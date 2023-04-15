@@ -1,17 +1,53 @@
-# Pull base image
-FROM python:3.10.2-slim-bullseye
+FROM python:3.10.11-alpine3.17
+LABEL manitainer="Washington Calandria"
 
-# Set environment variables
-ENV PIP_DISABLE_PIP_VERSION_CHECK 1
-ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# Set work directory
-WORKDIR /code
+COPY ./requirements.txt /tmp/requirements.txt
+COPY ./scripts /scripts
+COPY ./backend /backend
+WORKDIR /backend
+EXPOSE 8000
 
-# Install dependencies
-COPY ./requirements.txt .
-RUN pip install -r requirements.txt
+ARG DEV=false
+RUN python -m venv /py && \
+  /py/bin/pip install --upgrade pip && \
+  apk add --update --no-cache postgresql-client jpeg-dev && \
+  apk add --update --no-cache --virtual .tmp-build-deps \
+  build-base postgresql-dev musl-dev zlib zlib-dev linux-headers && \
+  /py/bin/pip install -r /tmp/requirements.txt && \
+  rm -rf /tmp && \
+  apk del .tmp-build-deps && \
+  adduser \
+  --disabled-password \
+  --no-create-home \
+  django-user && \
+  mkdir -p /vol/web/media && \
+  mkdir -p /vol/web/static && \
+  chown -R django-user:django-user /vol && \
+  chmod -R 755 /vol && \
+  chmod -R +x /scripts
 
-# Copy project
-COPY . .
+ENV PATH="/scripts:/py/bin:$PATH"
+
+USER django-user
+
+CMD ["run.sh"]
+
+# # Pull base image
+# FROM python:3.10.2-slim-bullseye
+
+# # Set environment variables
+# ENV PIP_DISABLE_PIP_VERSION_CHECK 1
+# ENV PYTHONDONTWRITEBYTECODE 1
+# ENV PYTHONUNBUFFERED 1
+
+# # Set work directory
+# WORKDIR /code
+
+# # Install dependencies
+# COPY ./requirements.txt .
+# RUN pip install -r requirements.txt
+
+# # Copy project
+# COPY . .

@@ -3,6 +3,7 @@ from django.core.files.storage import FileSystemStorage
 from core.models import Post, Comment, Like, Bookmark, Tag, PostContentImage
 from user_api.serializers import UserSerializer
 from django_editorjs.fields import EditorJsField
+from django.core.exceptions import ValidationError
 
 
 class LikeSerializer(serializers.ModelSerializer):
@@ -78,6 +79,12 @@ class PostSerializer(serializers.ModelSerializer):
     def get_likes(self, obj):
         """Number of likes of the post."""
         return str(obj.likes.count())
+
+    def validate_image_url(self, image):
+        print("######### IMAGE: ", type(image))
+        if image.size > 2 * 1024 * 1024:
+            raise ValidationError("The maximum image size that can be uploaded is 2MB")
+        return image
 
 
 class PostDetailSerializer(PostSerializer):
