@@ -1,0 +1,12 @@
+.env
+env
+.venv
+venv
+.git
+.gitignore
+frontend
+README.md
+
+todos.txt
+image.txt
+bugs.txt

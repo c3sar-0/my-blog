@@ -15,8 +15,9 @@ services:
       - SECRET_KEY=${DJANGO_SECRET_KEY}
       - ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
     depends_on:
-      - db
-  
+      db:
+        condition: service_healthy
+
   db:
     image: postgres:13-alpine
     restart: always
@@ -26,7 +27,12 @@ services:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASS}
-    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   proxy:
     build:
       context: ./proxy
@@ -37,7 +43,7 @@ services:
       - 8000:8000
     volumes:
       - static-data:/vol/static
-  
+
 volumes:
   postgres-data:
   static-data:

@@ -140,8 +140,6 @@ CORS_ORIGIN_WHITELIST = (
     "http://localhost:3000",
 )
 
-# CSRF_TRUSTED_ORIGINS = ["https://*.fly.dev"]
-
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -160,13 +158,17 @@ SIMPLE_JWT = {
 
 AUTH_USER_MODEL = "core.User"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
-MEDIA_URL = "/api/media/"
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-STATIC_URL = "static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# STATIC_URL = "static/"
+# STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = "/static/static/"
+MEDIA_URL = "/static/media/"
+
+STATIC_ROOT = "/vol/web/static/"
+MEDIA_ROOT = "/vol/web/media/"
+# MEDIA_URL = "/api/media/"
+# MEDIA_ROOT = os.path.join(BASE_DIR, "media")
