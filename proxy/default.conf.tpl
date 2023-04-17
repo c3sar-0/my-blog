@@ -9,6 +9,5 @@ server {
     uwsgi_pass           ${APP_HOST}:${APP_PORT};
     include              /etc/nginx/uwsgi_params;
     client_max_body_size 5M;
-    proxy_set_header Content-Security-Policy upgrade-insecure-requests;
   }
 }
