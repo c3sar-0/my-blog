@@ -143,7 +143,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://www.bytebusters.club",
     "https://api.bytebusters.club",
     "http://3.132.145.160",
-    "ec2-3-132-145-160.us-east-2.compute.amazonaws.com",
+    "http://ec2-3-132-145-160.us-east-2.compute.amazonaws.com",
 
 ]
 
