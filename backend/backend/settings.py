@@ -136,13 +136,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ORIGIN_ALLOW_ALL = False
 #CORS_ORIGIN_WHITELIST = (
-CORS_ALLOWED_ORIGINS = (
+CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://localhost:3000",
     "https://bytebusters.club",
     "https://www.bytebusters.club",
     "https://api.bytebusters.club",
-)
+    "3.132.145.160",
+    "ec2-3-132-145-160.us-east-2.compute.amazonaws.com",
+
+]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
