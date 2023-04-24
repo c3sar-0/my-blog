@@ -10,6 +10,8 @@ from django.utils.text import slugify
 
 from commons.get_image_urls import get_image_urls
 
+import os
+
 
 class UserManager(BaseUserManager):
     """Custom user manager."""
@@ -69,7 +71,8 @@ class Post(models.Model):
                 "image": {
                     "config": {
                         "endpoints": {
-                            "byFile": "http://localhost:8000/api/blog/posts/file_upload/"
+                            "byFile": os.environ.get("API_URL")
+                            + "api/blog/posts/file_upload/"
                         },
                         "additionalRequestHeaders": [
                             {"Content-Type": "multipart/form-data"}
@@ -141,3 +144,25 @@ class Bookmark(models.Model):
 
 class Tag(models.Model):
     text = models.TextField(max_length=10)
+
+
+class Notification(models.Model):
+    """Notification model. There are comment and post notifications."""
+
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="notifications"
+    )
+    message = models.CharField(max_length=500)
+    created = models.DateField(auto_now_add=True)
+
+
+class CommentNotification(Notification):
+    """Comment notification model. It can refer to a comment like or a new comment (the last can be a wall comment or a post comment)."""
+
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+
+
+class PostLikeNotification(Notification):
+    """Post notification model. I"""
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)

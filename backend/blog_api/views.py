@@ -8,7 +8,6 @@ from rest_framework.parsers import (
     FormParser,
     JSONParser,
 )
-from rest_framework.pagination import PageNumberPagination
 
 from django.shortcuts import get_object_or_404
 from django.core.files.storage import FileSystemStorage
@@ -24,13 +23,13 @@ from .serializers import (
     PostContentImageSerializer,
 )
 
-from core.models import Post, Comment, Tag, Bookmark, PostContentImage
+from core.models import Post, Comment, Tag
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-import json
-
 from commons.get_image_urls import get_image_urls
+
+import os
 
 
 class tags_view(APIView):
@@ -218,7 +217,7 @@ class PostsViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(
-            {"success": "1", "file": {"url": f"http://localhost:8000{file_url}"}},
+            {"success": "1", "file": {"url": os.environ.get("API_URL") + file_url}},
             status.HTTP_201_CREATED,
         )
 

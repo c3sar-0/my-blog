@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from core.models import User, Comment, Like
+from core.models import User, Comment, Like, CommentNotification, PostLikeNotification
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -17,20 +17,6 @@ class UserSerializer(serializers.ModelSerializer):
             "description",
             "profile_picture_url",
         ]
-        # fields = [
-        #     "name",
-        #     "email",
-        #     "password",
-        #     "profile_picture_url",
-        #     "slug",
-        #     "id",
-        #     "created",
-        #     "last_login",
-        #     "description",
-        #     "number_of_comments",
-        #     "number_of_posts",
-        #     "wall_comments",
-        # ]
         read_only_fields = ["slug", "created", "last_login"]
 
     def create(self, validated_data):
@@ -99,3 +85,19 @@ class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = "__all__"
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    pass
+
+
+class CommentNotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommentNotification
+        exclude = ["user"]
+
+
+class PostLikeNotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostLikeNotification
+        exclude = ["user"]

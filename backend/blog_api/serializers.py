@@ -1,8 +1,14 @@
 from rest_framework import serializers
 from django.core.files.storage import FileSystemStorage
-from core.models import Post, Comment, Like, Bookmark, Tag, PostContentImage
+from core.models import (
+    Post,
+    Comment,
+    Like,
+    Bookmark,
+    Tag,
+    PostContentImage,
+)
 from user_api.serializers import UserSerializer
-from django_editorjs.fields import EditorJsField
 from django.core.exceptions import ValidationError
 
 

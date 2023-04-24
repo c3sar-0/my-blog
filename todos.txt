@@ -33,6 +33,9 @@
 
 - Dark theme
 - Finish author preview
+- Notifications:
+  user/notifications this way you can get the notifications each time the user clicks the bell.
+  also get the notifications when the root header is rendered in the frontend.
 
 - Make the images responsive (I mean the size). E.g.: the profile images are tiny on the profile previews but they are full size. (see the network tab, they take up too much bandwith)
 - Add show more to wall comments? (only for phones)

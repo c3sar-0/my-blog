@@ -1,10 +1,6 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework.views import APIView
-from rest_framework.generics import (
-    RetrieveUpdateDestroyAPIView,
-    CreateAPIView,
-)
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
@@ -13,7 +9,7 @@ from rest_framework.decorators import action
 from rest_framework import permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from core.models import User, Comment
+from core.models import User, Comment, Notification
 from .serializers import (
     UserSerializer,
     UserDetailSerializer,
@@ -51,21 +47,6 @@ class UserViewSet(ModelViewSet):
         if self.action in actions:
             return UserDetailSerializer
         return UserSerializer
-
-
-# class CreateUserView(CreateAPIView):
-#     """View for creating a user."""
-
-#     serializer_class = UserSerializer
-
-
-# class GetUserView(APIView):
-#     """View for getting a user."""
-
-#     def get(self, request, slug):
-#         user = User.objects.get(slug=slug)
-#         serializer = UserSerializer(user, context={"request": request})
-#         return Response(serializer.data, status.HTTP_200_OK)
 
 
 class MeView(RetrieveUpdateDestroyAPIView):
@@ -142,3 +123,11 @@ class CommentsViewSet(ModelViewSet):
                     {"detail": "The comment has not been liked."},
                     status.HTTP_401_UNAUTHORIZED,
                 )
+
+
+class NotificationsView(ListAPIView):
+    ### How do I call the serializers? I don't know which notification is from a post and which from a comment
+    ### maybe handle that on the serializer?
+
+    def get_queryset(self):
+        return self.request.user.notifications
