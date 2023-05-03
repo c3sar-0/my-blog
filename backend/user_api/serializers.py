@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from core.models import User, Comment, Like, CommentNotification, PostLikeNotification
+from core.models import User, Comment, Like, Notification
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -50,7 +50,7 @@ class UserDetailSerializer(UserSerializer):
 
     class Meta:
         model = User
-        exclude = ["is_staff", "is_superuser"]
+        exclude = ["is_staff", "is_superuser", "groups", "user_permissions"]
         extra_kwargs = {
             "password": {"write_only": True, "min_length": 8},
         }
@@ -88,16 +88,18 @@ class LikeSerializer(serializers.ModelSerializer):
 
 
 class NotificationSerializer(serializers.ModelSerializer):
-    pass
-
-
-class CommentNotificationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CommentNotification
+        model = Notification
         exclude = ["user"]
 
 
-class PostLikeNotificationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PostLikeNotification
-        exclude = ["user"]
+# class CommentNotificationSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = CommentNotification
+#         exclude = ["user"]
+
+
+# class PostLikeNotificationSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = PostLikeNotification
+#         exclude = ["user"]

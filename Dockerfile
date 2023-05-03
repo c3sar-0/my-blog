@@ -26,28 +26,10 @@ RUN python -m venv /py && \
   mkdir -p /vol/web/static && \
   chown -R django-user:django-user /vol && \
   chmod -R 755 /vol && \
-  chmod -R +x /scripts
+  chmod -R +x /scripts && \
 
 ENV PATH="/scripts:/py/bin:$PATH"
 
 USER django-user
 
 CMD ["run.sh"]
-
-# # Pull base image
-# FROM python:3.10.2-slim-bullseye
-
-# # Set environment variables
-# ENV PIP_DISABLE_PIP_VERSION_CHECK 1
-# ENV PYTHONDONTWRITEBYTECODE 1
-# ENV PYTHONUNBUFFERED 1
-
-# # Set work directory
-# WORKDIR /code
-
-# # Install dependencies
-# COPY ./requirements.txt .
-# RUN pip install -r requirements.txt
-
-# # Copy project
-# COPY . .

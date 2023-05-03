@@ -155,14 +155,17 @@ class Notification(models.Model):
     message = models.CharField(max_length=500)
     created = models.DateField(auto_now_add=True)
 
-
-class CommentNotification(Notification):
-    """Comment notification model. It can refer to a comment like or a new comment (the last can be a wall comment or a post comment)."""
-
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
 
 
-class PostLikeNotification(Notification):
-    """Post notification model. I"""
+# class CommentNotification(Notification):
+#     """Comment notification model. It can refer to a comment like or a new comment (the last can be a wall comment or a post comment)."""
 
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+#     comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+
+
+# class PostLikeNotification(Notification):
+#     """Post notification model. I"""
+
+#     post = models.ForeignKey(Post, on_delete=models.CASCADE)

@@ -15,6 +15,7 @@ from .serializers import (
     UserDetailSerializer,
     CommentSerializer,
     LikeSerializer,
+    NotificationSerializer,
 )
 
 
@@ -99,9 +100,7 @@ class CommentsViewSet(ModelViewSet):
         """Like action for comments."""
 
         user = get_object_or_404(User.objects.all(), slug=user_pk)
-        comment = get_object_or_404(
-            user.wall_comments, id=pk
-        )
+        comment = get_object_or_404(user.wall_comments, id=pk)
         isLiked = comment.likes.filter(author=request.user).exists()
         if request.method == "POST":
             if isLiked:
@@ -125,12 +124,12 @@ class CommentsViewSet(ModelViewSet):
                 )
 
 
-class NotificationsView(ListAPIView):
-    """View for listing notifications"""
-    ### How do I call the serializers? I don't know which notification is from a post and which from a comment
-    ### maybe handle that on the serializer?
-    def get_serializer_class(self):
-        pass
+class NotificationView(ListAPIView):
+    """View for getting authenticated user's notifications"""
+
+    serializer_class = NotificationSerializer
+    permission_classes = [permissions.isAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
-        return self.request.user.notifications
+        return Notification.objects.filter(user=self.request.user)
