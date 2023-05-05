@@ -128,7 +128,7 @@ class NotificationView(ListAPIView):
     """View for getting authenticated user's notifications"""
 
     serializer_class = NotificationSerializer
-    permission_classes = [permissions.isAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
