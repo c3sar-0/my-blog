@@ -321,6 +321,9 @@ class CommentsViewSet(ModelViewSet):
     def perform_create(self, serializer):
         author = self.request.user
         post = Post.objects.get(id=self.kwargs["post_pk"])
+        post.author.notifications.create(
+            message=f"{author.name} has commented on your post!", post=post
+        )
         serializer.save(author=author, post=post)
 
     @action(
@@ -344,6 +347,10 @@ class CommentsViewSet(ModelViewSet):
                 )
             else:
                 like = comment.likes.create(author=request.user)
+                comment.author.notifications.create(
+                    comment=comment,
+                    message=f"{request.user.name} has liked your comment!",
+                )
                 comment.save()
                 serializer = LikeSerializer(like)
                 return Response(serializer.data, status.HTTP_201_CREATED)

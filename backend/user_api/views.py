@@ -1,6 +1,11 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListAPIView
+from rest_framework.generics import (
+    RetrieveUpdateDestroyAPIView,
+    GenericAPIView,
+    ListAPIView,
+)
+from rest_framework.mixins import DestroyModelMixin, ListModelMixin
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
@@ -133,3 +138,11 @@ class NotificationView(ListAPIView):
 
     def get_queryset(self):
         return Notification.objects.filter(user=self.request.user)
+
+    def get(self, request, *args, **kwargs):
+        request.user.notifications.update(seen=True)
+        return self.list(request, *args, **kwargs)
+
+    def delete(self, request):
+        Notification.objects.filter(user=request.user).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

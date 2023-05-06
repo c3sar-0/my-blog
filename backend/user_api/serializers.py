@@ -5,6 +5,7 @@ from core.models import User, Comment, Like, Notification
 
 class UserSerializer(serializers.ModelSerializer):
     profile_picture_url = serializers.ImageField(required=False)
+    num_unseen_notifications = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -16,6 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
             "last_login",
             "description",
             "profile_picture_url",
+            "num_unseen_notifications",
         ]
         read_only_fields = ["slug", "created", "last_login"]
 
@@ -36,15 +38,11 @@ class UserSerializer(serializers.ModelSerializer):
 
         return user
 
-    def get_number_of_comments(self, user):
-        return user.comments.count()
-
-    def get_number_of_posts(self, user):
-        return user.posts.count()
+    def get_num_unseen_notifications(self, user):
+        return user.notifications.filter(seen=False).count()
 
 
 class UserDetailSerializer(UserSerializer):
-    profile_picture_url = serializers.ImageField(required=False)
     number_of_comments = serializers.SerializerMethodField()
     number_of_posts = serializers.SerializerMethodField()
 
@@ -55,6 +53,12 @@ class UserDetailSerializer(UserSerializer):
             "password": {"write_only": True, "min_length": 8},
         }
         read_only_fields = ["slug", "created", "last_login", "wall_comments"]
+
+    def get_number_of_comments(self, user):
+        return user.comments.count()
+
+    def get_number_of_posts(self, user):
+        return user.posts.count()
 
 
 class CommentSerializer(serializers.ModelSerializer):

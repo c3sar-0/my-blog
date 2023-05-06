@@ -154,6 +154,7 @@ class Notification(models.Model):
     )
     message = models.CharField(max_length=500)
     created = models.DateField(auto_now_add=True)
+    seen = models.BooleanField(default=False)
 
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
