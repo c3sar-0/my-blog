@@ -246,6 +246,9 @@ class PostsViewSet(ModelViewSet):
                 like = post.likes.create(author=request.user)
                 post.save()
                 serializer = LikeSerializer(like)
+                post.author.notifications.create(
+                    message=f"{request.user.name} liked your post!", post=post
+                )
                 return Response(serializer.data, status.HTTP_201_CREATED)
         if request.method == "DELETE":
             if isLiked:
