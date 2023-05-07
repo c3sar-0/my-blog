@@ -93,6 +93,9 @@ class CommentsViewSet(ModelViewSet):
         author = self.request.user
         # wall_user = User.objects.get(id=self.kwargs["user_pk"])
         wall_user = User.objects.get(slug=self.kwargs["user_pk"])
+        wall_user.notifications.create(
+            author_name=self.request.user.name, notification_type="wall_comment"
+        )
         serializer.save(author=author, wall_user=wall_user)
 
     @action(
@@ -117,6 +120,10 @@ class CommentsViewSet(ModelViewSet):
                 like = comment.likes.create(author=request.user)
                 comment.save()
                 serializer = LikeSerializer(like)
+                user.notifications.create(
+                    author_name=self.request.user.name,
+                    notification_type="wall_comment_like",
+                )
                 return Response(serializer.data, status.HTTP_201_CREATED)
         if request.method == "DELETE":
             if isLiked:
@@ -144,5 +151,5 @@ class NotificationView(ListAPIView):
         return self.list(request, *args, **kwargs)
 
     def delete(self, request):
-        Notification.objects.filter(user=request.user).delete()
+        self.get_queryset().delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

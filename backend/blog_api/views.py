@@ -247,7 +247,9 @@ class PostsViewSet(ModelViewSet):
                 post.save()
                 serializer = LikeSerializer(like)
                 post.author.notifications.create(
-                    message=f"{request.user.name} liked your post!", post=post
+                    notification_type="post_like",
+                    post=post,
+                    author_name=request.user.name,
                 )
                 return Response(serializer.data, status.HTTP_201_CREATED)
         if request.method == "DELETE":
@@ -322,9 +324,21 @@ class CommentsViewSet(ModelViewSet):
         author = self.request.user
         post = Post.objects.get(id=self.kwargs["post_pk"])
         post.author.notifications.create(
-            message=f"{author.name} has commented on your post!", post=post
+            post=post,
+            notification_type="post_comment",
+            author_name=self.request.user.name,
         )
         serializer.save(author=author, post=post)
+
+    # def create(self, request, *args, **kwargs):
+    #     data = request.data
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(serializer)
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(
+    #         serializer.data, status=status.HTTP_201_CREATED, headers=headers
+    #     )
 
     @action(
         methods=["POST", "DELETE"],
@@ -348,8 +362,9 @@ class CommentsViewSet(ModelViewSet):
             else:
                 like = comment.likes.create(author=request.user)
                 comment.author.notifications.create(
-                    comment=comment,
-                    message=f"{request.user.name} has liked your comment!",
+                    post=post,
+                    author_name=request.user.name,
+                    notification_type="post_comment_like",
                 )
                 comment.save()
                 serializer = LikeSerializer(like)

@@ -110,18 +110,39 @@ class PostContentImage(models.Model):
 
 
 class Comment(models.Model):
-    """Comment model. It can be a post comment OR a user's wall comment."""
+    """Comment model. It can be a post comment OR a user's wall comment. Comments can also be answers to other comments."""
 
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
     created = models.DateTimeField(auto_now_add=True)
     text = models.TextField(max_length=500)
-
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, null=True, related_name="comments"
     )
     wall_user = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, related_name="wall_comments"
     )
+    answer_to = models.ForeignKey(
+        "self", on_delete=models.CASCADE, null=True, related_name="answers"
+    )
+    depth = models.IntegerField(null=True)
+
+    def calculate_depth(self, comment):
+        # parent would be answer_to
+        depth = -1
+
+        def get_depth(c):
+            nonlocal depth
+            if c == None:
+                return depth
+            else:
+                depth += 1
+                return get_depth(c.answer_to)
+
+        return get_depth(comment)
+
+    def save(self, *args, **kwargs):
+        self.depth = self.calculate_depth(self)
+        super().save(*args, **kwargs)
 
 
 class Like(models.Model):
@@ -147,17 +168,28 @@ class Tag(models.Model):
 
 
 class Notification(models.Model):
-    """Notification model. There are comment and post notifications."""
+    """Notification model. There are post and wall notifications. If the notification has a null post, then it is a wall notification."""
 
+    NOTIFICATION_TYPES = (
+        ("wall_comment", "Wall comment"),
+        ("wall_comment_like", "Wall comment like"),
+        ("post_like", "Post like"),
+        ("post_comment", "Post comment"),
+        ("post_comment_like", "Post comment like"),
+    )
+    # User that will receive the notification
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="notifications"
     )
-    message = models.CharField(max_length=500)
     created = models.DateField(auto_now_add=True)
     seen = models.BooleanField(default=False)
-
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True)
+    notification_type = models.CharField(
+        choices=NOTIFICATION_TYPES, max_length=50, null=True
+    )
     post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
+    author_name = models.CharField(max_length=100, null=True)
+
+    # comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True)
 
 
 # class CommentNotification(Notification):

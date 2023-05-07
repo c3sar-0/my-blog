@@ -91,19 +91,16 @@ class LikeSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+# class WallLikeNotificationSerializer(serializers.serializer):
+#     class Meta:
+#         model = Notification
+#         exclude = ["post"]
+
+
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         exclude = ["user"]
 
-
-# class CommentNotificationSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = CommentNotification
-#         exclude = ["user"]
-
-
-# class PostLikeNotificationSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = PostLikeNotification
-#         exclude = ["user"]
+    # def to_representation(self, instance):
+    #     data = super().to_representation(instance)
