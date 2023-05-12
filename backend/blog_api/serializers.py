@@ -26,6 +26,7 @@ class CommentSerializer(serializers.ModelSerializer):
     author = UserSerializer(many=False, required=False)
     likes = serializers.SerializerMethodField()
     is_liked_by_user = serializers.SerializerMethodField()
+    # children = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
@@ -40,6 +41,14 @@ class CommentSerializer(serializers.ModelSerializer):
     def get_likes(self, obj):
         """Number of likes of the comment."""
         return str(obj.likes.count())
+
+    # def get_children(self, obj):
+    #     serializer = CommentSerializer(
+    #         instance=obj.children.all(),
+    #         many=True,
+    #         context={"request": self.context["request"]},
+    #     )
+    #     return serializer.data
 
 
 class TagSerializer(serializers.ModelSerializer):

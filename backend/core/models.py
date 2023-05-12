@@ -121,13 +121,29 @@ class Comment(models.Model):
     wall_user = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, related_name="wall_comments"
     )
-    answer_to = models.ForeignKey(
-        "self", on_delete=models.CASCADE, null=True, related_name="answers"
+    parent = models.ForeignKey(
+        "self", on_delete=models.CASCADE, null=True, related_name="children"
     )
     depth = models.IntegerField(null=True)
 
-    def calculate_depth(self, comment):
-        # parent would be answer_to
+    # class Meta:
+    #     comments = queryset.annotate(
+    #         sort_order=Case(
+    #             # When parent is not null, set sort_order to parent's ID
+    #             When(parent__isnull=False, then="parent__id"),
+    #             # When parent is null, set sort_order to own ID
+    #             When(parent__isnull=True, then="id"),
+    #             output_field=IntegerField(),
+    #         )
+    #     ).order_by("sort_order", "id")
+    #     return comments
+    # order_with_respect_to = ""
+    # if parent is None:
+    #     order_with_respect_to = "id"
+    # else:
+    #     "parent__id"
+
+    def calculate_depth(self):
         depth = -1
 
         def get_depth(c):
@@ -136,12 +152,12 @@ class Comment(models.Model):
                 return depth
             else:
                 depth += 1
-                return get_depth(c.answer_to)
+                return get_depth(c.parent)
 
-        return get_depth(comment)
+        return get_depth(self)
 
     def save(self, *args, **kwargs):
-        self.depth = self.calculate_depth(self)
+        self.depth = self.calculate_depth()
         super().save(*args, **kwargs)
 
 

@@ -11,7 +11,7 @@ from rest_framework.parsers import (
 
 from django.shortcuts import get_object_or_404
 from django.core.files.storage import FileSystemStorage
-from django.db.models import Count
+from django.db.models import Count, Case, When, Value, IntegerField
 from django.http import QueryDict
 
 from .serializers import (
@@ -312,6 +312,17 @@ class CommentsViewSet(ModelViewSet):
         queryset = Comment.objects.filter(post__id=self.kwargs["post_pk"])
         if self.action in actions:
             return queryset.filter(author=self.request.user)
+        if self.action == "list":
+            comments = queryset.annotate(
+                sort_order=Case(
+                    # When parent is not null, set sort_order to parent's ID
+                    When(parent__isnull=False, then="parent__id"),
+                    # When parent is null, set sort_order to own ID
+                    When(parent__isnull=True, then="id"),
+                    output_field=IntegerField(),
+                )
+            ).order_by("sort_order", "id")
+            return comments
         return queryset
 
     def get_permissions(self):
@@ -329,16 +340,6 @@ class CommentsViewSet(ModelViewSet):
             author_name=self.request.user.name,
         )
         serializer.save(author=author, post=post)
-
-    # def create(self, request, *args, **kwargs):
-    #     data = request.data
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_create(serializer)
-    #     headers = self.get_success_headers(serializer.data)
-    #     return Response(
-    #         serializer.data, status=status.HTTP_201_CREATED, headers=headers
-    #     )
 
     @action(
         methods=["POST", "DELETE"],
