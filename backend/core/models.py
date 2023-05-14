@@ -125,39 +125,33 @@ class Comment(models.Model):
         "self", on_delete=models.CASCADE, null=True, related_name="children"
     )
     depth = models.IntegerField(null=True)
+    outermost_parent_id = models.IntegerField(null=True)
 
-    # class Meta:
-    #     comments = queryset.annotate(
-    #         sort_order=Case(
-    #             # When parent is not null, set sort_order to parent's ID
-    #             When(parent__isnull=False, then="parent__id"),
-    #             # When parent is null, set sort_order to own ID
-    #             When(parent__isnull=True, then="id"),
-    #             output_field=IntegerField(),
-    #         )
-    #     ).order_by("sort_order", "id")
-    #     return comments
-    # order_with_respect_to = ""
-    # if parent is None:
-    #     order_with_respect_to = "id"
-    # else:
-    #     "parent__id"
+    def get_outermost_parent_id(self):
+        def get_next_parent(comment):
+            if (comment.parent) is None:
+                return comment.id
+            else:
+                return get_next_parent(comment.parent)
+
+        return get_next_parent(self)
 
     def calculate_depth(self):
         depth = -1
 
-        def get_depth(c):
+        def calculate_outermost_parent_depth(c):
             nonlocal depth
             if c == None:
                 return depth
             else:
                 depth += 1
-                return get_depth(c.parent)
+                return calculate_outermost_parent_depth(c.parent)
 
-        return get_depth(self)
+        return calculate_outermost_parent_depth(self)
 
     def save(self, *args, **kwargs):
         self.depth = self.calculate_depth()
+        self.outermost_parent_id = self.get_outermost_parent_id()
         super().save(*args, **kwargs)
 
 

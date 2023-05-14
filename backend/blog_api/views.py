@@ -11,7 +11,8 @@ from rest_framework.parsers import (
 
 from django.shortcuts import get_object_or_404
 from django.core.files.storage import FileSystemStorage
-from django.db.models import Count, Case, When, Value, IntegerField
+from django.db.models import Count, Case, When, Value, IntegerField, Func, F
+from django.db.models.functions import Cast
 from django.http import QueryDict
 
 from .serializers import (
@@ -316,7 +317,10 @@ class CommentsViewSet(ModelViewSet):
             comments = queryset.annotate(
                 sort_order=Case(
                     # When parent is not null, set sort_order to parent's ID
-                    When(parent__isnull=False, then="parent__id"),
+                    When(
+                        parent__isnull=False,
+                        then="outermost_parent_id"
+                    ),
                     # When parent is null, set sort_order to own ID
                     When(parent__isnull=True, then="id"),
                     output_field=IntegerField(),
